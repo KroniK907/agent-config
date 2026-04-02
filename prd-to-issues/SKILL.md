@@ -5,7 +5,9 @@ description: Break a PRD into independently-grabbable GitHub issues using tracer
 
 # PRD to Issues
 
-Break a PRD into independently-grabbable GitHub issues using vertical slices (tracer bullets).
+Break a PRD into independently-grabbable GitHub issues using **vertical slices** (tracer bullets) so work can proceed **in parallel** with minimal merge thrash—**not** broad horizontal layers.
+
+**Assumption:** You usually have **only the PRD text + codebase context**, not the original grill-me chat. All commitments must come from the **parent PRD** (especially the **`GM-xx` decision log**).
 
 ## Process
 
@@ -19,11 +21,22 @@ If the PRD is not already in your context window, fetch it with `gh issue view <
 
 If you have not already explored the codebase, do so to understand the current state of the code.
 
-### 3. Draft vertical slices
+### 3. Pre-split human checkpoint (conditional)
 
-Break the PRD into **tracer bullet** issues. Each issue is a thin vertical slice that cuts through ALL integration layers end-to-end, NOT a horizontal slice of one layer.
+**Before** drafting slices, have an **open-ended** conversation with the user when **any** of the following is true:
 
-Slices may be 'HITL' or 'AFK'. HITL slices require human interaction, such as an architectural decision or a design review. AFK slices can be implemented and merged without human interaction. Prefer AFK over HITL where possible.
+- The PRD includes a **numbered implementation ladder**, refactor sequence, or other strong ordering signal.
+- You are **not confident** you can choose between **strict ladder order** vs **parallelism within steps** without breaking `GM-xx` commitments.
+
+Skip this step for small, obviously parallel PRDs.
+
+Goal: agree on how aggressive parallelism should be **before** you propose a breakdown. If still unclear after a short exchange, state your best assumption and ask for confirmation.
+
+### 4. Draft vertical slices
+
+Break the PRD into **tracer bullet** issues. Each issue is a thin vertical slice that cuts through **all** integration layers end-to-end, **not** a horizontal slice of one layer.
+
+Slices may be `HITL` or `AFK`. `HITL` slices require human interaction (e.g. design review). `AFK` slices can be implemented and merged without human interaction. Prefer `AFK` over `HITL` where possible.
 
 <vertical-slice-rules>
 - Each slice delivers a narrow but COMPLETE path through every layer (schema, API, UI, tests)
@@ -31,7 +44,15 @@ Slices may be 'HITL' or 'AFK'. HITL slices require human interaction, such as an
 - Prefer many thin slices over few thick ones
 </vertical-slice-rules>
 
-### 4. Quiz the user
+**`Blocked by` / prerequisites**
+
+- Use **`Blocked by` only** in issue bodies. **No separate “serialize with” field.**
+- Add **`Blocked by` links only for true prerequisites**: later work would be wrong, non-building, or violate a `GM-xx` / ladder commitment if earlier work is missing.
+- **Do not** add blockers “to be safe” if **splitting the slice** (different integration seams) could preserve parallelism instead.
+
+If the PRD’s **`GM-xx` log or implementation ladder** implies an order, the **blocker graph should respect that order** unless the user explicitly opted for more parallelism in step 3.
+
+### 5. Quiz the user
 
 Present the proposed breakdown as a numbered list. For each slice, show:
 
@@ -39,6 +60,7 @@ Present the proposed breakdown as a numbered list. For each slice, show:
 - **Type**: HITL / AFK
 - **Blocked by**: which other slices (if any) must complete first
 - **User stories covered**: which user stories from the PRD this addresses
+- **`GM-xx` covered**: which decision log rows this slice must satisfy
 
 Ask the user:
 
@@ -49,11 +71,18 @@ Ask the user:
 
 Iterate until the user approves the breakdown.
 
-### 5. Create the GitHub issues
+### 6. Create the GitHub issues
 
 For each approved slice, create a GitHub issue using `gh issue create`. Use the issue body template below.
 
+Label each issue with the `agent-queue` label.
+
 Create issues in dependency order (blockers first) so you can reference real issue numbers in the "Blocked by" field.
+
+**Quoting from the PRD**
+
+- For every **`GM-xx`** that applies to the slice, copy the **`GM-xx` paragraph verbatim** from the parent PRD into the issue (no paraphrase). If the PRD uses appendix pointers, keep those pointer phrases intact.
+- For every **user story** the slice addresses, copy the **full story line(s) verbatim** from the parent PRD (the numbered `As a…` text), not only the numbers.
 
 <issue-template>
 ## Parent PRD
@@ -62,7 +91,24 @@ Create issues in dependency order (blockers first) so you can reference real iss
 
 ## What to build
 
-A concise description of this vertical slice. Describe the end-to-end behavior, not layer-by-layer implementation. Reference specific sections of the parent PRD rather than duplicating content.
+A concise description of this vertical slice. End-to-end behavior and boundaries. Reference appendices in the parent PRD by name where helpful.
+
+## Decisions (`GM-xx`, verbatim from parent PRD)
+
+Paste the full text from the parent PRD for each relevant row:
+
+**GM-00x** — …verbatim paragraph from PRD…
+
+**GM-00y** — …
+
+(Add rows as needed.)
+
+## User stories (verbatim from parent PRD)
+
+Paste the full numbered story lines this slice implements:
+
+1. …
+2. …
 
 ## Acceptance criteria
 
@@ -75,13 +121,6 @@ A concise description of this vertical slice. Describe the end-to-end behavior, 
 - Blocked by #<issue-number> (if any)
 
 Or "None - can start immediately" if no blockers.
-
-## User stories addressed
-
-Reference by number from the parent PRD:
-
-- User story 3
-- User story 7
 
 </issue-template>
 
