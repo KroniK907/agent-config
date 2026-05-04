@@ -1,117 +1,113 @@
 # Agent Skills
 
-A collection of agent skills that extend capabilities across planning, development, and tooling.
+A collection of agent skills that extend capabilities across planning, development, and delivery.
 
-## Planning & Design
+Install paths below use this repository (`KroniK907/skills`). If you use a fork, substitute your GitHub `owner/repo` prefix.
 
-These skills help you think through problems before writing code.
+## Planning & design
 
-- **write-a-prd** — Create a PRD through an interactive interview, codebase exploration, and module design. Filed as a GitHub issue.
+Skills for shaping work before or alongside implementation.
 
-  ```
-  npx skills@latest add mattpocock/skills/write-a-prd
-  ```
-
-- **prd-to-plan** — Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices.
+- **feature-ideation** — Expand a rough feature seed through alternating ideation and tension rounds, then prune to a bounded handoff for grill-me or PRD work.
 
   ```
-  npx skills@latest add mattpocock/skills/prd-to-plan
+  npx skills@latest add KroniK907/skills/feature-ideation
+  ```
+
+- **write-a-prd** — Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue (after decisions exist; use grill-me separately if you need depth-first Q&A first).
+
+  ```
+  npx skills@latest add KroniK907/skills/write-a-prd
+  ```
+
+- **prd-to-plan** — Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices (saved under `./plans/`).
+
+  ```
+  npx skills@latest add KroniK907/skills/prd-to-plan
   ```
 
 - **prd-to-issues** — Break a PRD into independently-grabbable GitHub issues using vertical slices.
 
   ```
-  npx skills@latest add mattpocock/skills/prd-to-issues
+  npx skills@latest add KroniK907/skills/prd-to-issues
   ```
 
-- **grill-me** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
+- **grill-me** — Stress-test a plan or design through sequential Q&A until open branches are resolved.
 
   ```
-  npx skills@latest add mattpocock/skills/grill-me
+  npx skills@latest add KroniK907/skills/grill-me
   ```
 
 - **design-an-interface** — Generate multiple radically different interface designs for a module using parallel sub-agents.
 
   ```
-  npx skills@latest add mattpocock/skills/design-an-interface
+  npx skills@latest add KroniK907/skills/design-an-interface
   ```
 
 - **request-refactor-plan** — Create a detailed refactor plan with tiny commits via user interview, then file it as a GitHub issue.
 
   ```
-  npx skills@latest add mattpocock/skills/request-refactor-plan
+  npx skills@latest add KroniK907/skills/request-refactor-plan
   ```
 
 ## Development
 
-These skills help you write, refactor, and fix code.
+Skills for building, fixing, and evolving code.
 
-- **tdd** — Test-driven development with a red-green-refactor loop. Builds features or fixes bugs one vertical slice at a time.
-
-  ```
-  npx skills@latest add mattpocock/skills/tdd
-  ```
-
-- **triage-issue** — Investigate a bug by exploring the codebase, identify the root cause, and file a GitHub issue with a TDD-based fix plan.
+- **tdd** — Test-driven development with a red-green-refactor loop (features, fixes, integration tests).
 
   ```
-  npx skills@latest add mattpocock/skills/triage-issue
+  npx skills@latest add KroniK907/skills/tdd
   ```
 
-- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and improving testability.
+- **triage-issue** — Investigate a bug by exploring the codebase, identify root cause, and file a GitHub issue with a TDD-based fix plan.
 
   ```
-  npx skills@latest add mattpocock/skills/improve-codebase-architecture
+  npx skills@latest add KroniK907/skills/triage-issue
   ```
 
-- **migrate-to-shoehorn** — Migrate test files from `as` type assertions to @total-typescript/shoehorn.
+- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and testability.
 
   ```
-  npx skills@latest add mattpocock/skills/migrate-to-shoehorn
+  npx skills@latest add KroniK907/skills/improve-codebase-architecture
   ```
 
-- **scaffold-exercises** — Create exercise directory structures with sections, problems, solutions, and explainers.
+- **commit** — Stage and commit only changes attributable to the current agent chat (split into logical commits when appropriate; uses `git` and `gh`).
 
   ```
-  npx skills@latest add mattpocock/skills/scaffold-exercises
+  npx skills@latest add KroniK907/skills/commit
   ```
 
-## Tooling & Setup
+## Writing & knowledge
 
-- **setup-pre-commit** — Set up Husky pre-commit hooks with lint-staged, Prettier, type checking, and tests.
-
-  ```
-  npx skills@latest add mattpocock/skills/setup-pre-commit
-  ```
-
-- **git-guardrails-claude-code** — Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, etc.) before they execute.
+- **write-a-skill** — Create new agent skills with proper structure, progressive disclosure, and bundled resources.
 
   ```
-  npx skills@latest add mattpocock/skills/git-guardrails-claude-code
+  npx skills@latest add KroniK907/skills/write-a-skill
   ```
 
-## Writing & Knowledge
-
-- **write-a-skill** — Create new skills with proper structure, progressive disclosure, and bundled resources.
+- **ubiquitous-language** — Extract a DDD-style ubiquitous language glossary from the current conversation; saves to `UBIQUITOUS_LANGUAGE.md`.
 
   ```
-  npx skills@latest add mattpocock/skills/write-a-skill
+  npx skills@latest add KroniK907/skills/ubiquitous-language
   ```
 
-- **edit-article** — Edit and improve articles by restructuring sections, improving clarity, and tightening prose.
+## Skills in this repo
 
-  ```
-  npx skills@latest add mattpocock/skills/edit-article
-  ```
+| Skill | Folder |
+|-------|--------|
+| feature-ideation | `feature-ideation/` |
+| write-a-prd | `write-a-prd/` |
+| prd-to-plan | `prd-to-plan/` |
+| prd-to-issues | `prd-to-issues/` |
+| grill-me | `grill-me/` |
+| design-an-interface | `design-an-interface/` |
+| request-refactor-plan | `request-refactor-plan/` |
+| tdd | `tdd/` |
+| triage-issue | `triage-issue/` |
+| improve-codebase-architecture | `improve-codebase-architecture/` |
+| commit | `commit/` |
+| write-a-skill | `write-a-skill/` |
+| ubiquitous-language | `ubiquitous-language/` |
 
-- **ubiquitous-language** — Extract a DDD-style ubiquitous language glossary from the current conversation.
-
-  ```
-  npx skills@latest add mattpocock/skills/ubiquitous-language
-  ```
-
-- **obsidian-vault** — Search, create, and manage notes in an Obsidian vault with wikilinks and index notes.
-
-  ```
-  npx skills@latest add mattpocock/skills/obsidian-vault
-  ```
+Related Cursor-focused skills (hooks, rules, canvas, SDK, CLI status line, and so on) may live in a separate `skills-cursor` tree alongside this repo on your machine; they are not bundled here.
