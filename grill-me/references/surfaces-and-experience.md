@@ -12,6 +12,16 @@
 
 If **any** new or changed **screen, message, document, command, or help text** exists, this zone is **in scope**—do not mark N/A without stating what the surface is.
 
+## Mandatory layout pass (UI/UX—when not N/A)
+
+This zone **includes UI/UX**: composition, hierarchy, and layout—not only copy and states.
+
+Before treating **Surfaces & experience** as settled for product UI, the session **must** capture a **rough layout for every layout-bearing surface** in scope: each **page/route**, **modal/dialog**, **drawer/sheet**, **side panel**, **wizard step** (each step counts as its own surface if layout differs), **full-screen takeover**, or **similar chrome-heavy container**. For each, the user should describe **where** the main blocks live (header, body, rails, footers), **where** primary vs secondary actions sit, **what** scrolls vs stays fixed, and any **structural** decision that would change implementation (e.g. split view vs single column, table above fold vs below filters).
+
+Accept **ASCII**, **labeled zones**, or **tight prose**—precision is about **spatial commitments**, not visuals. If a surface is **explicitly deferred**, record **which** surface and **what default layout** you will assume until designed.
+
+Only after **each** such surface is described or deferred should you move on to other deep prompts in this zone (states, flows, a11y, etc.), unless you are depth-first on **one** surface’s layout and temporarily postponing siblings—still **one question per turn**.
+
 ## Deep prompts (load when not N/A)
 
 - **Who** sees what, in which contexts (roles, admin vs self-serve, internal vs external)?
@@ -23,6 +33,7 @@ If **any** new or changed **screen, message, document, command, or help text** e
 
 ### Web app overlay (use when relevant)
 
+- **Enumerate layout-bearing surfaces** first (pages, modals, drawers, etc.); then **rough layout per surface**—see **Mandatory layout pass**.
 - **Routes/pages** affected; **new vs reused** components; layout constraints (grids, modals, drawers).
 - **Responsive:** mobile vs tablet vs desktop—what differs (information priority, actions, breakpoints)?
 - **SSR/CSR** or **hydration** assumptions that affect UX or SEO snippets.
