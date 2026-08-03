@@ -145,7 +145,7 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 
 ## Tracker operations
 
-**Default:** GitHub issues on the **target repo** (or `KroniK907/skills` for meta/skills work).
+**Default:** GitHub issues on the **target repo** (or `KroniK907/skills` for meta/skills work). This is the **canonical tracker** when issues are enabled.
 
 | Artifact | Label |
 |----------|--------|
@@ -153,9 +153,11 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 | Decision log | `wayfinder:decision-log` |
 | To Do ticket | `wayfinder:todo` + type + mode |
 
-**Local fallback:** `wayfinder/plans/{FeatureName}.Map.md` and `{FeatureName}.Decision-Log.md` when GitHub is unavailable. Same body template; To Do/Completed as markdown tables.
+**Sub-issues:** Link map → tickets and decision log via GitHub sub-issues. **Blocked-by:** Use native issue dependencies for frontier ordering.
 
-**Create order:** Map → decision log issue → To Do tickets → wire blockers.
+**Local fallback:** `wayfinder/plans/{FeatureName}.Map.md` only when GitHub is unavailable, or for export. See [plans/README.md](plans/README.md). Do not commit local maps that duplicate an active GitHub map.
+
+**Create order:** Map → decision log issue → To Do tickets → wire blockers → link sub-issues. Bootstrap reference: [scripts/bootstrap-github-map.sh](scripts/bootstrap-github-map.sh).
 
 ---
 

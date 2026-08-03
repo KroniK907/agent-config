@@ -31,7 +31,7 @@ Skip wayfinder when the path is already clear — use `grill-me` or implement di
    - Do **not** resolve unknowns in this phase — collect them.
 2. **Name the map** — `{FeatureName}:Map` (e.g. `CommandPalette:Map`). Derive **map slug** per [REFERENCE.md](REFERENCE.md#map-slug-and-decision-log-prefix).
 3. **Set target outcome** — What this map is working toward (usually a buildable PRD). One or two lines.
-4. **Create the map artifact** — GitHub issue (preferred) or local file under `wayfinder/plans/` — label `wayfinder:map`. Use the [map template](REFERENCE.md#map-body-template).
+4. **Create the map artifact** — GitHub issue (preferred) labelled `wayfinder:map`, or local file under `wayfinder/plans/` only when GitHub is unavailable. Use the [map template](REFERENCE.md#map-body-template).
 5. **Create To Do tickets** — One child issue per resolvable unknown/research gap from ideation. Labels: `wayfinder:todo` + type (`wayfinder:research` | `:prototype` | `:grilling` | `:task`) + mode (`wayfinder:hitl` | `:afk`). Wire **native GitHub blocking** in a second pass.
 6. **Seed fog** — Anything in scope but not yet sharp enough → map **Not yet specified**.
 7. **Stop** — Charting does not resolve tickets. Fire **AFK research** subagents only if the user asks in this session.

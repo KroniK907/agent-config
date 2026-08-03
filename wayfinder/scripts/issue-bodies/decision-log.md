@@ -1,6 +1,6 @@
 # Wayfinder-Ecosystem:Decision-Log
 
-**Map:** [Wayfinder-Ecosystem:Map](Wayfinder-Ecosystem.Map.md)  
+**Map:** Wayfinder-Ecosystem:Map (parent issue)  
 **Prefix:** `WF-ECO-GM-`
 
 Append-only log. `grill-me` and ticket resolutions add rows here. `write-a-prd` consolidates when map To Do is empty.
@@ -17,6 +17,8 @@ Append-only log. `grill-me` and ticket resolutions add rows here. `write-a-prd` 
 
 **WF-ECO-GM-005** — Large features may spawn **subfeature maps** linked under parent **Subfeatures**; parent owns cross-cutting integration grilling tickets.
 
-**WF-ECO-GM-006** — Local map files use `{FeatureName}.Map.md` and `{FeatureName}.Decision-Log.md` (dot separator) because `:` is invalid in paths on Windows. GitHub issue titles keep the `{FeatureName}:Map` display name.
+**WF-ECO-GM-006** — Local map files use `{FeatureName}.Map.md` only as a Windows-safe export fallback. **GitHub issues are the canonical tracker** when enabled; display title `{FeatureName}:Map`.
 
-*(Bootstrap entries from initial chart — refine via frontier tickets.)*
+**WF-ECO-GM-007** — GitHub issues replace local plan files for the Wayfinder-Ecosystem bootstrap map. Sub-issues and native blocked-by dependencies express frontier and blocking.
+
+*(Bootstrap entries — refine via frontier tickets.)*
