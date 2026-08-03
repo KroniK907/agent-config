@@ -8,6 +8,12 @@ Install paths below use this repository (`KroniK907/skills`). If you use a fork,
 
 Skills for shaping work before or alongside implementation.
 
+- **wayfinder** — Plan and orchestrate large features via a structured ideation interview, a `FeatureName:Map` with To Do/Completed tickets, scoped decision logs, and subfeature maps. Use before grill-me/PRD when work is too big for one session.
+
+  ```
+  npx skills@latest add KroniK907/skills/wayfinder
+  ```
+
 - **feature-ideation** — Expand a rough feature seed through alternating ideation and tension rounds, then prune to a bounded handoff for grill-me or PRD work.
 
   ```
@@ -96,6 +102,7 @@ Skills for building, fixing, and evolving code.
 
 | Skill | Folder |
 |-------|--------|
+| wayfinder | `wayfinder/` |
 | feature-ideation | `feature-ideation/` |
 | write-a-prd | `write-a-prd/` |
 | prd-to-plan | `prd-to-plan/` |
