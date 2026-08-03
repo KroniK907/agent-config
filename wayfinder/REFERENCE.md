@@ -2,7 +2,9 @@
 
 ## Map slug and decision-log prefix
 
-**Map title:** `{FeatureName}:Map` — PascalCase feature name, literal `:Map` suffix.
+**Map title:** `{FeatureName}:Map` — PascalCase feature name, literal `:Map` suffix (GitHub issue title, map heading).
+
+**Local filenames:** Use a dot, not a colon — `{FeatureName}.Map.md` and `{FeatureName}.Decision-Log.md`. Colons are invalid in paths on Windows.
 
 **Map slug:** Derive from the feature name for stable IDs:
 
@@ -32,7 +34,7 @@ Optional source link: `(from [Palette IA grilling](#123))`
 
 ## Map body template
 
-Use for GitHub issue body or `wayfinder/plans/{FeatureName}:Map.md`.
+Use for GitHub issue body or `wayfinder/plans/{FeatureName}.Map.md`.
 
 ```markdown
 # {FeatureName}:Map
@@ -151,7 +153,7 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 | Decision log | `wayfinder:decision-log` |
 | To Do ticket | `wayfinder:todo` + type + mode |
 
-**Local fallback:** `wayfinder/plans/{FeatureName}:Map.md` when GitHub is unavailable. Same body template; To Do/Completed as markdown tables.
+**Local fallback:** `wayfinder/plans/{FeatureName}.Map.md` and `{FeatureName}.Decision-Log.md` when GitHub is unavailable. Same body template; To Do/Completed as markdown tables.
 
 **Create order:** Map → decision log issue → To Do tickets → wire blockers.
 

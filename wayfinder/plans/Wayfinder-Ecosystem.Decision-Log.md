@@ -1,6 +1,6 @@
 # Wayfinder-Ecosystem:Decision-Log
 
-**Map:** [Wayfinder-Ecosystem:Map](Wayfinder-Ecosystem:Map.md)  
+**Map:** [Wayfinder-Ecosystem:Map](Wayfinder-Ecosystem.Map.md)  
 **Prefix:** `WF-ECO-GM-`
 
 Append-only log. `grill-me` and ticket resolutions add rows here. `write-a-prd` consolidates when map To Do is empty.
@@ -16,5 +16,7 @@ Append-only log. `grill-me` and ticket resolutions add rows here. `write-a-prd` 
 **WF-ECO-GM-004** — To Do tickets carry labels for **type** (research, prototype, grilling, task) and **mode** (HITL, AFK). AFK tickets are intended for cloud automation pickup; human still closes the issue.
 
 **WF-ECO-GM-005** — Large features may spawn **subfeature maps** linked under parent **Subfeatures**; parent owns cross-cutting integration grilling tickets.
+
+**WF-ECO-GM-006** — Local map files use `{FeatureName}.Map.md` and `{FeatureName}.Decision-Log.md` (dot separator) because `:` is invalid in paths on Windows. GitHub issue titles keep the `{FeatureName}:Map` display name.
 
 *(Bootstrap entries from initial chart — refine via frontier tickets.)*

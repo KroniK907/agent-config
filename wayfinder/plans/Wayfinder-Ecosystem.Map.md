@@ -2,7 +2,7 @@
 
 **Phase:** deciding  
 **Map slug:** `WF-ECO`  
-**Decision log:** `wayfinder/plans/Wayfinder-Ecosystem:Decision-Log.md` — prefix `WF-ECO-GM-`  
+**Decision log:** `wayfinder/plans/Wayfinder-Ecosystem.Decision-Log.md` — prefix `WF-ECO-GM-`  
 **Bootstrap note:** This map plans the wayfinder skill ecosystem using wayfinder itself. Tracker = local markdown until GitHub issues are created on `KroniK907/skills`.
 
 ## Target outcome
