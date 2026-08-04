@@ -8,16 +8,28 @@ Install paths below use this repository (`KroniK907/skills`). If you use a fork,
 
 Skills for shaping work before or alongside implementation.
 
-- **wayfinder** — Plan and orchestrate large features via a structured ideation interview, a `FeatureName:Map` with To Do/Completed tickets, scoped decision logs, and subfeature maps. Use before grill-me/PRD when work is too big for one session.
+- **wayfinder** — Bootstrap and maintain `FeatureName:Map` GitHub trackers: map skeleton, materialize tickets from map-discovery comment, reconcile after approval, suggest next skill. Use when a feature is too big for one session.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder
   ```
 
-- **feature-ideation** — Expand a rough feature seed through alternating ideation and tension rounds, then prune to a bounded handoff for grill-me or PRD work.
+- **define-bundle** — Coalesce decision-log clusters into draft `wayfinder:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
 
   ```
-  npx skills@latest add KroniK907/skills/feature-ideation
+  npx skills@latest add KroniK907/skills/define-bundle
+  ```
+
+- **feature-discovery** — Breadth-first five-zone interview; posts a map-discovery artifact as a comment on the map issue for wayfinder Materialize.
+
+  ```
+  npx skills@latest add KroniK907/skills/feature-discovery
+  ```
+
+- **strategic-ideation** — Expand/tension/prune at idea level for scope and strategy; hand off to grill-me or PRD (renamed from feature-ideation).
+
+  ```
+  npx skills@latest add KroniK907/skills/strategic-ideation
   ```
 
 - **write-a-prd** — Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue (after decisions exist; use grill-me separately if you need depth-first Q&A first).
@@ -103,7 +115,10 @@ Skills for building, fixing, and evolving code.
 | Skill | Folder |
 |-------|--------|
 | wayfinder | `wayfinder/` |
-| feature-ideation | `feature-ideation/` |
+| define-bundle | `define-bundle/` |
+| feature-discovery | `feature-discovery/` |
+| strategic-ideation | `strategic-ideation/` |
+| feature-ideation | `feature-ideation/` (stub → strategic-ideation) |
 | write-a-prd | `write-a-prd/` |
 | prd-to-plan | `prd-to-plan/` |
 | prd-to-issues | `prd-to-issues/` |

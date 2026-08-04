@@ -63,9 +63,10 @@ Grill-me works best when the seed describes **what to build**, not lengthy negat
 [Backlog, deferred exploration, stakeholder context. Do not paste this section into grill-me—use it for humans or PRD follow-up only.]
 ```
 
-## Tension vs grill-me
+## Tension vs grill-me vs feature-discovery
 
-| | This skill (tension rounds) | grill-me |
-|--|-----------------------------|----------|
-| Layer | Idea: stakeholders, consistency with adjacent initiatives, separation between features | Implementation: correctness, integrations, rollout |
-| Pace | One question per tension reply | One question per reply |
+| | strategic-ideation (tension) | grill-me | feature-discovery |
+|--|------------------------------|----------|-------------------|
+| Layer | Idea: stakeholders, consistency with adjacent initiatives | Implementation: correctness, integrations, rollout | Edge inventory across five zones |
+| Pace | One question per tension reply | One question per reply | One zone per reply (default) |
+| Output | Scope handoff | `{MAP-SLUG}-GM-xx` | Map-discovery comment on map issue |

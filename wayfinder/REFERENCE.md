@@ -19,8 +19,8 @@
 **Rules:**
 
 - One authoritative log per map (GitHub issue labelled `wayfinder:decision-log` or section in local map file).
-- `grill-me` and ticket resolutions **append** rows; do not renumber until `write-a-prd` consolidates.
-- PRD consolidation may merge/dedupe into plain `GM-001` or keep prefixed IDs — document choice in map **Notes**.
+- `grill-me`, **Reconcile**, and ticket resolutions **append** rows; do not renumber existing rows.
+- Wayfinder maps implement via [define-bundle](../define-bundle/SKILL.md) + [create-tasks](../create-tasks/SKILL.md); map-free work may still use `write-a-prd` consolidation.
 
 ### Decision-log row format
 
@@ -65,9 +65,16 @@ Use for GitHub issue body or `wayfinder/plans/{FeatureName}.Map.md`.
 |--------|------|------|----------|------------|
 | [Title](issue-link) | research / prototype / grilling / task | HITL / AFK | @user or unclaimed | — |
 
+## Implementing
+
+<!-- Minted implementation tasks from approved bundles. Separate from planning To Do frontier. -->
+
+| Ticket | Bundle | Mode | Status | Blocked by |
+|--------|--------|------|--------|------------|
+
 ## Completed
 
-<!-- Human moves rows here after closing the ticket issue. One-line gist each. -->
+<!-- Row moves here after approved reconcile closes the ticket. One-line gist each. -->
 
 - [Title](link) — gist of outcome
 
@@ -78,9 +85,19 @@ Use for GitHub issue body or `wayfinder/plans/{FeatureName}.Map.md`.
 ## Out of scope
 
 <!-- Consciously excluded from this map's target outcome -->
+
+## Decision coverage
+
+<!-- Last section on the map body. Operational GM lifecycle index; binding prose lives in decision log only. -->
+
+| GM ID | Status | Linked issue |
+|-------|--------|--------------|
+| {MAP-SLUG}-GM-001 | open | — |
 ```
 
-**Index rule:** The map **lists** and **gists**; detail lives in ticket threads and the decision log. Do not paste full `GM-xx` paragraphs into the map body.
+**Section order:** **Decision coverage** is always the **last section** on the map body (after **Out of scope**). **Implementing** sits below **To Do**; planning and implementation frontiers stay separate.
+
+**Index rule:** The map **lists** and **gists**; detail lives in ticket threads and the decision log. Do not paste full `GM-xx` paragraphs into the map body or Decision coverage table.
 
 ---
 
@@ -88,14 +105,14 @@ Use for GitHub issue body or `wayfinder/plans/{FeatureName}.Map.md`.
 
 | Label | Mode typical | Resolved by | Produces |
 |-------|--------------|-------------|----------|
-| `wayfinder:research` | AFK | Task subagent / future `research` skill | Facts, links, constraints → ticket comment |
+| `wayfinder:research` | HITL (v1) | [research](../research/SKILL.md) | Structured findings comment; non-binding Proposed tracker updates |
 | `wayfinder:prototype` | HITL | Stub code, outline, or `design-an-interface` | Asset link → comment |
-| `wayfinder:grilling` | HITL | `grill-me` scoped to ticket **Question** | `{MAP-SLUG}-GM-xx` rows in decision log |
+| `wayfinder:grilling` | HITL | `grill-me` or `strategic-ideation` when Question is scope/strategy | `{MAP-SLUG}-GM-xx` rows in decision log |
 | `wayfinder:task` | HITL or AFK | Agent checklist or human errand | Done-work record → comment |
 
 Every To Do ticket is a **child issue** of the map, labelled `wayfinder:todo`.
 
-### Ticket body template
+### Ticket body template (grilling, prototype, task)
 
 ```markdown
 ## Question
@@ -107,16 +124,86 @@ Every To Do ticket is a **child issue** of the map, labelled `wayfinder:todo`.
 Parent: [{FeatureName}:Map](#parent-issue-number)
 ```
 
+### Research ticket template
+
+For `wayfinder:research` tickets — full template in [research REFERENCE](../research/REFERENCE.md#research-ticket-template). Required: **Question**, **Done when**, **Map**; optional: **Source hints**, **Perspectives**. Materialize and feature-discovery use this shape.
+
+Script template: [scripts/issue-bodies/research.md](scripts/issue-bodies/research.md).
+
+### Implementation task template
+
+For tasks minted by [create-tasks](../create-tasks/SKILL.md) from approved bundles — full template in [create-tasks REFERENCE](../create-tasks/REFERENCE.md#task-issue-template). Labels: `wayfinder:task` or `:prototype` + `:hitl` or `:afk`; add **`wayfinder:approved`** when **Status:** `ready`.
+
 ---
 
-## Completed workflow
+## Map-discovery artifact
 
-1. Agent finishes work → **resolution comment** on ticket (never closes).
-2. Human reviews → **closes** the GitHub issue (or marks done in local tracker).
-3. Human or agent-with-explicit-instruction updates map: remove from **To Do** table, append to **Completed** with gist.
-4. If resolution invalidates other tickets → close or update those tickets; move mis-scoped items to **Out of scope**.
+**Default:** [feature-discovery](../feature-discovery/SKILL.md) posts a comment on the **map issue** whose body starts with `## Map discovery`. Not a separate issue — an creation-time artifact tied to the map.
 
-**Agents must not** close `wayfinder:todo` issues. Cloud automations deliver PRs/comments; human still closes.
+| Field | Value |
+|-------|--------|
+| Created by | feature-discovery (on completion; optional partial comments while in progress) |
+| Read by | wayfinder **Materialize** |
+| Template | [feature-discovery REFERENCE — map-discovery artifact](../feature-discovery/REFERENCE.md#map-discovery-artifact) |
+
+**Local fallback:** `wayfinder/plans/{FeatureName}.Map-Discovery.md` when GitHub is unavailable.
+
+Set **Status:** `ready for materialize` in the comment when discovery is complete.
+
+**Materialize lookup:** `gh issue view <map-num> --comments` — use the latest comment containing `## Map discovery` with **Status:** `ready for materialize`, unless the user points at chat output or a specific comment.
+
+---
+
+## Materialize from map-discovery
+
+Load the artifact from [feature-discovery](../feature-discovery/REFERENCE.md#map-discovery-artifact).
+
+| Artifact section | Map / GitHub action |
+|------------------|---------------------|
+| **Ticket candidates** — sharp Question | Create child issue + **To Do** row |
+| **Fog** | Append to map **Not yet specified** |
+| **Out of scope suggestions** | Confirm with user; then **Out of scope** |
+| **Zone matrix** | Stays on map-discovery comment only; do not paste into map body |
+| **Notes** | Merge into map **Notes** if durable |
+
+After materialize: reply on the map-discovery comment thread with **Status:** `materialized`; add **Completed** gist on map (*Map discovery materialized — N tickets*).
+
+**Create order:** Tickets → wire blockers → link sub-issues → update map body.
+
+**Label each ticket:** `wayfinder:todo` + `wayfinder:research` | `:prototype` | `:grilling` | `:task` + `wayfinder:hitl` | `:afk`.
+
+---
+
+## Completed workflow and approval
+
+1. Sibling skill (or Reconcile draft) → **resolution comment** on ticket.
+2. Human reviews → sends an **approval phrase** (below).
+3. Agent **Reconcile** executes approved GitHub/map updates.
+4. If resolution invalidates other tickets → update or close those; move mis-scoped items to **Out of scope**.
+
+### Approval phrases
+
+| User says | Agent may |
+|-----------|-----------|
+| **Approved — reconcile and close** | Close ticket issue; move row To Do → **Completed** with gist; append decision log **body**; add/update **Decision coverage** row(s) (last map section); update fog/Notes |
+| **Approved — reconcile, keep open** | Post comment + decision log body + Decision coverage + map notes; **do not** close or move to Completed |
+| (no approval) | Post draft resolution comment only; **do not** close |
+
+Synonyms accepted if unambiguous: “approve and close #N”, “reconcile and close this ticket”.
+
+**Requires:** `gh` authenticated on the target repo for issue close/edit.
+
+### Implementation task Reconcile
+
+When closing a **`wayfinder:approved`** implementation task (from [create-tasks](../create-tasks/SKILL.md)):
+
+| User says | Agent may |
+|-----------|-----------|
+| **Approved — reconcile and close** | Close task; remove **`wayfinder:approved`**; move **Implementing** row → **Completed** gist; set Decision coverage **`implemented`** for bundle-scoped GMs shipped by this task |
+
+Synonyms accepted if unambiguous: "reconcile and close task #N".
+
+See [create-tasks REFERENCE — implementation Reconcile](../create-tasks/REFERENCE.md#implementation-reconcile).
 
 ---
 
@@ -128,13 +215,33 @@ Use GitHub’s blocked-by graph for ordering. Open tickets not listed in **To Do
 
 ---
 
+## Routing table
+
+Suggest-only — user starts the recommended skill. Map ticket **Type** → default skill:
+
+| Ticket type | Default skill | Notes |
+|-------------|---------------|-------|
+| `grilling` (implementation) | `grill-me` | Ticket **Question** is the grill seed |
+| `grilling` (scope/strategy) | `strategic-ideation` | When **Question** is bundling, roadmap, or scope shape |
+| `research` | `research` | HITL v1; AFK deferred per map Notes |
+| `prototype` | `design-an-interface` or inline stub | Per ticket **Question** |
+| `task` | Agent checklist or human | Per ticket **Question** |
+| GM cluster ready to build | `define-bundle` | While planning To Do or fog may stay open; see [define-bundle REFERENCE](../define-bundle/REFERENCE.md#route-heuristics-for-wayfinder) |
+| Approved bundle | `create-tasks` | Splits into **Implementing** tasks |
+| Small scope, no map | `write-a-prd` → `prd-to-issues` | **Not** a map Route handoff |
+| New feature, no map | wayfinder **Chart** | Then `feature-discovery` |
+
+After sibling session: remind user to invoke wayfinder **Reconcile** (explicit invoke — see map fog if auto-reconcile is ever desired).
+
+---
+
 ## Subfeature maps
 
-**When:** A zone or subsystem is large enough for its own ideation + ticket graph but must stay consistent with the parent.
+**When:** A zone or subsystem is large enough for its own discovery + ticket graph but must stay consistent with the parent.
 
 **Steps:**
 
-1. Create child map `{SubFeatureName}:Map` with its own slug and decision log.
+1. **Chart** child map `{SubFeatureName}:Map` with its own slug and decision log.
 2. Add link under parent **Subfeatures** with one-line boundary ("Owns search UX; parent owns shell IA").
 3. Add parent **To Do** ticket if needed: *Integration review — align `{Child}-GM-*` with `{Parent}-GM-*`* (grilling, blocked by child frontier empty or milestone).
 4. Child **Notes** must link parent map and list parent `GM-xx` rows that constrain it.
@@ -151,13 +258,18 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 |----------|--------|
 | Map | `wayfinder:map` |
 | Decision log | `wayfinder:decision-log` |
+| Build bundle | `wayfinder:bundle` |
 | To Do ticket | `wayfinder:todo` + type + mode |
+| Implementation task (draft) | `wayfinder:task` or `:prototype` + `:hitl` or `:afk` |
+| Approved implementation task | above + **`wayfinder:approved`**; body **Status:** `ready` |
 
-**Sub-issues:** Link map → tickets and decision log via GitHub sub-issues. **Blocked-by:** Use native issue dependencies for frontier ordering.
+Map-discovery artifact = **comment on map issue** (no label).
 
-**Local fallback:** `wayfinder/plans/{FeatureName}.Map.md` only when GitHub is unavailable, or for export. See [plans/README.md](plans/README.md). Do not commit local maps that duplicate an active GitHub map.
+**Sub-issues:** Link map → decision log and tickets via GitHub sub-issues. **Blocked-by:** Use native issue dependencies for frontier ordering.
 
-**Create order:** Map → decision log issue → To Do tickets → wire blockers → link sub-issues. Bootstrap reference: [scripts/bootstrap-github-map.sh](scripts/bootstrap-github-map.sh).
+**Chart create order:** Decision log → map (with log link) → link sub-issues → hand off to feature-discovery.
+
+**Local fallback:** `wayfinder/plans/{FeatureName}.Map.md` and `{FeatureName}.Map-Discovery.md` only when GitHub is unavailable, or for export. See [plans/README.md](plans/README.md). Do not commit local files that duplicate active GitHub issues.
 
 ---
 
@@ -170,33 +282,34 @@ Skills that **read** wayfinder maps:
 | `write-a-prd` | Map Completed + decision log | PRD issue |
 | `prd-to-issues` | PRD | `agent-queue` issues |
 
-Skills that **write** wayfinder state (planned updates — see bootstrap map):
+Skills that **write** wayfinder state:
 
 | Skill | Writes |
 |-------|--------|
+| `feature-discovery` | Map-discovery comment on map issue |
+| `strategic-ideation` | Scope handoff (chat); Reconcile records on map |
 | `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket |
-| `wayfinder` | Map To Do / Completed / fog / Subfeatures |
-| `research` (TBD) | Research ticket comment; optional map note |
-| Cloud AFK automation (TBD) | PR + comment on AFK ticket; human closes |
+| `define-bundle` | Draft/approved bundle issue; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |
+| `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; `implemented` on Reconcile close |
+| `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
+| [research](../research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
+| Cloud AFK automation (TBD) | PR + comment on AFK ticket; human approves close via Reconcile |
 
-**Handoff chain:** wayfinder (To Do empty) → optional integration `grill-me` → `write-a-prd` → `prd-to-issues` → implement → reconcile map (future).
+**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → `define-bundle` → `create-tasks` → implement → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
 
 ---
 
-## Ideation interview capture template
+## Chart handoff message (template)
 
-Use during **Chart** before tickets exist:
+Post or narrate after skeleton creation:
 
 ```markdown
-## Ideation capture — {FeatureName}
+**Wayfinder Chart complete** — [{FeatureName}:Map](link) · decision log [#N](link)
 
-| Zone | Known | Unknown / needs research |
-|------|-------|---------------------------|
-| Surfaces & experience | … | … |
-| Behavior & correctness | … | … |
-| Boundaries & integration | … | … |
-| Persistence & data | … | … |
-| Change, risk & evidence | … | … |
+**Next:** Run [feature-discovery](../feature-discovery/SKILL.md) with:
+- Map: #N
+- Seed: …
+- Target outcome: …
+
+When the map-discovery comment has **Status:** `ready for materialize`, invoke **wayfinder Materialize** with the map link.
 ```
-
-Each **unknown / needs research** cell item → candidate To Do ticket (when the question is sharp) or **Not yet specified** (when not).

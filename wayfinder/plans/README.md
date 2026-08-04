@@ -9,7 +9,7 @@
 | **Wayfinder-Ecosystem:Map** | https://github.com/KroniK907/skills/issues/12 |
 | **Wayfinder-Ecosystem:Decision-Log** | https://github.com/KroniK907/skills/issues/11 |
 
-To Do tickets `#4`–`#10` are sub-issues of the map. Native **blocked-by** dependencies are wired on the repo.
+Map-discovery artifact lives as a **comment on the map issue** (see issue #12 comments). To Do tickets `#4`–`#10` are sub-issues of the map. Native **blocked-by** dependencies are wired on the repo.
 
 ### Labels to add (manual)
 
@@ -25,6 +25,6 @@ Close spurious test issues `#2` and `#3` if still open (created during API permi
 
 ## Local files
 
-Use `wayfinder/plans/{FeatureName}.Map.md` only when GitHub issues are unavailable (offline) or as a Windows-friendly export. Do not duplicate the canonical map in the repo while GitHub is enabled.
+Use `wayfinder/plans/{FeatureName}.Map.md` and `{FeatureName}.Map-Discovery.md` only when GitHub issues are unavailable (offline) or as a Windows-friendly export. Do not duplicate the canonical issues in the repo while GitHub is enabled.
 
-Re-bootstrap script: [`../scripts/bootstrap-github-map.sh`](../scripts/bootstrap-github-map.sh) (creates new issues — do not re-run on an existing map).
+New maps: invoke wayfinder **Chart** mode (creates map + decision log via `gh` on the target repo).
