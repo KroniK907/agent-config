@@ -73,19 +73,22 @@ Create early with `gh issue create` or update an existing draft in place.
 
 Fill **Scope summary**, **Boundaries**, **Open questions**, **User stories or Outcomes** (`N/A — meta/infra` + bullet outcomes when no user stories).
 
-Post or narrate the draft; end with: *Review the bundle — reply **bundle approved** when scope is accepted, or request edits.*
+**Branch (draft):** Propose the full **`Branch:`** line per [REFERENCE § Bundle branch](REFERENCE.md#bundle-branch-wf-eco-gm-027) — pattern `afk/bundle-{issue-num}-{slug}`. Do not create the git branch until **`bundle approved`**.
+
+Post or narrate the draft; end with: *Review the bundle — reply **bundle approved** when scope is accepted (optionally confirm or rename **Branch:**), or request edits.*
 
 **Default:** do not run **`bundle approved`** writes without the explicit phrase.
 
 ### 4. On `bundle approved`
 
-When the user says **`bundle approved`** (optionally naming the bundle issue):
+When the user says **`bundle approved`** (optionally naming the bundle issue or confirming/editing **Branch:**):
 
 1. **Bundle issue** — set **Status:** `approved` in body (`gh issue edit`)
-2. **Map Decision coverage** — covered rows → **`scoped`**, **Linked issue** → bundle URL
-3. **Decision log body** — append ` — bundled via [#N](url)` to each covered row (immutable paragraph text before suffix)
-4. **Map Notes** — one-line approved-bundle link if helpful
-5. **Comment** on bundle issue summarizing executed updates
+2. **Git branch** — create and push the confirmed **`Branch:`** name per [REFERENCE § Bundle branch](REFERENCE.md#bundle-branch-wf-eco-gm-027); persist **Branch:** on bundle body
+3. **Map Decision coverage** — covered rows → **`scoped`**, **Linked issue** → bundle URL
+4. **Decision log body** — append ` — bundled via [#N](url)` to each covered row (immutable paragraph text before suffix)
+5. **Map Notes** — one-line approved-bundle link if helpful
+6. **Comment** on bundle issue summarizing executed updates (include branch name)
 
 Use `gh issue edit --body-file` for full body replacements. Requires `gh` auth.
 
@@ -96,6 +99,7 @@ Use `gh issue edit --body-file` for full body replacements. Requires `gh` auth.
 Tell the user:
 
 - **Next:** [create-tasks](../create-tasks/SKILL.md) with the approved bundle link, **or** implement directly from the bundle when a single session needs no task split
+- Bundle **Branch:** is created and pushed — all bundle tasks commit on that branch via [implement-task](../implement-task/SKILL.md)
 - Planning **To Do** may stay open
 
 ## Interaction rules
@@ -110,6 +114,6 @@ Tell the user:
 
 User: "Bundle decision-log rows for a build slice on map #N."
 
-Load map #N + decision log → propose cluster → create draft `wayfinder:bundle` issue → user says **`bundle approved`** → sync coverage + suffixes → suggest create-tasks or direct implementation.
+Load map #N + decision log → propose cluster → create draft `wayfinder:bundle` issue (with proposed **Branch:**) → user says **`bundle approved`** → create branch, sync coverage + suffixes → suggest create-tasks or direct implementation.
 
 See [REFERENCE.md](REFERENCE.md) for bundle template, approval phrases, and global-row rules.

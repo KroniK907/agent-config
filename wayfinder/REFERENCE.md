@@ -360,7 +360,7 @@ Suggest-only — user starts the recommended skill. Map ticket **Type** → defa
 | `task` (Implementing) | [implement-task](implement-task/SKILL.md) | Method from task **## Method**; per **What to build** |
 | `task` (To Do) | Agent checklist or human | Per ticket **Question** |
 | GM cluster ready to build | `define-bundle` | While planning To Do or fog may stay open; see [define-bundle REFERENCE](define-bundle/REFERENCE.md#route-heuristics-for-wayfinder) |
-| Approved bundle | `create-tasks` | Splits into **Implementing** tasks |
+| Approved bundle | `create-tasks` | Splits into **Implementing** tasks; bundle **Branch:** already set by [define-bundle](define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027) |
 | Small scope, no map | `write-a-prd` → `prd-to-issues` | **Not** a map Route handoff |
 | New feature, no map | wayfinder **Chart** | Then `feature-discovery` |
 
@@ -391,7 +391,7 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 |----------|--------|
 | Map | `wayfinder:map` |
 | Decision log | `wayfinder:decision-log` |
-| Build bundle | `wayfinder:bundle` |
+| Build bundle | `wayfinder:bundle` · body **Branch:** `afk/bundle-{issue-num}-{slug}` when approved |
 | To Do ticket | `wayfinder:todo` + type + mode |
 | Implementation task (draft) | `wayfinder:task` or `:prototype` + `:hitl` or `:afk` |
 | Approved implementation task | above + **`wayfinder:approved`**; body **Status:** `ready` \| `awaiting-reconcile` |
@@ -440,8 +440,8 @@ Skills that **write** wayfinder state:
 | `feature-discovery` | Map-discovery comment on map issue |
 | `strategic-ideation` | Scope handoff (chat); Reconcile records on map |
 | `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes holistic tracker delta (tickets, bundle clusters, route) |
-| `define-bundle` | Draft/approved bundle issue; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |
-| `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; `implemented` on Reconcile close |
+| `define-bundle` | Draft/approved bundle issue; proposed **Branch:** in draft; git branch create + push on **`bundle approved`**; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |
+| `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; deferred/serial **`wayfinder:approved`** on **`tasks approved`**; `implemented` on Reconcile close |
 | [implement-task](implement-task/SKILL.md) | Bundle-branch run; Method dispatch; **code-review** after Method; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
 | [code-review](code-review/SKILL.md) | Two-axis Standards + Spec review; auto-fix obvious mistakes when invoked by implement-task; ad-hoc branch/PR/WIP review on request |
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wayfinder:prototype`** Method — throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |
@@ -451,7 +451,7 @@ Skills that **write** wayfinder state:
 
 **Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](code-review/SKILL.md) in ad-hoc mode. Complements built-in `review-bugbot` / `review-security`. During **implement-task**, code-review runs automatically after Method — no separate Route handoff.
 
-**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → `define-bundle` → `create-tasks` → **`implement-task`** (Method e.g. **`prototype`** → **code-review** → push) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
+**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → **`define-bundle`** ( **`bundle approved`** → create **Branch:** `afk/bundle-{N}-{slug}` ) → **`create-tasks`** ( **`tasks approved`** → one **`wayfinder:approved`** when unblocked ) → **`implement-task`** (checkout bundle branch → Method → **code-review** → push) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
 
 ---
 

@@ -84,11 +84,36 @@ Synonyms accepted if unambiguous: "approve the tasks", "approve task #N", "appro
 
 ### Deferred **`wayfinder:approved`** (WF-ECO-GM-026)
 
-On **`tasks approved`**, set **Status:** `ready` for all approved tasks. Add **`wayfinder:approved`** only when **Blocked by** is empty or every listed blocker is **closed** or **`awaiting-reconcile`**.
+On **`tasks approved`**, set **Status:** `ready` for **all** approved tasks. Add **`wayfinder:approved`** only when **Blocked by** is empty or every listed blocker is **closed** or **`awaiting-reconcile`**.
+
+| Blocker state | Label action |
+|---------------|--------------|
+| No blockers (or **Blocked by:** `—`) | Add **`wayfinder:approved`** per one-eligible-task rule below |
+| One or more blockers still **open** | **Defer** label — task stays `ready` without **`wayfinder:approved`** |
+| Blocker closed or **`awaiting-reconcile`** | Eligible for label add — [implement-task](../implement-task/SKILL.md) may add when unblocking dependents |
 
 When blockers remain, defer the label — [implement-task](../implement-task/SKILL.md) adds **`wayfinder:approved`** when blockers clear ([REFERENCE § Unblock and handoff](../implement-task/REFERENCE.md#unblock-and-handoff)).
 
-For bundles with multiple ready tasks and no blockers, add **`wayfinder:approved`** to **one** eligible task per approval decision (short agent prompt to pick the next logical slice). Full serial/git pipeline details: see define-bundle + create-tasks git task when scheduled.
+#### One eligible task per approval decision
+
+When multiple tasks are **`ready`** and unblocked after **`tasks approved`**, add **`wayfinder:approved`** to **one** task only — the next logical slice in build order.
+
+**Pick prompt** (narrate to human or AFK operator after approval):
+
+```text
+Eligible tasks (ready, unblocked): [#N title], [#M title], …
+Recommended next: #N — {one line: rollout order, dependency, or bundle scope summary rationale}
+Add wayfinder:approved to #N only; defer others until #N ships or reaches awaiting-reconcile.
+```
+
+Heuristics for the pick:
+
+1. **Rollout order** — when bundle body lists an Implementing frontier order, pick the first unblocked item
+2. **Blocked-by chain** — downstream tasks stay deferred until upstream clears
+3. **Dependency / foundation first** — infra or shared contract before consumers
+4. **Single remaining task** — add label to that task
+
+Do **not** add **`wayfinder:approved`** to every unblocked task in one approval pass — serial pickup (especially AFK) expects one frontier task at a time.
 
 ---
 

@@ -91,9 +91,10 @@ Use `gh issue edit --body-file` for full map body replacements.
 
 When the user says **`tasks approved`**, **`task approved`**, or issue comment **`approved`** (per task or all):
 
-1. **Task issue(s)** — set **Status:** `ready` in body; add label **`wayfinder:approved`** when unblocked ([REFERENCE § Deferred approval](REFERENCE.md#deferred-wayfinderapproved-wf-eco-gm-026))
-2. **Map Implementing** — update Status column to `ready` for approved tasks
-3. **Comment** on each task — ready for implementation
+1. **Task issue(s)** — set **Status:** `ready` in body for all approved tasks
+2. **`wayfinder:approved`** — add **only when unblocked**; when multiple tasks are ready and unblocked, add to **one** eligible task per approval decision ([REFERENCE § Deferred approval](REFERENCE.md#deferred-wayfinderapproved-wf-eco-gm-026) — use pick prompt)
+3. **Map Implementing** — update Status column to `ready` for approved tasks
+4. **Comment** on each task — ready for implementation; note deferred label if blockers remain
 
 **Default:** do not start implementation without **`wayfinder:approved`** on the task. AFK pickup requires **## Method** populated before the label is added.
 
@@ -101,7 +102,8 @@ When the user says **`tasks approved`**, **`task approved`**, or issue comment *
 
 Tell the user:
 
-- **Next:** implement from the ready task(s) — agent or human worker picks up **`wayfinder:approved`** tasks
+- **Next:** implement from the ready task(s) with **`wayfinder:approved`** — [implement-task](../implement-task/SKILL.md) on bundle **Branch:** from [define-bundle](../define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027)
+- Deferred tasks: label added when blockers clear (implement-task unblock scan) or on a later **`tasks approved`** pass with the one-eligible-task pick
 - On completion: invoke wayfinder **Reconcile** with **`Approved — reconcile and close`** on the task issue
 
 ## Implementation Reconcile (after ship)

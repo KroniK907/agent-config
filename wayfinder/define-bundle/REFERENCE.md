@@ -9,6 +9,8 @@ Use for GitHub issue body. Title: `Bundle: {short name}`.
 
 **Status:** draft | approved
 
+**Branch:** afk/bundle-{issue-num}-{slug}   *(draft: proposed; approved: confirmed — see [Bundle branch](#bundle-branch-wf-eco-gm-027))*
+
 ## Map
 
 Parent: [{FeatureName}:Map](map-issue-url) · slug `{MAP-SLUG}` · decision log [#N](log-url)
@@ -63,7 +65,7 @@ For product bundles with user stories, replace the `N/A` line with story bullets
 
 | User says | Agent may |
 |-----------|-----------|
-| **bundle approved** | Set bundle Status `approved`; update map Decision coverage (`scoped` + link); append log suffixes; optional Notes line |
+| **bundle approved** | Set bundle Status `approved`; create and push bundle git branch; persist **Branch:** on bundle body; update map Decision coverage (`scoped` + link); append log suffixes; optional Notes line |
 | (edits requested) | Update draft bundle body in place; keep Status `draft` |
 | (no approval) | Narrate or post draft only; **do not** write coverage or suffixes |
 
@@ -123,6 +125,60 @@ Do not alter binding prose before the suffix.
 
 ---
 
+## Bundle branch (WF-ECO-GM-027)
+
+All implementation tasks for a bundle commit and **push** on one shared branch. **Agents never open PRs** — humans open a PR when the bundle is complete.
+
+### Naming pattern
+
+```text
+afk/bundle-{issue-num}-{slug}
+```
+
+| Part | Rule |
+|------|------|
+| `{issue-num}` | Bundle issue number (e.g. `23` for `#23`) |
+| `{slug}` | Short kebab-case from bundle **Name** (e.g. `afk-v1` from "AFK v1 — skills…") |
+
+Example: bundle [#23](https://github.com/KroniK907/skills/issues/23) → **`afk/bundle-23-afk-v1`**
+
+### Draft bundle
+
+When creating or updating a draft bundle issue, **propose the full `Branch:` line** in the body (after **Status**). Use the naming pattern above; human may edit before approval.
+
+```markdown
+**Status:** draft
+
+**Branch:** afk/bundle-23-afk-v1
+```
+
+Do **not** create the git branch while Status is `draft`.
+
+### On `bundle approved`
+
+After setting Status `approved` and before handoff to create-tasks:
+
+1. **Confirm branch name** — use the draft **Branch:** line; human may edit the slug in chat before approval (e.g. "bundle approved with branch `afk/bundle-23-my-name`")
+2. **Create branch** — from default branch (usually `main`):
+
+```powershell
+git fetch origin
+git checkout main
+git pull origin main
+git checkout -b <branch-name>
+git push -u origin <branch-name>
+```
+
+3. **Persist** — set **Branch:** on the bundle body to the confirmed name (`gh issue edit`)
+
+[implement-task](../implement-task/SKILL.md) reads **Branch:** from the approved bundle at pickup; [create-tasks](../create-tasks/SKILL.md) does not create branches.
+
+### Human edit gate
+
+The **Branch:** line is the human edit gate at **`bundle approved`**. Agent proposes in draft; human confirms or renames when approving. Once approved, branch name is stable for the bundle lifecycle unless human explicitly edits the bundle body.
+
+---
+
 ## Route heuristics (for wayfinder)
 
 Suggest **define-bundle** when:
@@ -133,4 +189,4 @@ Suggest **define-bundle** when:
 
 Prefer planning frontier skills (grill-me, research ticket, etc.) when rows are still **`open`** because work is incomplete — not because fog exists elsewhere on the map.
 
-After approval, suggest **create-tasks** (or direct implementation if create-tasks is unavailable).
+After approval, suggest **create-tasks** (or direct implementation if create-tasks is unavailable). Narrate that the bundle **Branch:** is set and pushed — create-tasks and implement-task use it for all bundle task commits.
