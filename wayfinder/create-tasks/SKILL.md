@@ -60,14 +60,16 @@ Create early with `gh issue create` or update drafts in place.
 |-------|--------|
 | Title | `Task: {short name}` |
 | Labels | `wayfinder:task` or `wayfinder:prototype` + `wayfinder:hitl` or `wayfinder:afk` |
-| Body | Per [REFERENCE.md](REFERENCE.md#task-issue-template) |
+| Body | Per [REFERENCE.md](REFERENCE.md#task-issue-template) — include **## Method** at draft |
 | **Status** | `draft` |
 
 **Parent bundle:** link in **Parent bundle** section (body link only; native sub-issues optional).
 
 **Decisions:** copy bundle **Decisions** rows **verbatim** + relevant **Constraints** the task must honor.
 
-Fill **What to build**, **Outcomes/stories covered**, **Done when**, **Blocked by**.
+Fill **What to build**, **## Method**, **Outcomes/stories covered**, **Done when**, **Blocked by**.
+
+**Method (required at draft):** Propose **## Method** for every task when splitting — pick from `wayfinder/` or `wayfinder/actions/` skills (frontmatter `name`). Repo-root one-offs only when the human explicitly sets them. **AFK tasks** must have a valid **## Method** before **`wayfinder:approved`**; [implement-task](../implement-task/SKILL.md) fail-closes without one. See [REFERENCE § Method field](REFERENCE.md#method-field) and [implement-task Method validation](../implement-task/REFERENCE.md#method-validation).
 
 Post or narrate drafts; end with: *Review the tasks — reply **scope approved** when the split is accepted, or request edits.*
 
@@ -89,11 +91,11 @@ Use `gh issue edit --body-file` for full map body replacements.
 
 When the user says **`tasks approved`**, **`task approved`**, or issue comment **`approved`** (per task or all):
 
-1. **Task issue(s)** — set **Status:** `ready` in body; add label **`wayfinder:approved`**
+1. **Task issue(s)** — set **Status:** `ready` in body; add label **`wayfinder:approved`** when unblocked ([REFERENCE § Deferred approval](REFERENCE.md#deferred-wayfinderapproved-wf-eco-gm-026))
 2. **Map Implementing** — update Status column to `ready` for approved tasks
 3. **Comment** on each task — ready for implementation
 
-**Default:** do not start implementation without **`wayfinder:approved`** on the task.
+**Default:** do not start implementation without **`wayfinder:approved`** on the task. AFK pickup requires **## Method** populated before the label is added.
 
 ### 6. Hand off
 
@@ -117,7 +119,7 @@ See [REFERENCE.md](REFERENCE.md#implementation-reconcile).
 1. **Approved bundle only** — never split draft bundles
 2. **Planning To Do stays separate** — **Implementing** is the implementation frontier; do not move planning tickets
 3. **Globals inherited** — copy bundle **Constraints** into each task **Decisions**; never mark constraint-only GMs **`assigned`**
-4. **Draft early** — create task issues while split is still being refined; update in place
+4. **Draft early** — create task issues while split is still being refined; update in place; always include **## Method** at draft
 5. **No bundle edits** — create-tasks does not change bundle Status or re-scope GM rows
 
 ## Quick start

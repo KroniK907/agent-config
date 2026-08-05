@@ -7,7 +7,7 @@ Use for GitHub issue body. Title: `Task: {short name}`.
 ```markdown
 # Task: {short name}
 
-**Status:** draft | ready
+**Status:** draft | ready | awaiting-reconcile
 
 ## Parent bundle
 
@@ -16,6 +16,12 @@ Use for GitHub issue body. Title: `Task: {short name}`.
 ## What to build
 
 {Concrete deliverables for this vertical slice; 1–2 paragraphs + bullet list when helpful.}
+
+## Method
+
+**Skill:** {skill-name}
+
+{One line — why this Method for this slice. Propose from `wayfinder/` or `wayfinder/actions/`; repo-root one-offs only when human sets explicitly.}
 
 ## Decisions
 
@@ -40,6 +46,27 @@ N/A — meta/infra
 
 For product tasks with user stories, replace the `N/A` line with story bullets and use **Done when** as acceptance criteria.
 
+### Status lifecycle
+
+| Status | Set by | Meaning |
+|--------|--------|---------|
+| `draft` | create-tasks | Task created; split not yet promoted to pickup |
+| `ready` | create-tasks on **`tasks approved`** | Eligible for [implement-task](../implement-task/SKILL.md) pickup |
+| `awaiting-reconcile` | **implement-task only** | Work pushed; resolution posted; awaits human Reconcile |
+
+create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`awaiting-reconcile`** — do not use that status when splitting or approving tasks.
+
+### Method field
+
+**Required at draft.** Propose a skill from the ecosystem Method pool when minting each task:
+
+- Default pool: **`wayfinder/**/<name>/SKILL.md`** in the pinned skills pack (`wayfinder/actions/<name>/` for bundle build playbooks)
+- Repo-root one-offs (`tdd`, `commit`, `write-a-skill`, …) valid **only** when the human explicitly sets them on **## Method**
+
+**AFK pickup:** **## Method** must name a valid skill before **`wayfinder:approved`** — [implement-task](../implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks.
+
+**Validation at pickup:** see [implement-task REFERENCE § Method validation](../implement-task/REFERENCE.md#method-validation).
+
 ---
 
 ## Approval phrases
@@ -47,13 +74,21 @@ For product tasks with user stories, replace the `N/A` line with story bullets a
 | User says | Agent may |
 |-----------|-----------|
 | **scope approved** | Add map **Implementing** rows; set Decision coverage **`assigned`** + task links for bundle-scoped GMs |
-| **tasks approved** / **task approved** / issue comment **approved** | Set task Status `ready`; add **`wayfinder:approved`**; update Implementing Status → `ready` |
+| **tasks approved** / **task approved** / issue comment **approved** | Set task Status `ready`; add **`wayfinder:approved`** when **unblocked** (see deferred approval below); update Implementing Status → `ready` |
 | (edits requested) | Update draft task bodies in place; keep Status `draft`; no `wayfinder:approved` |
 | (no approval) | Narrate or post drafts only; **do not** write Implementing or coverage |
 
 Synonyms accepted if unambiguous: "approve the tasks", "approve task #N", "approved" on a specific task thread.
 
 **Separate from Reconcile:** `scope approved` / `tasks approved` are owned by **create-tasks**. wayfinder **Reconcile** owns implementation task close + coverage **`implemented`**.
+
+### Deferred **`wayfinder:approved`** (WF-ECO-GM-026)
+
+On **`tasks approved`**, set **Status:** `ready` for all approved tasks. Add **`wayfinder:approved`** only when **Blocked by** is empty or every listed blocker is **closed** or **`awaiting-reconcile`**.
+
+When blockers remain, defer the label — [implement-task](../implement-task/SKILL.md) adds **`wayfinder:approved`** when blockers clear ([REFERENCE § Unblock and handoff](../implement-task/REFERENCE.md#unblock-and-handoff)).
+
+For bundles with multiple ready tasks and no blockers, add **`wayfinder:approved`** to **one** eligible task per approval decision (short agent prompt to pick the next logical slice). Full serial/git pipeline details: see define-bundle + create-tasks git task when scheduled.
 
 ---
 
