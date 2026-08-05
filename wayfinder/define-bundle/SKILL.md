@@ -13,10 +13,10 @@ Runs on a wayfinder map + its decision log. After approval, hand off to [create-
 
 | Skill | When instead |
 |-------|----------------|
-| [wayfinder](../wayfinder/SKILL.md) | Chart, Materialize, Reconcile, Route only |
+| [wayfinder](../SKILL.md) | Chart, Materialize, Reconcile, Route only |
 | [grill-me](../grill-me/SKILL.md) | Resolve unknowns → new binding GM rows |
 | [create-tasks](../create-tasks/SKILL.md) | Split an **approved** bundle into implementation tasks |
-| [write-a-prd](../write-a-prd/SKILL.md) | Small map-free scope only |
+| [write-a-prd](../../write-a-prd/SKILL.md) | Small map-free scope only |
 
 ## Prerequisites
 

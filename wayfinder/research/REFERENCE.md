@@ -146,7 +146,7 @@ Research sessions are **non-binding fact-gathering** (WF-ECO-GM-017):
 
 1. Human reviews findings and **Proposed tracker updates**
 2. For decisions → [grill-me](../grill-me/SKILL.md) or [strategic-ideation](../strategic-ideation/SKILL.md) on findings
-3. For tracker sync → invoke wayfinder **Reconcile** with human **Approved — reconcile and close** (or **keep open**)
+3. For tracker sync → invoke wayfinder **Reconcile** with human **Approved — reconcile and close** (or **keep open**). Reconcile merges research **Proposed tracker updates** into its [holistic resolution template](../REFERENCE.md#reconcile-resolution-template).
 
 **Follow-up research:** New session on same ticket posts a **new comment**; prior runs preserved in thread.
 

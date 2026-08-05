@@ -7,16 +7,16 @@ description: Split an approved wayfinder bundle into draft implementation tasks 
 
 Split an **approved** bundle issue (`wayfinder:bundle`, Status `approved`) into agent-run-sized **thin vertical slices** as draft implementation issues, then on human approval sync map **Implementing** + **Decision coverage**. Does **not** implement product code unless the task itself is the work.
 
-Runs on an approved bundle + parent map + decision log. After **`tasks approved`**, hand off to implementation; on ship, invoke [wayfinder](../wayfinder/SKILL.md) **Reconcile** to close the task and move coverage to **`implemented`**.
+Runs on an approved bundle + parent map + decision log. After **`tasks approved`**, hand off to implementation; on ship, invoke [wayfinder](../SKILL.md) **Reconcile** to close the task and move coverage to **`implemented`**.
 
 ## Not this skill
 
 | Skill | When instead |
 |-------|----------------|
-| [wayfinder](../wayfinder/SKILL.md) | Chart, Materialize, Reconcile, Route only |
+| [wayfinder](../SKILL.md) | Chart, Materialize, Reconcile, Route only |
 | [define-bundle](../define-bundle/SKILL.md) | Coalesce GM rows into draft/approved bundles |
 | [grill-me](../grill-me/SKILL.md) | Resolve unknowns → new binding GM rows |
-| [write-a-prd](../write-a-prd/SKILL.md) | Small map-free scope only |
+| [write-a-prd](../../write-a-prd/SKILL.md) | Small map-free scope only |
 
 ## Prerequisites
 
@@ -104,7 +104,7 @@ Tell the user:
 
 ## Implementation Reconcile (after ship)
 
-Owned by [wayfinder](../wayfinder/SKILL.md) **Reconcile**, not create-tasks. On **`Approved — reconcile and close`** for an implementation task:
+Owned by [wayfinder](../SKILL.md) **Reconcile**, not create-tasks. On **`Approved — reconcile and close`** for an implementation task:
 
 1. Close task issue; remove **`wayfinder:approved`** label
 2. **Map Implementing** — move row gist to **Completed**

@@ -15,7 +15,7 @@ Typically runs **after** wayfinder **Chart** creates the map skeleton and decisi
 |-------|----------------|
 | [strategic-ideation](../strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune; idea-level tradeoffs |
 | [grill-me](../grill-me/SKILL.md) | Depth-first Q&A on one branch; resolves a single ticket **Question** |
-| [wayfinder](../wayfinder/SKILL.md) | Create map, materialize To Do tickets, reconcile, routing |
+| [wayfinder](../SKILL.md) | Create map, materialize To Do tickets, reconcile, routing |
 
 ## Prerequisites
 

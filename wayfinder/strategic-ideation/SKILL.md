@@ -13,7 +13,7 @@ Take a **simple seed** (or chat history) and grow an **oversized** picture throu
 |-------|----------------|
 | [feature-discovery](../feature-discovery/SKILL.md) | Chart phase: breadth-first zone triage → map-discovery comment |
 | [grill-me](../grill-me/SKILL.md) | Depth-first Q&A on one implementation branch; resolves a ticket **Question** |
-| [wayfinder](../wayfinder/SKILL.md) | Map/issues tracker, materialize, reconcile, next-step routing |
+| [wayfinder](../SKILL.md) | Map/issues tracker, materialize, reconcile, next-step routing |
 
 ## When to use (typical triggers)
 

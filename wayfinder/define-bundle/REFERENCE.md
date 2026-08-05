@@ -87,7 +87,7 @@ Per WF-ECO-GM-021:
 
 On **`bundle approved`**, only rows listed in **Decisions** receive the suffix and **`scoped`** coverage update.
 
-Reconcile proposes **`[global]`** vs bundle-scoped when appending new rows; human confirms. Default **`[global]` when unsure**.
+Reconcile proposes **`[global]`** vs bundle-scoped when appending new rows; human confirms. Default **`[global]` when unsure**. Reconcile may also propose **bundle cluster suggestions** in the resolution comment — human runs define-bundle to draft/approve bundle issues.
 
 ---
 

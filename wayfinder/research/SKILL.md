@@ -13,7 +13,7 @@ Load a **`wayfinder:research`** ticket, investigate per [behavior rules](REFEREN
 
 | Skill | When instead |
 |-------|----------------|
-| [wayfinder](../wayfinder/SKILL.md) | Chart, Materialize, Reconcile, Route only |
+| [wayfinder](../SKILL.md) | Chart, Materialize, Reconcile, Route only |
 | [grill-me](../grill-me/SKILL.md) | Depth-first Q&A → binding `{MAP-SLUG}-GM-*` rows |
 | [strategic-ideation](../strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune |
 | [feature-discovery](../feature-discovery/SKILL.md) | Breadth-first zone triage before tickets exist |
@@ -37,7 +37,7 @@ From the ticket: **Question**, **Done when** bullets, **Map** link, optional **S
 
 From the map: slug, decision log link, **Notes**, relevant **Not yet specified** fog.
 
-**Gate:** Ticket must be labelled `wayfinder:research`. If the **Question** is scope/strategy shape rather than fact-gathering, hand off to [strategic-ideation](../strategic-ideation/SKILL.md) or [grill-me](../grill-me/SKILL.md) per [wayfinder routing](../wayfinder/REFERENCE.md#routing-table).
+**Gate:** Ticket must be labelled `wayfinder:research`. If the **Question** is scope/strategy shape rather than fact-gathering, hand off to [strategic-ideation](../strategic-ideation/SKILL.md) or [grill-me](../grill-me/SKILL.md) per [wayfinder routing](../REFERENCE.md#routing-table).
 
 ### 2. Investigate
 
