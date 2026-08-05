@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Build throwaway prototypes to answer a design question — logic/state demos or multi-variant UI on a route. Method playbook for wayfinder:prototype bundle tasks; dispatched by implement-task.
+description: Build throwaway prototypes to answer a design question — logic/state demos or multi-variant UI on a route. Method playbook for wf:prototype bundle tasks; dispatched by implement-task.
 ---
 
 # Prototype
@@ -11,7 +11,7 @@ Dispatched by [implement-task](../../implement-task/SKILL.md) on bundle branch a
 
 ## When to use
 
-- **`wayfinder:prototype`** implementation task with **## Method:** `prototype`
+- **`wf:prototype`** implementation task with **## Method:** `prototype`
 - Task **What to build** asks to sanity-check logic/state or explore what a UI should look like
 
 ## Not this skill

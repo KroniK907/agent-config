@@ -1,8 +1,8 @@
 # AFK bootstrap checklist
 
-Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup ([WF-ECO-GM-028](https://github.com/KroniK907/skills/issues/11)). Complete every step in an **app implementation repo** before adding `wayfinder:afk` tasks or enabling label-trigger automation.
+Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Complete every step in an **app implementation repo** before adding `wf:afk` tasks or enabling label-trigger automation.
 
-**Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/skills`](https://github.com/KroniK907/skills) pinned to a **semver tag**; one automation per repo; agents **never open PRs** — bundle branch + resolution comment only ([WF-ECO-GM-027](https://github.com/KroniK907/skills/issues/11)).
+**Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/skills`](https://github.com/KroniK907/skills) pinned to a **semver tag**; one automation per repo; agents **never open PRs** — bundle branch + resolution comment only.
 
 ---
 
@@ -30,12 +30,12 @@ Run once per app repo from any checkout that includes this skills pack:
 bash wayfinder/bootstrap/bootstrap-labels.sh
 ```
 
-Manifest: [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) — includes **`wayfinder:afk-running`** (serial queue lock).
+Manifest: [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) — includes **`wf:afk-running`** (serial queue lock) and **`wf:needs-review`** (approval gate pending).
 
 Verify:
 
 ```powershell
-gh label list --limit 100 | Select-String wayfinder:
+gh label list --limit 100 | Select-String wf:
 ```
 
 ---
@@ -80,12 +80,12 @@ gh auth status
 ## 4. Duplicate Cursor automation (one per repo)
 
 1. Open Cursor **Automations** for the app repo.
-2. Create **one** repo-scoped automation — trigger: **`wayfinder:approved` label added**.
-3. Paste prompt from [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md) (references [implement-task #29](https://github.com/KroniK907/skills/issues/29)).
+2. Create **one** repo-scoped automation — trigger: **`wf:approved` label added**.
+3. Paste prompt from [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md).
 4. **Disable PR creation** in automation settings.
 5. Save and note the automation name for your runbook.
 
-The prompt references **`implement-task`** as the sole orchestration entry ([WF-ECO-GM-029](https://github.com/KroniK907/skills/issues/11)). Task bodies are identical for HITL and AFK — contract lives in implement-task + this automation ([WF-ECO-GM-025](https://github.com/KroniK907/skills/issues/11)).
+The prompt references **`implement-task`** as the sole orchestration entry. Task bodies are identical for HITL and AFK — contract lives in implement-task + this automation.
 
 ---
 
@@ -93,16 +93,16 @@ The prompt references **`implement-task`** as the sole orchestration entry ([WF-
 
 Run at least **one** implementation task manually before enabling AFK on production frontier work:
 
-1. Chart / define-bundle / create-tasks through to a **`wayfinder:approved`** HITL task with **Status:** `ready`.
+1. Chart / define-bundle / create-tasks through to a **`wf:approved`** HITL task with **Status:** `ready`.
 2. In chat: `/implement-task` on that task (or invoke implement-task skill with issue `#N`).
 3. Confirm: bundle branch checkout, Method build, code-review, push, resolution comment, **Status:** `awaiting-reconcile`.
 4. Reconcile with **`Approved — reconcile and close`**.
 
 Only after HITL smoke passes:
 
-- [ ] Add **`wayfinder:afk`** label to AFK-mode tasks at create-tasks approval time
+- [ ] Add **`wf:afk`** label to AFK-mode tasks at create-tasks approval time
 - [ ] Enable the label automation from step 4
-- [ ] Confirm serial queue: only one open issue should hold **`wayfinder:afk-running`** at a time
+- [ ] Confirm serial queue: only one open issue should hold **`wf:afk-running`** at a time
 
 ---
 
@@ -122,7 +122,7 @@ Only after HITL smoke passes:
 | Path | Purpose |
 |------|---------|
 | [AFK-BOOTSTRAP.md](AFK-BOOTSTRAP.md) | This checklist |
-| [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) | Canonical `wayfinder:*` labels |
+| [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) | Canonical `wf:*` labels |
 | [bootstrap/bootstrap-labels.ps1](bootstrap/bootstrap-labels.ps1) | Label bootstrap (Windows) |
 | [bootstrap/bootstrap-labels.sh](bootstrap/bootstrap-labels.sh) | Label bootstrap (Unix) |
 | [bootstrap/environment.json.example](bootstrap/environment.json.example) | Cloud Agent env template |

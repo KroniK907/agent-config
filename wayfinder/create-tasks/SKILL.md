@@ -1,11 +1,11 @@
 ---
 name: create-tasks
-description: Split an approved wayfinder bundle into draft implementation tasks and sync map Implementing rows on scope and task approval. Use when a wayfinder:bundle is approved, wayfinder Route suggests create-tasks, or the user wants implementation tasks from a bundle.
+description: Split an approved wayfinder bundle into draft implementation tasks and sync map Implementing rows on scope and task approval. Use when a wf:bundle is approved, wayfinder Route suggests create-tasks, or the user wants implementation tasks from a bundle.
 ---
 
 # Create tasks
 
-Split an **approved** bundle issue (`wayfinder:bundle`, Status `approved`) into agent-run-sized **thin vertical slices** as draft implementation issues, then on human approval sync map **Implementing** + **Decision coverage**. Does **not** implement product code unless the task itself is the work.
+Split an **approved** bundle issue (`wf:bundle`, Status `approved`) into agent-run-sized **thin vertical slices** as draft implementation issues, then on human approval sync map **Implementing** + **Decision coverage**. Does **not** implement product code unless the task itself is the work.
 
 Runs on an approved bundle + parent map + decision log. After **`tasks approved`**, hand off to implementation; on ship, invoke [wayfinder](../SKILL.md) **Reconcile** to close the task and move coverage to **`implemented`**.
 
@@ -20,10 +20,10 @@ Runs on an approved bundle + parent map + decision log. After **`tasks approved`
 
 ## Prerequisites
 
-- Approved bundle issue (`wayfinder:bundle`, **Status:** `approved`)
+- Approved bundle issue (`wf:bundle`, **Status:** `approved`)
 - Parent map with **Implementing** table and **Decision coverage**
 - `gh` authenticated on the target repo
-- Labels `wayfinder:task` or `wayfinder:prototype`, `wayfinder:hitl` or `wayfinder:afk`, `wayfinder:approved`
+- Labels `wf:task` or `wf:prototype`, `wf:hitl` or `wf:afk`, `wf:approved`
 
 ## Workflow
 
@@ -59,7 +59,7 @@ Create early with `gh issue create` or update drafts in place.
 | Field | Value |
 |-------|--------|
 | Title | `Task: {short name}` |
-| Labels | `wayfinder:task` or `wayfinder:prototype` + `wayfinder:hitl` or `wayfinder:afk` |
+| Labels | `wf:task` or `wf:prototype` + `wf:hitl` or `wf:afk` |
 | Body | Per [REFERENCE.md](REFERENCE.md#task-issue-template) — include **## Method** at draft |
 | **Status** | `draft` |
 
@@ -69,9 +69,11 @@ Create early with `gh issue create` or update drafts in place.
 
 Fill **What to build**, **## Method**, **Outcomes/stories covered**, **Done when**, **Blocked by**.
 
-**Method (required at draft):** Propose **## Method** for every task when splitting — pick from `wayfinder/` or `wayfinder/actions/` skills (frontmatter `name`). Repo-root one-offs only when the human explicitly sets them. **AFK tasks** must have a valid **## Method** before **`wayfinder:approved`**; [implement-task](../implement-task/SKILL.md) fail-closes without one. See [REFERENCE § Method field](REFERENCE.md#method-field) and [implement-task Method validation](../implement-task/REFERENCE.md#method-validation).
+**Method (required at draft):** Propose **## Method** for every task when splitting — pick from `wayfinder/` or `wayfinder/actions/` skills (frontmatter `name`). Repo-root one-offs only when the human explicitly sets them. **AFK tasks** must have a valid **## Method** before **`wf:approved`**; [implement-task](../implement-task/SKILL.md) fail-closes without one. See [REFERENCE § Method field](REFERENCE.md#method-field) and [implement-task Method validation](../implement-task/REFERENCE.md#method-validation).
 
 Post or narrate drafts; end with: *Review the tasks — reply **scope approved** when the split is accepted, or request edits.*
+
+Add label **`wf:needs-review`** to each draft task issue.
 
 **Default:** do not run **`scope approved`** writes without the explicit phrase.
 
@@ -85,24 +87,24 @@ When the user says **`scope approved`** (optionally naming task issues):
 
 Use `gh issue edit --body-file` for full map body replacements.
 
-**Do not** add `wayfinder:approved` or set Status `ready` yet.
+**Do not** add `wf:approved` or set Status `ready` yet. Keep **`wf:needs-review`** until **`tasks approved`**.
 
 ### 5. On `tasks approved`
 
 When the user says **`tasks approved`**, **`task approved`**, or issue comment **`approved`** (per task or all):
 
-1. **Task issue(s)** — set **Status:** `ready` in body for all approved tasks
-2. **`wayfinder:approved`** — add **only when unblocked**; when multiple tasks are ready and unblocked, add to **one** eligible task per approval decision ([REFERENCE § Deferred approval](REFERENCE.md#deferred-wayfinderapproved-wf-eco-gm-026) — use pick prompt)
+1. **Task issue(s)** — set **Status:** `ready` in body for all approved tasks; remove label **`wf:needs-review`**
+2. **`wf:approved`** — add **only when unblocked**; when multiple tasks are ready and unblocked, add to **one** eligible task per approval decision ([REFERENCE § Deferred approval](REFERENCE.md#deferred-wayfinderapproved-wf-eco-gm-026) — use pick prompt)
 3. **Map Implementing** — update Status column to `ready` for approved tasks
 4. **Comment** on each task — ready for implementation; note deferred label if blockers remain
 
-**Default:** do not start implementation without **`wayfinder:approved`** on the task. AFK pickup requires **## Method** populated before the label is added.
+**Default:** do not start implementation without **`wf:approved`** on the task. AFK pickup requires **## Method** populated before the label is added.
 
 ### 6. Hand off
 
 Tell the user:
 
-- **Next:** implement from the ready task(s) with **`wayfinder:approved`** — [implement-task](../implement-task/SKILL.md) on bundle **Branch:** from [define-bundle](../define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027)
+- **Next:** implement from the ready task(s) with **`wf:approved`** — [implement-task](../implement-task/SKILL.md) on bundle **Branch:** from [define-bundle](../define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027)
 - Deferred tasks: label added when blockers clear (implement-task unblock scan) or on a later **`tasks approved`** pass with the one-eligible-task pick
 - On completion: invoke wayfinder **Reconcile** with **`Approved — reconcile and close`** on the task issue
 
@@ -110,7 +112,7 @@ Tell the user:
 
 Owned by [wayfinder](../SKILL.md) **Reconcile**, not create-tasks. On **`Approved — reconcile and close`** for an implementation task:
 
-1. Close task issue; remove **`wayfinder:approved`** label
+1. Close task issue; remove **`wf:approved`** and **`wf:needs-review`** labels
 2. **Map Implementing** — move row gist to **Completed**
 3. **Decision coverage** — bundle-scoped GMs fully shipped by this task → **`implemented`**, linked issue stays task URL
 
@@ -128,6 +130,6 @@ See [REFERENCE.md](REFERENCE.md#implementation-reconcile).
 
 User: "Split bundle #N into tasks on map #M."
 
-Load bundle #N + map #M → propose split → create draft `wayfinder:task` issue(s) → user says **`scope approved`** → sync Implementing + coverage → user says **`tasks approved`** → add `wayfinder:approved` → implement.
+Load bundle #N + map #M → propose split → create draft `wf:task` issue(s) → user says **`scope approved`** → sync Implementing + coverage → user says **`tasks approved`** → add `wf:approved` → implement.
 
 See [REFERENCE.md](REFERENCE.md) for task template, approval phrases, and coverage updates.

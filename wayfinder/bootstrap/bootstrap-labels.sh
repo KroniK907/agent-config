@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bootstrap wayfinder:* GitHub labels from labels-manifest.json.
+# Bootstrap wf:* GitHub labels from labels-manifest.json.
 # Idempotent: gh label create --force updates existing labels.
 set -euo pipefail
 

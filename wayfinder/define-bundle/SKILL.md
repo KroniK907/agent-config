@@ -5,7 +5,7 @@ description: Coalesce map decision-log clusters into draft build bundle issues a
 
 # Define bundle
 
-Coalesce **`open`** decision-log rows into a **draft bundle issue** (`wayfinder:bundle`), then on human **`bundle approved`** promote it and sync map **Decision coverage** + log suffixes. Maps implement incrementally — do **not** wait for empty To Do, a PRD, or cleared fog.
+Coalesce **`open`** decision-log rows into a **draft bundle issue** (`wf:bundle`), then on human **`bundle approved`** promote it and sync map **Decision coverage** + log suffixes. Maps implement incrementally — do **not** wait for empty To Do, a PRD, or cleared fog.
 
 Runs on a wayfinder map + its decision log. After approval, hand off to [create-tasks](../create-tasks/SKILL.md) or implement directly from the bundle when splitting is unnecessary.
 
@@ -20,9 +20,9 @@ Runs on a wayfinder map + its decision log. After approval, hand off to [create-
 
 ## Prerequisites
 
-- Map issue (`wayfinder:map`) with **Decision coverage** table and linked decision log
+- Map issue (`wf:map`) with **Decision coverage** table and linked decision log
 - `gh` authenticated on the target repo
-- Label `wayfinder:bundle` available
+- Label `wf:bundle` available
 
 ## Workflow
 
@@ -61,7 +61,7 @@ Create early with `gh issue create` or update an existing draft in place.
 | Field | Value |
 |-------|--------|
 | Title | `Bundle: {short name}` |
-| Label | `wayfinder:bundle` |
+| Label | `wf:bundle` |
 | Body | Per [REFERENCE.md](REFERENCE.md#bundle-issue-template) |
 | **Status** | `draft` |
 
@@ -77,13 +77,15 @@ Fill **Scope summary**, **Boundaries**, **Open questions**, **User stories or Ou
 
 Post or narrate the draft; end with: *Review the bundle — reply **bundle approved** when scope is accepted (optionally confirm or rename **Branch:**), or request edits.*
 
+Add label **`wf:needs-review`** to the draft bundle issue.
+
 **Default:** do not run **`bundle approved`** writes without the explicit phrase.
 
 ### 4. On `bundle approved`
 
 When the user says **`bundle approved`** (optionally naming the bundle issue or confirming/editing **Branch:**):
 
-1. **Bundle issue** — set **Status:** `approved` in body (`gh issue edit`)
+1. **Bundle issue** — set **Status:** `approved` in body (`gh issue edit`); remove label **`wf:needs-review`**
 2. **Git branch** — create and push the confirmed **`Branch:`** name per [REFERENCE § Bundle branch](REFERENCE.md#bundle-branch-wf-eco-gm-027); persist **Branch:** on bundle body
 3. **Map Decision coverage** — covered rows → **`scoped`**, **Linked issue** → bundle URL
 4. **Decision log body** — append ` — bundled via [#N](url)` to each covered row (immutable paragraph text before suffix)
@@ -114,6 +116,6 @@ Tell the user:
 
 User: "Bundle decision-log rows for a build slice on map #N."
 
-Load map #N + decision log → propose cluster → create draft `wayfinder:bundle` issue (with proposed **Branch:**) → user says **`bundle approved`** → create branch, sync coverage + suffixes → suggest create-tasks or direct implementation.
+Load map #N + decision log → propose cluster → create draft `wf:bundle` issue (with proposed **Branch:**) → user says **`bundle approved`** → create branch, sync coverage + suffixes → suggest create-tasks or direct implementation.
 
 See [REFERENCE.md](REFERENCE.md) for bundle template, approval phrases, and global-row rules.

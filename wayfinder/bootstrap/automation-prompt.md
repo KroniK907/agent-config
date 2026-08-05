@@ -1,13 +1,13 @@
 # Cursor automation prompt — wayfinder AFK implementation pickup
 
-Copy this prompt into **one repo-scoped Cursor automation** per implementation repository. Do **not** enable PR creation in the automation — agents push to the bundle branch only ([WF-ECO-GM-027](https://github.com/KroniK907/skills/issues/11)).
+Copy this prompt into **one repo-scoped Cursor automation** per implementation repository. Do **not** enable PR creation in the automation — agents push to the bundle branch only.
 
 ## Trigger
 
 | Setting | Value |
 |---------|--------|
 | Event | Issue label added |
-| Label | `wayfinder:approved` |
+| Label | `wf:approved` |
 | Scope | This repository only |
 
 Optional bypass: an issue comment containing `@cursor` on an AFK task skips the serial queue gate for that pickup ([implement-task REFERENCE](../implement-task/REFERENCE.md#5-afk-serial-gate--afk-only)).
@@ -26,12 +26,12 @@ You are picking up a wayfinder implementation task in AFK (unattended) mode.
    - Code review after Method (implement-task mode)
    - Commit + push to bundle branch — **never open PRs**
    - Post resolution comment; set task **Status:** awaiting-reconcile
-   - Never close the task; never remove wayfinder:approved; never post Reconcile approval phrases
+   - Never close the task; never remove wf:approved; never post Reconcile approval phrases
 4. On startup gate failure, post Blocked resolution per implement-task references/resolution-comment.md — no repo edits.
-5. At end-of-run: remove wayfinder:afk-running from this task; hand off to next eligible AFK task if any.
+5. At end-of-run: remove wf:afk-running from this task; hand off to next eligible AFK task if any.
 
 Contract references:
-- implement-task ([#29](https://github.com/KroniK907/skills/issues/29)): wayfinder/implement-task/SKILL.md + REFERENCE.md
+- implement-task: wayfinder/implement-task/SKILL.md + REFERENCE.md
 - Task body template (identical for HITL and AFK): wayfinder/create-tasks/REFERENCE.md
 - AFK bootstrap checklist: wayfinder/AFK-BOOTSTRAP.md
 

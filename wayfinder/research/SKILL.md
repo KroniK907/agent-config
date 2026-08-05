@@ -1,11 +1,11 @@
 ---
 name: research
-description: Investigate a wayfinder:research ticket, post structured findings as an issue comment, and propose non-binding tracker updates. Use when a wayfinder:research ticket is ready, wayfinder Route suggests research, or the user wants fact-gathering on a map research ticket.
+description: Investigate a wf:research ticket, post structured findings as an issue comment, and propose non-binding tracker updates. Use when a wf:research ticket is ready, wayfinder Route suggests research, or the user wants fact-gathering on a map research ticket.
 ---
 
 # Research
 
-Load a **`wayfinder:research`** ticket, investigate per [behavior rules](REFERENCE.md#behavior-rules), post a **structured findings comment** on the ticket, and hand off **non-binding Proposed tracker updates**. Does **not** append decision-log rows, post Reconcile approval phrases, or edit the map without human review.
+Load a **`wf:research`** ticket, investigate per [behavior rules](REFERENCE.md#behavior-rules), post a **structured findings comment** on the ticket, and hand off **non-binding Proposed tracker updates**. Does **not** append decision-log rows, post Reconcile approval phrases, or edit the map without human review.
 
 **v1 is human-initiated HITL only** — cloud AFK pickup deferred.
 
@@ -20,7 +20,7 @@ Load a **`wayfinder:research`** ticket, investigate per [behavior rules](REFEREN
 
 ## Prerequisites
 
-- Open **`wayfinder:research`** ticket (`wayfinder:todo` + `wayfinder:hitl` in v1) with **Question**, **Done when**, and **Map** sections
+- Open **`wf:research`** ticket (`wf:todo` + `wf:hitl` in v1) with **Question**, **Done when**, and **Map** sections
 - `gh` authenticated on the target repo (for posting findings comment)
 - Parent map + decision log links available from ticket **Map** section
 
@@ -37,7 +37,7 @@ From the ticket: **Question**, **Done when** bullets, **Map** link, optional **S
 
 From the map: slug, decision log link, **Notes**, relevant **Not yet specified** fog.
 
-**Gate:** Ticket must be labelled `wayfinder:research`. If the **Question** is scope/strategy shape rather than fact-gathering, hand off to [strategic-ideation](../strategic-ideation/SKILL.md) or [grill-me](../grill-me/SKILL.md) per [wayfinder routing](../REFERENCE.md#routing-table).
+**Gate:** Ticket must be labelled `wf:research`. If the **Question** is scope/strategy shape rather than fact-gathering, hand off to [strategic-ideation](../strategic-ideation/SKILL.md) or [grill-me](../grill-me/SKILL.md) per [wayfinder routing](../REFERENCE.md#routing-table).
 
 ### 2. Investigate
 

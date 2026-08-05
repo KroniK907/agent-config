@@ -63,7 +63,7 @@ create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`a
 - Default pool: **`wayfinder/**/<name>/SKILL.md`** in the pinned skills pack (`wayfinder/actions/<name>/` for bundle build playbooks)
 - Repo-root one-offs (`tdd`, `commit`, `writing-for-agents`, …) valid **only** when the human explicitly sets them on **## Method**
 
-**AFK pickup:** **## Method** must name a valid skill before **`wayfinder:approved`** — [implement-task](../implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks.
+**AFK pickup:** **## Method** must name a valid skill before **`wf:approved`** — [implement-task](../implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks.
 
 **Validation at pickup:** see [implement-task REFERENCE § Method validation](../implement-task/REFERENCE.md#method-validation).
 
@@ -73,37 +73,37 @@ create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`a
 
 | User says | Agent may |
 |-----------|-----------|
-| **scope approved** | Add map **Implementing** rows; set Decision coverage **`assigned`** + task links for bundle-scoped GMs |
-| **tasks approved** / **task approved** / issue comment **approved** | Set task Status `ready`; add **`wayfinder:approved`** when **unblocked** (see deferred approval below); update Implementing Status → `ready` |
-| (edits requested) | Update draft task bodies in place; keep Status `draft`; no `wayfinder:approved` |
-| (no approval) | Narrate or post drafts only; **do not** write Implementing or coverage |
+| **scope approved** | Add map **Implementing** rows; set Decision coverage **`assigned`** + task links for bundle-scoped GMs; keep **`wf:needs-review`** until **`tasks approved`** |
+| **tasks approved** / **task approved** / issue comment **approved** | Set task Status `ready`; remove **`wf:needs-review`**; add **`wf:approved`** when **unblocked** (see deferred approval below); update Implementing Status → `ready` |
+| (edits requested) | Update draft task bodies in place; keep Status `draft`; keep **`wf:needs-review`**; no `wf:approved` |
+| (no approval) | Narrate or post drafts only; add **`wf:needs-review`** on each draft task; **do not** write Implementing or coverage |
 
 Synonyms accepted if unambiguous: "approve the tasks", "approve task #N", "approved" on a specific task thread.
 
 **Separate from Reconcile:** `scope approved` / `tasks approved` are owned by **create-tasks**. wayfinder **Reconcile** owns implementation task close + coverage **`implemented`**.
 
-### Deferred **`wayfinder:approved`** (WF-ECO-GM-026)
+### Deferred **`wf:approved`** (WF-ECO-GM-026)
 
-On **`tasks approved`**, set **Status:** `ready` for **all** approved tasks. Add **`wayfinder:approved`** only when **Blocked by** is empty or every listed blocker is **closed** or **`awaiting-reconcile`**.
+On **`tasks approved`**, set **Status:** `ready` for **all** approved tasks. Add **`wf:approved`** only when **Blocked by** is empty or every listed blocker is **closed** or **`awaiting-reconcile`**.
 
 | Blocker state | Label action |
 |---------------|--------------|
-| No blockers (or **Blocked by:** `—`) | Add **`wayfinder:approved`** per one-eligible-task rule below |
-| One or more blockers still **open** | **Defer** label — task stays `ready` without **`wayfinder:approved`** |
+| No blockers (or **Blocked by:** `—`) | Add **`wf:approved`** per one-eligible-task rule below |
+| One or more blockers still **open** | **Defer** label — task stays `ready` without **`wf:approved`** |
 | Blocker closed or **`awaiting-reconcile`** | Eligible for label add — [implement-task](../implement-task/SKILL.md) may add when unblocking dependents |
 
-When blockers remain, defer the label — [implement-task](../implement-task/SKILL.md) adds **`wayfinder:approved`** when blockers clear ([REFERENCE § Unblock and handoff](../implement-task/REFERENCE.md#unblock-and-handoff)).
+When blockers remain, defer the label — [implement-task](../implement-task/SKILL.md) adds **`wf:approved`** when blockers clear ([REFERENCE § Unblock and handoff](../implement-task/REFERENCE.md#unblock-and-handoff)).
 
 #### One eligible task per approval decision
 
-When multiple tasks are **`ready`** and unblocked after **`tasks approved`**, add **`wayfinder:approved`** to **one** task only — the next logical slice in build order.
+When multiple tasks are **`ready`** and unblocked after **`tasks approved`**, add **`wf:approved`** to **one** task only — the next logical slice in build order.
 
 **Pick prompt** (narrate to human or AFK operator after approval):
 
 ```text
 Eligible tasks (ready, unblocked): [#N title], [#M title], …
 Recommended next: #N — {one line: rollout order, dependency, or bundle scope summary rationale}
-Add wayfinder:approved to #N only; defer others until #N ships or reaches awaiting-reconcile.
+Add wf:approved to #N only; defer others until #N ships or reaches awaiting-reconcile.
 ```
 
 Heuristics for the pick:
@@ -113,7 +113,7 @@ Heuristics for the pick:
 3. **Dependency / foundation first** — infra or shared contract before consumers
 4. **Single remaining task** — add label to that task
 
-Do **not** add **`wayfinder:approved`** to every unblocked task in one approval pass — serial pickup (especially AFK) expects one frontier task at a time.
+Do **not** add **`wf:approved`** to every unblocked task in one approval pass — serial pickup (especially AFK) expects one frontier task at a time.
 
 ---
 
@@ -154,7 +154,7 @@ When wayfinder **Reconcile** closes a shipped task (`Approved — reconcile and 
 | {MAP-SLUG}-GM-NNN | implemented | [#task](task-url) |
 ```
 
-Remove **`wayfinder:approved`** from the closed task. Move **Implementing** row gist to **Completed**.
+Remove **`wf:approved`** from the closed task. Move **Implementing** row gist to **Completed**.
 
 | Status | Meaning | Linked issue |
 |--------|---------|--------------|
@@ -202,12 +202,12 @@ Default (matches [define-bundle](../define-bundle/REFERENCE.md#bundle-issue-temp
 
 ## Implementation Reconcile
 
-After an agent or human ships a **`wayfinder:approved`** task:
+After an agent or human ships a **`wf:approved`** task:
 
 1. Post resolution comment on the task issue (what shipped, checklist against **Done when**)
 2. Human: **`Approved — reconcile and close`**
 3. wayfinder **Reconcile** executes:
-   - Close task; remove **`wayfinder:approved`**
+   - Close task; remove **`wf:approved`**
    - **Implementing** → **Completed** gist
    - Decision coverage **`implemented`** for GMs fully delivered by this task
 
@@ -220,9 +220,9 @@ create-tasks does **not** run implementation Reconcile — remind the user to in
 Suggest **create-tasks** when:
 
 - User explicitly asks to split or implement from an approved bundle
-- Map has an approved **`wayfinder:bundle`** with Status `approved` and empty or stale **Implementing** frontier
+- Map has an approved **`wf:bundle`** with Status `approved` and empty or stale **Implementing** frontier
 - **`define-bundle`** just completed **`bundle approved`** handoff
 
 Prefer **define-bundle** when GM rows are still **`open`** and need bundling first.
 
-After **`tasks approved`**, suggest picking up a **`wayfinder:approved`** task for implementation.
+After **`tasks approved`**, suggest picking up a **`wf:approved`** task for implementation.

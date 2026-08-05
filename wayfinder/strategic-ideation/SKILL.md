@@ -17,7 +17,7 @@ Take a **simple seed** (or chat history) and grow an **oversized** picture throu
 
 ## When to use (typical triggers)
 
-- A `wayfinder:grilling` ticket whose **Question** is scope, bundling, or strategy
+- A `wf:grilling` ticket whose **Question** is scope, bundling, or strategy
 - Map **Not yet specified** notes scope is unstable before PRD
 - Optional pass before `write-a-prd` when idea-level tensions were never resolved in tickets
 - User explicitly asks for strategic expand/tension/prune (not zone discovery)

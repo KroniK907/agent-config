@@ -18,7 +18,7 @@
 
 **Rules:**
 
-- One authoritative log per map (GitHub issue labelled `wayfinder:decision-log` or section in local map file).
+- One authoritative log per map (GitHub issue labelled `wf:decision-log` or section in local map file).
 - `grill-me`, **Reconcile**, and ticket resolutions **append** rows; do not renumber existing rows.
 - Wayfinder maps implement via [define-bundle](define-bundle/SKILL.md) + [create-tasks](create-tasks/SKILL.md); map-free work may still use `write-a-prd` consolidation.
 
@@ -105,12 +105,12 @@ Use for GitHub issue body or `wayfinder/plans/{FeatureName}.Map.md`.
 
 | Label | Mode typical | Resolved by | Produces |
 |-------|--------------|-------------|----------|
-| `wayfinder:research` | HITL (v1) | [research](research/SKILL.md) | Structured findings comment; non-binding Proposed tracker updates |
-| `wayfinder:prototype` | HITL | Stub code, outline, or `design-an-interface` | Asset link → comment |
-| `wayfinder:grilling` | HITL | `grill-me` or `strategic-ideation` when Question is scope/strategy | `{MAP-SLUG}-GM-xx` rows in decision log |
-| `wayfinder:task` | HITL or AFK | Agent checklist or human errand | Done-work record → comment |
+| `wf:research` | HITL (v1) | [research](research/SKILL.md) | Structured findings comment; non-binding Proposed tracker updates |
+| `wf:prototype` | HITL | Stub code, outline, or `design-an-interface` | Asset link → comment |
+| `wf:grilling` | HITL | `grill-me` or `strategic-ideation` when Question is scope/strategy | `{MAP-SLUG}-GM-xx` rows in decision log |
+| `wf:task` | HITL or AFK | Agent checklist or human errand | Done-work record → comment |
 
-Every To Do ticket is a **child issue** of the map, labelled `wayfinder:todo`.
+Every To Do ticket is a **child issue** of the map, labelled `wf:todo`.
 
 ### Ticket body template (grilling, prototype, task)
 
@@ -126,13 +126,13 @@ Parent: [{FeatureName}:Map](#parent-issue-number)
 
 ### Research ticket template
 
-For `wayfinder:research` tickets — full template in [research REFERENCE](research/REFERENCE.md#research-ticket-template). Required: **Question**, **Done when**, **Map**; optional: **Source hints**, **Perspectives**. Materialize and feature-discovery use this shape.
+For `wf:research` tickets — full template in [research REFERENCE](research/REFERENCE.md#research-ticket-template). Required: **Question**, **Done when**, **Map**; optional: **Source hints**, **Perspectives**. Materialize and feature-discovery use this shape.
 
 Script template: [scripts/issue-bodies/research.md](scripts/issue-bodies/research.md).
 
 ### Implementation task template
 
-For tasks minted by [create-tasks](create-tasks/SKILL.md) from approved bundles — full template in [create-tasks REFERENCE](create-tasks/REFERENCE.md#task-issue-template). Labels: `wayfinder:task` or `:prototype` + `:hitl` or `:afk`; add **`wayfinder:approved`** when **Status:** `ready`.
+For tasks minted by [create-tasks](create-tasks/SKILL.md) from approved bundles — full template in [create-tasks REFERENCE](create-tasks/REFERENCE.md#task-issue-template). Labels: `wf:task` or `:prototype` + `:hitl` or `:afk`; add **`wf:approved`** when **Status:** `ready`.
 
 ---
 
@@ -170,7 +170,7 @@ After materialize: reply on the map-discovery comment thread with **Status:** `m
 
 **Create order:** Tickets → wire blockers → link sub-issues → update map body.
 
-**Label each ticket:** `wayfinder:todo` + `wayfinder:research` | `:prototype` | `:grilling` | `:task` + `wayfinder:hitl` | `:afk`.
+**Label each ticket:** `wf:todo` + `wf:research` | `:prototype` | `:grilling` | `:task` + `wf:hitl` | `:afk`.
 
 ---
 
@@ -272,7 +272,7 @@ Primary source for holistic inference.
 | Infrastructure / cross-cutting constraint | `[global]` on log row; coverage **`global`** |
 | Uncertain scope tag | Default **`[global]` when unsure**; human edits in review |
 
-Do **not** create `wayfinder:bundle` issues in Reconcile — narrate clusters for [define-bundle](define-bundle/SKILL.md).
+Do **not** create `wf:bundle` issues in Reconcile — narrate clusters for [define-bundle](define-bundle/SKILL.md).
 
 ### Research
 
@@ -295,7 +295,7 @@ Do **not** create `wayfinder:bundle` issues in Reconcile — narrate clusters fo
 
 When resolution **New ticket candidates** are approved:
 
-1. Create child issues — labels: `wayfinder:todo` + type + mode (same as [Materialize](REFERENCE.md#materialize-from-map-discovery)).
+1. Create child issues — labels: `wf:todo` + type + mode (same as [Materialize](REFERENCE.md#materialize-from-map-discovery)).
 2. Append **To Do** rows; wire **blocked-by** in a second pass.
 3. For `research`, include **Done when** in issue body per [research ticket template](research/REFERENCE.md#research-ticket-template).
 
@@ -314,8 +314,8 @@ Skip rows the human struck from the resolution comment before approving.
 
 | User says | Agent may |
 |-----------|-----------|
-| **Approved — reconcile and close** | Close ticket issue; move row To Do → **Completed** with gist; append decision log **body**; add/update **Decision coverage** row(s) (last map section); update fog/Notes/Out of scope; **create To Do issues** from **New ticket candidates**; apply **Ticket invalidations** |
-| **Approved — reconcile, keep open** | Post comment + decision log body + Decision coverage + map notes + optional ticket creates/invalidations; **do not** close or move source ticket to Completed |
+| **Approved — reconcile and close** | Close ticket issue; move row To Do → **Completed** with gist; append decision log **body**; add/update **Decision coverage** row(s) (last map section); update fog/Notes/Out of scope; **create To Do issues** from **New ticket candidates**; apply **Ticket invalidations**; remove **`wf:needs-review`** |
+| **Approved — reconcile, keep open** | Post comment + decision log body + Decision coverage + map notes + optional ticket creates/invalidations; remove **`wf:needs-review`**; **do not** close or move source ticket to Completed |
 | (no approval) | Post draft resolution comment only; **do not** close, edit map, append log, or create issues |
 
 **Not Reconcile:** **`bundle approved`** → [define-bundle](define-bundle/SKILL.md). **`scope approved`** / **`tasks approved`** → [create-tasks](create-tasks/SKILL.md).
@@ -326,11 +326,11 @@ Synonyms accepted if unambiguous: “approve and close #N”, “reconcile and c
 
 ### Implementation task Reconcile
 
-When closing a **`wayfinder:approved`** implementation task (from [create-tasks](create-tasks/SKILL.md)):
+When closing a **`wf:approved`** implementation task (from [create-tasks](create-tasks/SKILL.md)):
 
 | User says | Agent may |
 |-----------|-----------|
-| **Approved — reconcile and close** | Close task; remove **`wayfinder:approved`**; move **Implementing** row → **Completed** gist; set Decision coverage **`implemented`** for bundle-scoped GMs shipped by this task |
+| **Approved — reconcile and close** | Close task; remove **`wf:approved`** and **`wf:needs-review`**; move **Implementing** row → **Completed** gist; set Decision coverage **`implemented`** for bundle-scoped GMs shipped by this task |
 
 Synonyms accepted if unambiguous: "reconcile and close task #N".
 
@@ -389,15 +389,32 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 
 | Artifact | Label |
 |----------|--------|
-| Map | `wayfinder:map` |
-| Decision log | `wayfinder:decision-log` |
-| Build bundle | `wayfinder:bundle` · body **Branch:** `afk/bundle-{issue-num}-{slug}` when approved |
-| To Do ticket | `wayfinder:todo` + type + mode |
-| Implementation task (draft) | `wayfinder:task` or `:prototype` + `:hitl` or `:afk` |
-| Approved implementation task | above + **`wayfinder:approved`**; body **Status:** `ready` \| `awaiting-reconcile` |
-| AFK run lock | **`wayfinder:afk-running`** on current AFK task |
+| Map | `wf:map` |
+| Decision log | `wf:decision-log` |
+| Build bundle | `wf:bundle` · body **Branch:** `afk/bundle-{issue-num}-{slug}` when approved |
+| To Do ticket | `wf:todo` + type + mode |
+| Implementation task (draft) | `wf:task` or `:prototype` + `:hitl` or `:afk` |
+| Approved implementation task | above + **`wf:approved`**; body **Status:** `ready` \| `awaiting-reconcile` |
+| AFK run lock | **`wf:afk-running`** on current AFK task |
+| Awaiting approval | **`wf:needs-review`** — add when agent posts draft awaiting human gate phrase; remove when phrase received |
 
 Map-discovery artifact = **comment on map issue** (no label).
+
+### `wf:needs-review`
+
+Bright-red queue signal: an agent finished a draft step and a **human approval phrase** is required before tracker writes or close.
+
+| Add label | When | Remove label |
+|-----------|------|--------------|
+| [define-bundle](define-bundle/SKILL.md) | Draft bundle issue posted | **`bundle approved`** |
+| [create-tasks](create-tasks/SKILL.md) | Draft task issue(s) posted | **`tasks approved`** (or **`scope approved`** if no further task promotion pending) |
+| [wayfinder](SKILL.md) **Reconcile** | Resolution draft comment posted on session ticket | **`Approved — reconcile and close`** or **`Approved — reconcile, keep open`** |
+| [implement-task](implement-task/SKILL.md) | Success end-of-run (**Status:** `awaiting-reconcile`) | wayfinder **Reconcile** on **`Approved — reconcile and close`** |
+
+```powershell
+gh issue edit <num> --add-label "wf:needs-review"
+gh issue edit <num> --remove-label "wf:needs-review"
+```
 
 **Sub-issues:** Link map → decision log and tickets via GitHub sub-issues. **Blocked-by:** Use native issue dependencies for frontier ordering.
 
@@ -443,17 +460,17 @@ Skills that **write** wayfinder state:
 | `strategic-ideation` | Scope handoff (chat); Reconcile records on map |
 | `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes holistic tracker delta (tickets, bundle clusters, route) |
 | `define-bundle` | Draft/approved bundle issue; proposed **Branch:** in draft; git branch create + push on **`bundle approved`**; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |
-| `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; deferred/serial **`wayfinder:approved`** on **`tasks approved`**; `implemented` on Reconcile close |
+| `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; deferred/serial **`wf:approved`** on **`tasks approved`**; `implemented` on Reconcile close |
 | [implement-task](implement-task/SKILL.md) | Bundle-branch run; Method dispatch; **code-review** after Method; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
 | [code-review](code-review/SKILL.md) | Two-axis Standards + Spec review; auto-fix obvious mistakes when invoked by implement-task; ad-hoc branch/PR/WIP review on request |
-| [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wayfinder:prototype`** Method — throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |
+| [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wf:prototype`** Method — throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |
 | `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
 | [research](research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
-| Cloud AFK automation | Label trigger on **`wayfinder:approved`**; runs [implement-task](implement-task/SKILL.md) on bundle branch; **push + resolution comment** (no agent PRs); human Reconcile closes task — setup via [AFK-BOOTSTRAP.md](AFK-BOOTSTRAP.md) |
+| Cloud AFK automation | Label trigger on **`wf:approved`**; runs [implement-task](implement-task/SKILL.md) on bundle branch; **push + resolution comment** (no agent PRs); human Reconcile closes task — setup via [AFK-BOOTSTRAP.md](AFK-BOOTSTRAP.md) |
 
 **Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](code-review/SKILL.md) in ad-hoc mode. Complements built-in `review-bugbot` / `review-security`. During **implement-task**, code-review runs automatically after Method — no separate Route handoff.
 
-**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → **`define-bundle`** ( **`bundle approved`** → create **Branch:** `afk/bundle-{N}-{slug}` ) → **`create-tasks`** ( **`tasks approved`** → one **`wayfinder:approved`** when unblocked ) → **`implement-task`** (checkout bundle branch → Method → **code-review** → push) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
+**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → **`define-bundle`** ( **`bundle approved`** → create **Branch:** `afk/bundle-{N}-{slug}` ) → **`create-tasks`** ( **`tasks approved`** → one **`wf:approved`** when unblocked ) → **`implement-task`** (checkout bundle branch → Method → **code-review** → push) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
 
 ---
 

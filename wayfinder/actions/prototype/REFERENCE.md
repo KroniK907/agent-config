@@ -1,6 +1,6 @@
 # Prototype action reference
 
-Method playbook for bundle **`wayfinder:prototype`** tasks. Implements [PATTERNS.md](../PATTERNS.md) five mandatory sections.
+Method playbook for bundle **`wf:prototype`** tasks. Implements [PATTERNS.md](../PATTERNS.md) five mandatory sections.
 
 Playbook shape adapted from [mattpocock/skills — engineering/prototype](https://github.com/mattpocock/skills/tree/main/skills/engineering/prototype): **LOGIC** vs **UI** branch, throwaway code, capture verdict on bundle branch.
 
@@ -30,7 +30,7 @@ No production merge, PR, or tests unless task **Done when** explicitly requires 
 
 Hard gates (implement-task runs first):
 
-- **`wayfinder:approved`** task; bundle branch checked out
+- **`wf:approved`** task; bundle branch checked out
 - Task **What to build** states or implies a design question (logic/state vs UI look)
 - **Done when** lists verifiable artifacts (file paths, route, variant count, verdict)
 - AFK: **## Method:** `prototype` valid

@@ -65,9 +65,9 @@ For product bundles with user stories, replace the `N/A` line with story bullets
 
 | User says | Agent may |
 |-----------|-----------|
-| **bundle approved** | Set bundle Status `approved`; create and push bundle git branch; persist **Branch:** on bundle body; update map Decision coverage (`scoped` + link); append log suffixes; optional Notes line |
-| (edits requested) | Update draft bundle body in place; keep Status `draft` |
-| (no approval) | Narrate or post draft only; **do not** write coverage or suffixes |
+| **bundle approved** | Set bundle Status `approved`; remove **`wf:needs-review`**; create and push bundle git branch; persist **Branch:** on bundle body; update map Decision coverage (`scoped` + link); append log suffixes; optional Notes line |
+| (edits requested) | Update draft bundle body in place; keep Status `draft`; keep **`wf:needs-review`** |
+| (no approval) | Narrate or post draft only; add **`wf:needs-review`**; **do not** write coverage or suffixes |
 
 Synonyms accepted if unambiguous: "approve the bundle", "approve bundle #N".
 

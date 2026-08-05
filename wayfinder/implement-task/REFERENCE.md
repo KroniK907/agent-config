@@ -7,11 +7,11 @@
 | Phase | Owner | Human gates | Agent may |
 |-------|-------|-------------|-----------|
 | Split bundle → draft tasks | [create-tasks](../create-tasks/SKILL.md) | **`scope approved`** | Create task issues; map **Implementing**; coverage **`assigned`** |
-| Promote to pickup | create-tasks | **`tasks approved`** / **`approved`** | **Status:** `ready`; label **`wayfinder:approved`** |
+| Promote to pickup | create-tasks | **`tasks approved`** / **`approved`** | **Status:** `ready`; label **`wf:approved`** |
 | Implementation run | **implement-task** | **`Approved — reconcile and close`** (wayfinder Reconcile) | Build via Method; push; resolution comment; **Status:** `awaiting-reconcile` |
-| Close + coverage | [wayfinder](../SKILL.md) Reconcile | **`Approved — reconcile and close`** | Close task; remove **`wayfinder:approved`**; **Implementing** → **Completed**; coverage **`implemented`** |
+| Close + coverage | [wayfinder](../SKILL.md) Reconcile | **`Approved — reconcile and close`** | Close task; remove **`wf:approved`**; **Implementing** → **Completed**; coverage **`implemented`** |
 
-create-tasks never runs Method playbooks or posts implementation resolution comments. implement-task never splits bundles or adds **`wayfinder:approved`**.
+create-tasks never runs Method playbooks or posts implementation resolution comments. implement-task never splits bundles or adds **`wf:approved`**.
 
 ---
 
@@ -36,11 +36,11 @@ Optional: load map **Implementing** row for mode (HITL / AFK).
 
 | Gate | Fail when |
 |------|-----------|
-| Label | Missing **`wayfinder:approved`** |
+| Label | Missing **`wf:approved`** |
 | Status | Not **`ready`** (re-runs: also accept **`awaiting-reconcile`** only when human explicitly restarted implementation in chat) |
 | Blockers | Any **Blocked by** issue still **open** |
 | Bundle parent | Bundle **Status** not **`approved`** |
-| Mode label | Missing **`wayfinder:hitl`** or **`wayfinder:afk`** |
+| Mode label | Missing **`wf:hitl`** or **`wf:afk`** |
 
 ### 3. Method validation
 
@@ -74,12 +74,12 @@ Gate failure: branch missing and cannot be created, checkout conflict, or pull f
 
 Before repo edits on an AFK task:
 
-1. If repo already has **`wayfinder:afk-running`** on another open issue → **Blocked** (serial queue)
-2. Else add **`wayfinder:afk-running`** to **this** task
+1. If repo already has **`wf:afk-running`** on another open issue → **Blocked** (serial queue)
+2. Else add **`wf:afk-running`** to **this** task
 
 **Bypass:** Issue comment containing **`@cursor`** on the AFK task skips the serial gate for that pickup (still run other gates).
 
-HITL tasks **never** add or remove **`wayfinder:afk-running`**.
+HITL tasks **never** add or remove **`wf:afk-running`**.
 
 ---
 
@@ -88,7 +88,7 @@ HITL tasks **never** add or remove **`wayfinder:afk-running`**.
 Throughout the run — violations are workflow bugs:
 
 1. **Never close** the implementation task issue
-2. **Never remove** **`wayfinder:approved`** from the task you are implementing
+2. **Never remove** **`wf:approved`** from the task you are implementing
 3. **Never post** Reconcile approval phrases (**`Approved — reconcile and close`**, **`Approved — reconcile, keep open`**) on the task
 4. **Never open PRs** — push to bundle branch only
 5. **Orchestration vs build** — git push, code-review invoke, resolution comment, status `awaiting-reconcile`, unblock scan, AFK handoff stay in implement-task; Method skill owns product/doc deliverables; [code-review](../code-review/SKILL.md) owns review + obvious auto-fix
@@ -150,7 +150,7 @@ Paste code-review [return artifact](../code-review/REFERENCE.md#implement-task-r
 gh issue edit <task-num> --body-file path\to\updated-body.md
 ```
 
-Set **Status:** `awaiting-reconcile`. Keep **`wayfinder:approved`**. Do not remove labels.
+Set **Status:** `awaiting-reconcile`. Keep **`wf:approved`**. Add **`wf:needs-review`**. Do not remove **`wf:approved`**.
 
 ### 4. Unblock and handoff
 
@@ -162,8 +162,8 @@ See [Unblock and handoff](#unblock-and-handoff) below.
 
 | Topic | HITL | AFK |
 |-------|------|-----|
-| Pickup | Human starts chat with task link / `#N` | Automation on **`wayfinder:approved`** label add |
-| **`wayfinder:afk-running`** | Never | Acquire at startup; remove at end-of-run |
+| Pickup | Human starts chat with task link / `#N` | Automation on **`wf:approved`** label add |
+| **`wf:afk-running`** | Never | Acquire at startup; remove at end-of-run |
 | Serial queue | N/A | One AFK run per repo; handoff after end-of-run |
 | **`@cursor` bypass** | N/A | Comment on task skips serial gate |
 | Method | Default from task; session override OK | **## Method** required; no override |
@@ -184,15 +184,15 @@ After success resolution and **`awaiting-reconcile`**:
 Scan implementation tasks (map **Implementing** or bundle siblings) that list this task in **Blocked by**:
 
 - When **all** blockers for a dependent are **closed** or **`awaiting-reconcile`** / reconciled as shipped, and dependent **Status** is **`ready`** with **`scope approved`** already applied:
-  - Add **`wayfinder:approved`** to the dependent (create-tasks deferred label when blocked; implement-task restores when unblocked)
+  - Add **`wf:approved`** to the dependent (create-tasks deferred label when blocked; implement-task restores when unblocked)
 - Do **not** start the dependent automatically in HITL unless the human asks
 
-create-tasks owns deferring **`wayfinder:approved`** while blockers exist; implement-task performs the **add** when blockers clear.
+create-tasks owns deferring **`wf:approved`** while blockers exist; implement-task performs the **add** when blockers clear.
 
 ### AFK serial handoff (AFK only)
 
-1. Remove **`wayfinder:afk-running`** from the current task
-2. Find next eligible AFK task: **`wayfinder:approved`**, **`ready`**, unblocked, no **`afk-running`** elsewhere
+1. Remove **`wf:afk-running`** from the current task
+2. Find next eligible AFK task: **`wf:approved`**, **`ready`**, unblocked, no **`afk-running`** elsewhere
 3. Hand off to automation (next pickup) — do **not** implement the next task in the same orchestration run unless explicitly configured
 
 If no eligible task, queue idle.
@@ -216,8 +216,8 @@ Only implement-task sets **`awaiting-reconcile`**.
 
 Suggest **implement-task** when:
 
-- Map **Implementing** row has **`wayfinder:approved`** and **Status:** `ready`
+- Map **Implementing** row has **`wf:approved`** and **Status:** `ready`
 - User says "implement task #N" or "pick up #N" on an approved implementation task
-- AFK automation triggers on **`wayfinder:approved`** add
+- AFK automation triggers on **`wf:approved`** add
 
 After **`awaiting-reconcile`**, suggest wayfinder **Reconcile** — not another implement-task pass unless human requests rework (reset **Status** to **`ready`** explicitly before re-run).

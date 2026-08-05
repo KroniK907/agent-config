@@ -1,11 +1,11 @@
 ---
 name: implement-task
-description: Orchestrate pickup and completion of wayfinder:approved implementation tasks — startup gates, bundle-branch git, Method dispatch, code-review (auto-fix obvious), resolution comment, awaiting-reconcile, and AFK queue handoff. Use when a wayfinder:approved task is ready to implement (HITL or AFK), or wayfinder Route suggests implement-task.
+description: Orchestrate pickup and completion of wf:approved implementation tasks — startup gates, bundle-branch git, Method dispatch, code-review (auto-fix obvious), resolution comment, awaiting-reconcile, and AFK queue handoff. Use when a wf:approved task is ready to implement (HITL or AFK), or wayfinder Route suggests implement-task.
 ---
 
 # Implement task
 
-**Orchestration-only** entry for **`wayfinder:approved`** implementation tasks. Fail-closed startup → bundle-branch git → **Method dispatch** → **[code-review](../code-review/SKILL.md)** (auto-fix obvious; defer rest) → push → [resolution comment](references/resolution-comment.md) → **`Status: awaiting-reconcile`**. Does **not** close the task, remove **`wayfinder:approved`**, or post Reconcile approval phrases.
+**Orchestration-only** entry for **`wf:approved`** implementation tasks. Fail-closed startup → bundle-branch git → **Method dispatch** → **[code-review](../code-review/SKILL.md)** (auto-fix obvious; defer rest) → push → [resolution comment](references/resolution-comment.md) → **`Status: awaiting-reconcile`**. Does **not** close the task, remove **`wf:approved`**, or post Reconcile approval phrases.
 
 Detail: [REFERENCE.md](REFERENCE.md) · resolution templates: [references/resolution-comment.md](references/resolution-comment.md)
 
@@ -13,7 +13,7 @@ Detail: [REFERENCE.md](REFERENCE.md) · resolution templates: [references/resolu
 
 | Skill | When instead |
 |-------|----------------|
-| [create-tasks](../create-tasks/SKILL.md) | Split bundle, **`scope approved`**, **`tasks approved`**, add **`wayfinder:approved`** |
+| [create-tasks](../create-tasks/SKILL.md) | Split bundle, **`scope approved`**, **`tasks approved`**, add **`wf:approved`** |
 | [wayfinder](../SKILL.md) | Chart, Materialize, **Reconcile** (close task after human **`Approved — reconcile and close`**) |
 | [actions/*](../actions/PATTERNS.md) | Build work delegated via task **## Method** |
 
@@ -28,11 +28,11 @@ Run in order. **Stop at first gate failure** — post **Blocked** resolution per
 5. **Build** — action skill owns deliverables; orchestrator does not duplicate build steps
 6. **Code review** — [code-review](../code-review/SKILL.md) in **implement-task mode** on `<pre-method-sha>...HEAD`; auto-fix obvious mistakes; capture [return artifact](../code-review/REFERENCE.md#implement-task-return-artifact) ([REFERENCE § Code review](REFERENCE.md#code-review))
 7. **Push** — commit Method + auto-fixes on bundle branch; push to remote
-8. **Resolve** — post success resolution comment (include **Code review** section); set body **Status:** `awaiting-reconcile` (keep **`wayfinder:approved`**)
-9. **Unblock** — scan dependents; add **`wayfinder:approved`** where **Blocked by** cleared ([REFERENCE § Unblock and handoff](REFERENCE.md#unblock-and-handoff))
-10. **AFK only** — remove **`wayfinder:afk-running`**; serial handoff to next eligible AFK task
+8. **Resolve** — post success resolution comment (include **Code review** section); set body **Status:** `awaiting-reconcile` (keep **`wf:approved`**); add label **`wf:needs-review`**
+9. **Unblock** — scan dependents; add **`wf:approved`** where **Blocked by** cleared ([REFERENCE § Unblock and handoff](REFERENCE.md#unblock-and-handoff))
+10. **AFK only** — remove **`wf:afk-running`**; serial handoff to next eligible AFK task
 
-**Invariants:** Never close task · never remove own **`wayfinder:approved`** · never post **`Approved — reconcile and close`**
+**Invariants:** Never close task · never remove own **`wf:approved`** · never post **`Approved — reconcile and close`**
 
 ## Hand off
 

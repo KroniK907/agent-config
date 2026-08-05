@@ -2,7 +2,7 @@
 
 ## Research ticket template
 
-Use when [feature-discovery](../feature-discovery/SKILL.md) **Materialize** or wayfinder **Materialize** creates a `wayfinder:research` ticket. Title: short investigation name.
+Use when [feature-discovery](../feature-discovery/SKILL.md) **Materialize** or wayfinder **Materialize** creates a `wf:research` ticket. Title: short investigation name.
 
 ```markdown
 ## Question
@@ -30,7 +30,7 @@ Parent: [{FeatureName}:Map](#parent-issue-number)
 **Required:** `## Question`, `## Done when`, `## Map`.
 **Optional:** `## Source hints`, `## Perspectives`.
 
-Labels: `wayfinder:todo` + `wayfinder:research` + `wayfinder:hitl` (v1 default) or `wayfinder:afk` (deferred).
+Labels: `wf:todo` + `wf:research` + `wf:hitl` (v1 default) or `wf:afk` (deferred).
 
 ---
 
@@ -156,7 +156,7 @@ Research sessions are **non-binding fact-gathering**:
 
 | Trigger | Suggest `research` |
 |---------|-------------------|
-| Open unblocked `wayfinder:research` ticket on map frontier | Yes — default |
+| Open unblocked `wf:research` ticket on map frontier | Yes — default |
 | User explicitly invokes research / names a research ticket | Yes |
 | User asks general question without a ticket | No — answer inline or suggest Materialize first |
 
@@ -169,7 +169,7 @@ Explicit user invoke always valid even when ticket is not frontier.
 | Topic | Default |
 |-------|---------|
 | REFERENCE split | Templates and behavior rules in this file; workflow in SKILL.md |
-| Route trigger | Frontier `wayfinder:research` ticket **or** explicit user invoke |
+| Route trigger | Frontier `wf:research` ticket **or** explicit user invoke |
 | Issue body template file | `wayfinder/scripts/issue-bodies/research.md` for Materialize scripts |
 | Global re-tag pass | **Deferred** — separate Reconcile pass; not part of research v1 |
 

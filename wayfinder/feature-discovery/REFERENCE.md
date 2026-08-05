@@ -77,7 +77,7 @@ When **Ticket candidates** Type is `research`, wayfinder **Materialize** creates
 | **Source hints** | Optional — add when discovery notes name docs, repos, or code paths |
 | **Perspectives** | Optional — add when discovery notes name stakeholders or alternate framings |
 
-**Mode:** Default `HITL` for research in v1 ([research](../research/SKILL.md) skill). Labels: `wayfinder:todo` + `wayfinder:research` + `wayfinder:hitl`.
+**Mode:** Default `HITL` for research in v1 ([research](../research/SKILL.md) skill). Labels: `wf:todo` + `wf:research` + `wf:hitl`.
 
 **Not research:** If the candidate Question is a binding decision or scope/strategy shape, use Type `grilling` instead (→ grill-me or strategic-ideation).
 

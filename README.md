@@ -14,7 +14,7 @@ Skills for large-feature planning and incremental implementation via GitHub map 
   npx skills@latest add KroniK907/skills/wayfinder
   ```
 
-- **define-bundle** — Coalesce decision-log clusters into draft `wayfinder:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
+- **define-bundle** — Coalesce decision-log clusters into draft `wf:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/define-bundle
@@ -50,7 +50,7 @@ Skills for large-feature planning and incremental implementation via GitHub map 
   npx skills@latest add KroniK907/skills/wayfinder/create-tasks
   ```
 
-- **research** — Investigate `wayfinder:research` tickets; post structured findings and non-binding tracker updates.
+- **research** — Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/research

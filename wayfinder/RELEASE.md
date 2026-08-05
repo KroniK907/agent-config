@@ -20,7 +20,7 @@ First release after AFK v1 bundle lands: **`v0.1.0`**.
 
 ## Release checklist (maintainer)
 
-Run on **`main`** after the AFK v1 bundle PR merges (bundle [#23](https://github.com/KroniK907/skills/issues/23) and all Implementing tasks reconciled):
+Run on **`main`** after the AFK v1 bundle PR merges and all Implementing tasks are reconciled:
 
 1. **Verify main** — `implement-task`, `actions/prototype`, bootstrap pack, and REFERENCE rows present on `main`.
 2. **Tag** — annotated tag preferred:

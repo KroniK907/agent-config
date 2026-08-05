@@ -1,4 +1,4 @@
-# Bootstrap wayfinder:* GitHub labels from labels-manifest.json.
+# Bootstrap wf:* GitHub labels from labels-manifest.json.
 # Idempotent: gh label create --force updates existing labels.
 # Usage: .\bootstrap-labels.ps1 [-Repo owner/repo] [-Manifest path\to\labels-manifest.json]
 param(

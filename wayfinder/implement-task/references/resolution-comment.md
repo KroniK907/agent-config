@@ -46,10 +46,10 @@ Post as a **new top-level comment** on the implementation task at end-of-run. Co
 
 <!-- Orchestrator does NOT post approval phrases. Human only. -->
 
-Pending **`Approved — reconcile and close`** — agent must not close this task or remove **`wayfinder:approved`**.
+Pending **`Approved — reconcile and close`** — agent must not close this task or remove **`wf:approved`**.
 ```
 
-After posting, set task body **Status:** `awaiting-reconcile`. Do **not** remove **`wayfinder:approved`**.
+After posting, set task body **Status:** `awaiting-reconcile`. Add label **`wf:needs-review`**. Do **not** remove **`wf:approved`**.
 
 ---
 
@@ -68,7 +68,7 @@ Run stopped at startup — <gate name>. No repository edits on this run.
 
 ### Blocked reason
 
-<Exact gate that failed — e.g. missing `wayfinder:approved`, invalid **## Method**, could not checkout `afk/bundle-23-…`, `wayfinder:afk-running` held by #other.>
+<Exact gate that failed — e.g. missing `wf:approved`, invalid **## Method**, could not checkout `afk/bundle-23-…`, `wf:afk-running` held by #other.>
 
 ### Method
 
