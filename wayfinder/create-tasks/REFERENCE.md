@@ -40,8 +40,6 @@ N/A — meta/infra
 
 For product tasks with user stories, replace the `N/A` line with story bullets and use **Done when** as acceptance criteria.
 
-**Reference example:** [#19](https://github.com/KroniK907/skills/issues/19) (Wayfinder-Ecosystem).
-
 ---
 
 ## Approval phrases
@@ -122,7 +120,7 @@ Remove row and add **Completed** gist on implementation Reconcile.
 
 ## Parent linkage
 
-Default (matches [define-bundle](../define-bundle/REFERENCE.md#github-operations)):
+Default (matches [define-bundle](../define-bundle/REFERENCE.md#bundle-issue-template)):
 
 - **Required:** **Parent bundle** section in task body with markdown links to bundle, map, decision log
 - **Optional:** native GitHub sub-issues (bundle → task); not required for workflow
@@ -138,7 +136,7 @@ Default (matches [define-bundle](../define-bundle/REFERENCE.md#github-operations
 | Sub-issues vs body links | Body **Parent bundle** link required; sub-issues optional |
 | Single-task bundles | Still mint a task issue; skip split debate when obvious |
 | Global re-tag pass | **Deferred** — separate Reconcile pass; not part of create-tasks |
-| GM-024 in bundle | **Constraint only** — write-a-prd Route stays in wayfinder REFERENCE |
+| Map-free PRD workflow | **Constraint only** — write-a-prd Route stays in wayfinder REFERENCE; not bundled here |
 
 ---
 
@@ -154,19 +152,6 @@ After an agent or human ships a **`wayfinder:approved`** task:
    - Decision coverage **`implemented`** for GMs fully delivered by this task
 
 create-tasks does **not** run implementation Reconcile — remind the user to invoke wayfinder when ready.
-
----
-
-## GitHub operations
-
-Use **`gh` only** — no GraphQL for issue create/edit/link.
-
-```powershell
-gh issue create --repo owner/repo --title "Task: …" --label "wayfinder:task" --label "wayfinder:hitl" --body-file path\to\body.md
-gh issue edit <num> --body-file path\to\body.md
-gh issue edit <num> --add-label "wayfinder:approved"
-gh issue comment <num> --body "…"
-```
 
 ---
 

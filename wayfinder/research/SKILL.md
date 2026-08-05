@@ -7,7 +7,7 @@ description: Investigate a wayfinder:research ticket, post structured findings a
 
 Load a **`wayfinder:research`** ticket, investigate per [behavior rules](REFERENCE.md#behavior-rules), post a **structured findings comment** on the ticket, and hand off **non-binding Proposed tracker updates**. Does **not** append decision-log rows, post Reconcile approval phrases, or edit the map without human review.
 
-**v1 is human-initiated HITL only** — cloud AFK pickup deferred to [#10](https://github.com/KroniK907/skills/issues/10).
+**v1 is human-initiated HITL only** — cloud AFK pickup deferred.
 
 ## Not this skill
 
@@ -92,12 +92,8 @@ End with: *Review the findings — invoke wayfinder **Reconcile** when ready to 
 
 ## Quick start
 
-User: "Research ticket #8 on map #12."
+User: "Research ticket #N on map #M."
 
-Load ticket #8 + map #12 → investigate per behavior rules → post structured findings comment → hand off for human review.
+Load ticket #N + map #M → investigate per behavior rules → post structured findings comment → hand off for human review.
 
 See [REFERENCE.md](REFERENCE.md) for ticket template, output sections, behavior rules, and design defaults.
-
-## Bootstrap
-
-This skill was first implemented manually from [Task: implement research skill](https://github.com/KroniK907/skills/issues/21) (bundle [#20](https://github.com/KroniK907/skills/issues/20)). That task is the reference example for the workflow above.

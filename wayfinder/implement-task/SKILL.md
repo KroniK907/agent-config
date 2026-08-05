@@ -23,7 +23,7 @@ Run in order. **Stop at first gate failure** — post **Blocked** resolution per
 
 1. **Load** — task issue + parent bundle (map link, decision log, **Branch:**, **Decisions**)
 2. **Startup gates** — [REFERENCE § Startup gates](REFERENCE.md#startup-gates) (Status, labels, Method, bundle branch, AFK serial)
-3. **Git** — checkout/pull bundle branch; create if missing per GM-027
+3. **Git** — checkout/pull bundle branch from bundle **Branch:** line; create if missing
 4. **Method dispatch** — load and follow task **## Method** skill (HITL session override allowed; AFK requires valid Method)
 5. **Build** — action skill owns deliverables; orchestrator does not duplicate build steps
 6. **Push** — commit on bundle branch; push to remote

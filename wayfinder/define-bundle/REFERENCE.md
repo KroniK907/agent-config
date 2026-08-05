@@ -75,8 +75,6 @@ Synonyms accepted if unambiguous: "approve the bundle", "approve bundle #N".
 
 ## Global vs bundle-scoped rows
 
-Per WF-ECO-GM-021:
-
 | Signal | Treatment in bundle |
 |--------|---------------------|
 | `[global]` in log row text | **Constraints** only |
@@ -118,24 +116,10 @@ Later lifecycle (create-tasks / implementation Reconcile):
 Append to the **end** of each covered row paragraph (after any `(from …)` source link):
 
 ```markdown
- — bundled via [#16](https://github.com/org/repo/issues/16)
+ — bundled via [#N](https://github.com/org/repo/issues/N)
 ```
 
 Do not alter binding prose before the suffix.
-
----
-
-## GitHub operations
-
-Use **`gh` only** — no GraphQL for issue create/edit/link.
-
-```powershell
-gh issue create --repo owner/repo --title "Bundle: …" --label "wayfinder:bundle" --body-file path\to\body.md
-gh issue edit <num> --body-file path\to\body.md
-gh issue comment <num> --body "…"
-```
-
-Link parent map in the bundle **Map** section (markdown link). Native parent/child sub-issues are optional.
 
 ---
 
@@ -144,7 +128,7 @@ Link parent map in the bundle **Map** section (markdown link). Native parent/chi
 Suggest **define-bundle** when:
 
 - User explicitly asks to bundle or implement from the decision log
-- **Decision coverage** has a cluster of **`open`** rows clearly describing one deliverable (e.g. GM-013–018)
+- **Decision coverage** has a cluster of **`open`** rows clearly describing one deliverable
 - User wants to ship while planning **To Do** or **Not yet specified** remain non-empty
 
 Prefer planning frontier skills (grill-me, research ticket, etc.) when rows are still **`open`** because work is incomplete — not because fog exists elsewhere on the map.

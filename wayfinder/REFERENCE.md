@@ -219,13 +219,13 @@ Omit table when none. Derive **Done when** bullets for `research` rows at materi
 
 | Suggested name | Covered GM IDs | Rationale | Excluded |
 |----------------|----------------|-----------|----------|
-| … | GM-012–015 | One vertical slice / subsystem | globals, already bundled, still foggy |
+| … | {MAP-SLUG}-GM-012–015 | One vertical slice / subsystem | globals, already bundled, still foggy |
 
 Omit table when no cluster is ready. Rows stay **`open`** until **`bundle approved`**.
 
 ### Ticket invalidations
 
-- **Close:** [#N Title](link) — superseded by GM-… / merged into this session
+- **Close:** [#N Title](link) — superseded by {MAP-SLUG}-GM-NNN / merged into this session
 - **Retitle / retype:** …
 - **Move to Out of scope:** …
 
@@ -395,7 +395,7 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 | To Do ticket | `wayfinder:todo` + type + mode |
 | Implementation task (draft) | `wayfinder:task` or `:prototype` + `:hitl` or `:afk` |
 | Approved implementation task | above + **`wayfinder:approved`**; body **Status:** `ready` \| `awaiting-reconcile` |
-| AFK run lock | **`wayfinder:afk-running`** on current AFK task (GM-026) |
+| AFK run lock | **`wayfinder:afk-running`** on current AFK task |
 
 Map-discovery artifact = **comment on map issue** (no label).
 
@@ -411,7 +411,7 @@ Map-discovery artifact = **comment on map issue** (no label).
 
 In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `grill-me`, `research`, `define-bundle`, `create-tasks`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, PRD tools, etc.) stay at repo root.
 
-**Method path validation** (WF-ECO-GM-030): default pool is skills at **`wayfinder/**/<name>/SKILL.md`** in the pinned pack. Repo-root one-offs are valid only when **## Method** explicitly names them.
+**Method path validation:** default pool is skills at **`wayfinder/**/<name>/SKILL.md`** in the pinned pack. Repo-root one-offs are valid only when **## Method** explicitly names them.
 
 | Path | Role |
 |------|------|

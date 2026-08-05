@@ -52,7 +52,7 @@ Present to the user:
 
 Wait for confirmation or edits before creating/updating the bundle issue.
 
-**Cluster heuristics:** same subsystem or skill (e.g. GM-013–018 → research skill); one vertical slice; rows that share deliverables. Do not bundle rows already **`scoped`**, **`assigned`**, or **`implemented`**.
+**Cluster heuristics:** same subsystem or skill; one vertical slice; rows that share deliverables. Do not bundle rows already **`scoped`**, **`assigned`**, or **`implemented`**.
 
 ### 3. Draft bundle issue
 
@@ -96,7 +96,7 @@ Use `gh issue edit --body-file` for full body replacements. Requires `gh` auth.
 Tell the user:
 
 - **Next:** [create-tasks](../create-tasks/SKILL.md) with the approved bundle link, **or** implement directly from the bundle when a single session needs no task split
-- Planning **To Do** may stay open (per WF-ECO-GM-019)
+- Planning **To Do** may stay open
 
 ## Interaction rules
 
@@ -108,8 +108,8 @@ Tell the user:
 
 ## Quick start
 
-User: "Bundle GM-013–018 for the research skill on map #12."
+User: "Bundle decision-log rows for a build slice on map #N."
 
-Load map #12 + log #11 → propose cluster → create draft `wayfinder:bundle` issue → user says **`bundle approved`** → sync coverage + suffixes → suggest create-tasks or direct implementation.
+Load map #N + decision log → propose cluster → create draft `wayfinder:bundle` issue → user says **`bundle approved`** → sync coverage + suffixes → suggest create-tasks or direct implementation.
 
 See [REFERENCE.md](REFERENCE.md) for bundle template, approval phrases, and global-row rules.

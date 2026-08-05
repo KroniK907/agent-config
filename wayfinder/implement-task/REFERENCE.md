@@ -1,7 +1,5 @@
 # Implement task reference
 
-Binding contract: **WF-ECO-GM-029** [global], **WF-ECO-GM-026** (AFK pickup), **WF-ECO-GM-027** (bundle git), **WF-ECO-GM-025** (task body unchanged), **WF-ECO-GM-030** (Method dispatch). Grilled in [#27](https://github.com/KroniK907/skills/issues/27).
-
 ---
 
 ## Split from create-tasks
@@ -28,9 +26,9 @@ gh issue view <task-num> --json body,title,url,labels
 gh issue view <bundle-num> --json body,title,url,labels
 ```
 
-From the task: **Status**, **Parent bundle**, **What to build**, **Decisions**, **Done when**, **Blocked by**, **## Method** (when present — GM-032; required for AFK).
+From the task: **Status**, **Parent bundle**, **What to build**, **Decisions**, **Done when**, **Blocked by**, **## Method** (required for AFK).
 
-From the bundle: map link, **Branch:** line (GM-027), covered **Decisions**, **Status:** `approved`.
+From the bundle: map link, **Branch:** line, covered **Decisions**, **Status:** `approved`.
 
 Optional: load map **Implementing** row for mode (HITL / AFK).
 
@@ -44,7 +42,7 @@ Optional: load map **Implementing** row for mode (HITL / AFK).
 | Bundle parent | Bundle **Status** not **`approved`** |
 | Mode label | Missing **`wayfinder:hitl`** or **`wayfinder:afk`** |
 
-### 3. Method validation (GM-030)
+### 3. Method validation
 
 Resolve Method skill path:
 
@@ -58,7 +56,7 @@ Resolve Method skill path:
 
 Record resolved Method name for resolution comment **Method** section.
 
-### 4. Bundle branch (GM-027)
+### 4. Bundle branch
 
 From bundle body **`Branch:`** line — pattern **`afk/bundle-{issue-num}-{slug}`**.
 
@@ -72,7 +70,7 @@ git pull --rebase origin <branch>
 
 Gate failure: branch missing and cannot be created, checkout conflict, or pull failure → **Blocked**.
 
-### 5. AFK serial gate (GM-026) — AFK only
+### 5. AFK serial gate — AFK only
 
 Before repo edits on an AFK task:
 
@@ -155,7 +153,7 @@ See [Unblock and handoff](#unblock-and-handoff) below.
 | Unblock scan | Same | Same |
 | Reconcile close | Human **`Approved — reconcile and close`** | Same — automation never closes task |
 
-Task bodies are **identical** for HITL and AFK (GM-025). Mode is label-only.
+Task bodies are **identical** for HITL and AFK. Mode is label-only.
 
 ---
 
@@ -192,22 +190,7 @@ If no eligible task, queue idle.
 | `awaiting-reconcile` | **implement-task** end-of-run | Work pushed; resolution posted; awaits human Reconcile |
 | (closed) | wayfinder Reconcile | Human **`Approved — reconcile and close`** |
 
-Only implement-task sets **`awaiting-reconcile`** (GM-032).
-
----
-
-## GitHub operations
-
-Use **`gh` only** — no GraphQL for issue edit/comment.
-
-```powershell
-gh issue view <num> --json body,title,url,labels
-gh issue comment <num> --body-file path\to\resolution.md
-gh issue edit <num> --body-file path\to\body.md
-gh issue edit <num> --add-label "wayfinder:afk-running"
-gh issue edit <num> --remove-label "wayfinder:afk-running"
-gh issue edit <dependent> --add-label "wayfinder:approved"
-```
+Only implement-task sets **`awaiting-reconcile`**.
 
 ---
 

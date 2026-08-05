@@ -30,7 +30,7 @@ Parent: [{FeatureName}:Map](#parent-issue-number)
 **Required:** `## Question`, `## Done when`, `## Map`.
 **Optional:** `## Source hints`, `## Perspectives`.
 
-Labels: `wayfinder:todo` + `wayfinder:research` + `wayfinder:hitl` (v1 default) or `wayfinder:afk` (deferred until [#10](https://github.com/KroniK907/skills/issues/10)).
+Labels: `wayfinder:todo` + `wayfinder:research` + `wayfinder:hitl` (v1 default) or `wayfinder:afk` (deferred).
 
 ---
 
@@ -133,7 +133,7 @@ Use **only** for logical/category ticket errors:
 
 ## Approval and handoff
 
-Research sessions are **non-binding fact-gathering** (WF-ECO-GM-017):
+Research sessions are **non-binding fact-gathering**:
 
 | Research may | Research must not |
 |--------------|-------------------|
@@ -164,7 +164,7 @@ Explicit user invoke always valid even when ticket is not frontier.
 
 ---
 
-## Design defaults (bundle #20 open questions)
+## Design defaults
 
 | Topic | Default |
 |-------|---------|
@@ -172,14 +172,5 @@ Explicit user invoke always valid even when ticket is not frontier.
 | Route trigger | Frontier `wayfinder:research` ticket **or** explicit user invoke |
 | Issue body template file | `wayfinder/scripts/issue-bodies/research.md` for Materialize scripts |
 | Global re-tag pass | **Deferred** — separate Reconcile pass; not part of research v1 |
-
----
-
-## GitHub operations
-
-```powershell
-gh issue view <num> --json body,title,url,labels
-gh issue comment <research-num> --body-file path\to\findings.md
-```
 
 Research does **not** close tickets or edit map/decision log — that is wayfinder **Reconcile** after human approval.

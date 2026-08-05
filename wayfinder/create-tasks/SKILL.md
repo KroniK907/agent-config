@@ -122,8 +122,8 @@ See [REFERENCE.md](REFERENCE.md#implementation-reconcile).
 
 ## Quick start
 
-User: "Split bundle #17 into tasks on map #12."
+User: "Split bundle #N into tasks on map #M."
 
-Load bundle #17 + map #12 → propose split → create draft `wayfinder:task` issue(s) → user says **`scope approved`** → sync Implementing + coverage → user says **`tasks approved`** → add `wayfinder:approved` → implement.
+Load bundle #N + map #M → propose split → create draft `wayfinder:task` issue(s) → user says **`scope approved`** → sync Implementing + coverage → user says **`tasks approved`** → add `wayfinder:approved` → implement.
 
 See [REFERENCE.md](REFERENCE.md) for task template, approval phrases, and coverage updates.
