@@ -422,6 +422,8 @@ In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map
 
 Install example: `npx skills@latest add KroniK907/skills/wayfinder/research`
 
+**AFK app repos:** cross-repo bootstrap checklist — [AFK-BOOTSTRAP.md](AFK-BOOTSTRAP.md). Pin this repo at a semver tag ([RELEASE.md](RELEASE.md)); templates under [bootstrap/](bootstrap/).
+
 ---
 
 ## Ecosystem integration
@@ -447,7 +449,7 @@ Skills that **write** wayfinder state:
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wayfinder:prototype`** Method — throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |
 | `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
 | [research](research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
-| Cloud AFK automation (TBD) | PR + comment on AFK ticket; human approves close via Reconcile |
+| Cloud AFK automation | Label trigger on **`wayfinder:approved`**; runs [implement-task](implement-task/SKILL.md) on bundle branch; **push + resolution comment** (no agent PRs); human Reconcile closes task — setup via [AFK-BOOTSTRAP.md](AFK-BOOTSTRAP.md) |
 
 **Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](code-review/SKILL.md) in ad-hoc mode. Complements built-in `review-bugbot` / `review-security`. During **implement-task**, code-review runs automatically after Method — no separate Route handoff.
 
