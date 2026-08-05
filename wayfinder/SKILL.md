@@ -89,7 +89,8 @@ Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under pare
 | [design-an-interface](design-an-interface/SKILL.md) | `wayfinder:prototype` tickets |
 | [define-bundle](define-bundle/SKILL.md) | GM cluster → draft/approved `wayfinder:bundle` issue |
 | [create-tasks](create-tasks/SKILL.md) | Approved bundle → **Implementing** tasks |
-| [implement-task](implement-task/SKILL.md) | **`wayfinder:approved`** tasks → Method dispatch → **`awaiting-reconcile`** |
+| [implement-task](implement-task/SKILL.md) | **`wayfinder:approved`** tasks → Method → **code-review** → push → **`awaiting-reconcile`** |
+| [code-review](code-review/SKILL.md) | Standards + Spec review; auto-fix obvious; invoked by implement-task or ad-hoc |
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wayfinder:prototype`** Method (LOGIC / UI branches via implement-task) |
 | [research](research/SKILL.md) | `wayfinder:research` tickets → findings comment |
 

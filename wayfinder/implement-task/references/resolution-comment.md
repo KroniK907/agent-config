@@ -21,6 +21,10 @@ Post as a **new top-level comment** on the implementation task at end-of-run. Co
 
 <{method-name}> — <one line on what the action skill did; link to key paths or artifacts.>
 
+### Code review
+
+<paste [code-review return artifact](../../code-review/REFERENCE.md#implement-task-return-artifact) — Auto-fixes applied, Standards/Spec remaining, Summary table. Use _(skipped — no diff)_ when Method produced no file changes.>
+
 ### Commits
 
 - `<short-hash>` — <message>

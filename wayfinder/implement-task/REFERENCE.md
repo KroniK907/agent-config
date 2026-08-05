@@ -91,7 +91,7 @@ Throughout the run — violations are workflow bugs:
 2. **Never remove** **`wayfinder:approved`** from the task you are implementing
 3. **Never post** Reconcile approval phrases (**`Approved — reconcile and close`**, **`Approved — reconcile, keep open`**) on the task
 4. **Never open PRs** — push to bundle branch only
-5. **Orchestration vs build** — git push, resolution comment, status `awaiting-reconcile`, unblock scan, AFK handoff stay in implement-task; Method skill owns product/doc deliverables
+5. **Orchestration vs build** — git push, code-review invoke, resolution comment, status `awaiting-reconcile`, unblock scan, AFK handoff stay in implement-task; Method skill owns product/doc deliverables; [code-review](../code-review/SKILL.md) owns review + obvious auto-fix
 
 ---
 
@@ -99,22 +99,40 @@ Throughout the run — violations are workflow bugs:
 
 After all startup gates pass:
 
-1. Read resolved Method skill (frontmatter **`name`** must match task **## Method**)
-2. Follow that skill's REFERENCE workflow for build work only
-3. Honor task **Decisions**, **What to build**, and **Done when**
-4. Return artifacts to orchestrator for resolution **Done when** table
+1. Record **`pre-method-sha`**: `git rev-parse HEAD`
+2. Read resolved Method skill (frontmatter **`name`** must match task **## Method**)
+3. Follow that skill's REFERENCE workflow for build work only
+4. Honor task **Decisions**, **What to build**, and **Done when**
+5. Return artifacts to orchestrator for resolution **Done when** table
 
 Action skills live under **`wayfinder/actions/<name>/`** per [PATTERNS.md](../actions/PATTERNS.md). Map-frontier skills (`research`, `grill-me`, …) are **not** default Methods for implementation tasks unless explicitly set.
 
 ---
 
+## Code review
+
+After Method build work completes, **before commit/push**:
+
+1. If `git diff pre-method-sha...HEAD` is empty → skip (no file changes)
+2. Invoke [code-review](../code-review/SKILL.md) in **implement-task mode**:
+   - Fixed point: **`pre-method-sha`**
+   - Spec: task issue + bundle **Decisions** (already loaded)
+3. Apply [auto-fix policy](../code-review/REFERENCE.md#auto-fix-policy) — code-review fixes obvious items in-repo
+4. Capture [return artifact](../code-review/REFERENCE.md#implement-task-return-artifact) for resolution **Code review** section
+
+Code-review does **not** replace human Reconcile — remaining Standards/Spec findings are for reviewer attention, not blockers unless the run cannot proceed (e.g. unfixable build break — narrate and stop before push).
+
+HITL and AFK both run code-review automatically. No task **## Method** override.
+
+---
+
 ## End-of-run sequence
 
-After Method skill completes build work:
+After code-review completes:
 
 ### 1. Commit and push
 
-- Commit on bundle branch with messages that reference task `#N` when helpful
+- Commit on bundle branch — Method deliverables + code-review auto-fixes; messages reference task `#N` when helpful
 - **`git push origin <bundle-branch>`**
 - If push fails → narrate blocker; do not set **`awaiting-reconcile`** until push succeeds (or human directs otherwise)
 
@@ -122,9 +140,9 @@ After Method skill completes build work:
 
 Post **Success** template from [references/resolution-comment.md](references/resolution-comment.md):
 
-Sections: **Summary**, **Method**, **Commits**, **Done when**, **Next**, **Reconcile**
+Sections: **Summary**, **Method**, **Code review**, **Commits**, **Done when**, **Next**, **Reconcile**
 
-Map each task **Done when** bullet in the table with evidence.
+Paste code-review [return artifact](../code-review/REFERENCE.md#implement-task-return-artifact) under **Code review**. Map each task **Done when** bullet in the table with evidence.
 
 ### 3. Task status
 

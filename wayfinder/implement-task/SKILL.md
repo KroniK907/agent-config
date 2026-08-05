@@ -1,11 +1,11 @@
 ---
 name: implement-task
-description: Orchestrate pickup and completion of wayfinder:approved implementation tasks — startup gates, bundle-branch git, Method dispatch, resolution comment, awaiting-reconcile, and AFK queue handoff. Use when a wayfinder:approved task is ready to implement (HITL or AFK), or wayfinder Route suggests implement-task.
+description: Orchestrate pickup and completion of wayfinder:approved implementation tasks — startup gates, bundle-branch git, Method dispatch, code-review (auto-fix obvious), resolution comment, awaiting-reconcile, and AFK queue handoff. Use when a wayfinder:approved task is ready to implement (HITL or AFK), or wayfinder Route suggests implement-task.
 ---
 
 # Implement task
 
-**Orchestration-only** entry for **`wayfinder:approved`** implementation tasks. Fail-closed startup → bundle-branch git → **Method dispatch** to the task's action skill → push → [resolution comment](references/resolution-comment.md) → **`Status: awaiting-reconcile`**. Does **not** close the task, remove **`wayfinder:approved`**, or post Reconcile approval phrases.
+**Orchestration-only** entry for **`wayfinder:approved`** implementation tasks. Fail-closed startup → bundle-branch git → **Method dispatch** → **[code-review](../code-review/SKILL.md)** (auto-fix obvious; defer rest) → push → [resolution comment](references/resolution-comment.md) → **`Status: awaiting-reconcile`**. Does **not** close the task, remove **`wayfinder:approved`**, or post Reconcile approval phrases.
 
 Detail: [REFERENCE.md](REFERENCE.md) · resolution templates: [references/resolution-comment.md](references/resolution-comment.md)
 
@@ -24,12 +24,13 @@ Run in order. **Stop at first gate failure** — post **Blocked** resolution per
 1. **Load** — task issue + parent bundle (map link, decision log, **Branch:**, **Decisions**)
 2. **Startup gates** — [REFERENCE § Startup gates](REFERENCE.md#startup-gates) (Status, labels, Method, bundle branch, AFK serial)
 3. **Git** — checkout/pull bundle branch from bundle **Branch:** line; create if missing
-4. **Method dispatch** — load and follow task **## Method** skill (HITL session override allowed; AFK requires valid Method)
+4. **Method dispatch** — record pre-Method `HEAD`; load and follow task **## Method** skill (HITL session override allowed; AFK requires valid Method)
 5. **Build** — action skill owns deliverables; orchestrator does not duplicate build steps
-6. **Push** — commit on bundle branch; push to remote
-7. **Resolve** — post success resolution comment; set body **Status:** `awaiting-reconcile` (keep **`wayfinder:approved`**)
-8. **Unblock** — scan dependents; add **`wayfinder:approved`** where **Blocked by** cleared ([REFERENCE § Unblock and handoff](REFERENCE.md#unblock-and-handoff))
-9. **AFK only** — remove **`wayfinder:afk-running`**; serial handoff to next eligible AFK task
+6. **Code review** — [code-review](../code-review/SKILL.md) in **implement-task mode** on `<pre-method-sha>...HEAD`; auto-fix obvious mistakes; capture [return artifact](../code-review/REFERENCE.md#implement-task-return-artifact) ([REFERENCE § Code review](REFERENCE.md#code-review))
+7. **Push** — commit Method + auto-fixes on bundle branch; push to remote
+8. **Resolve** — post success resolution comment (include **Code review** section); set body **Status:** `awaiting-reconcile` (keep **`wayfinder:approved`**)
+9. **Unblock** — scan dependents; add **`wayfinder:approved`** where **Blocked by** cleared ([REFERENCE § Unblock and handoff](REFERENCE.md#unblock-and-handoff))
+10. **AFK only** — remove **`wayfinder:afk-running`**; serial handoff to next eligible AFK task
 
 **Invariants:** Never close task · never remove own **`wayfinder:approved`** · never post **`Approved — reconcile and close`**
 

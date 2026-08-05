@@ -409,7 +409,7 @@ Map-discovery artifact = **comment on map issue** (no label).
 
 ## Skills repo layout
 
-In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `grill-me`, `research`, `define-bundle`, `create-tasks`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, `writing-for-agents`, PRD tools, etc.) stay at repo root.
+In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `grill-me`, `research`, `define-bundle`, `create-tasks`, `code-review`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, `writing-for-agents`, PRD tools, etc.) stay at repo root.
 
 **Method path validation:** default pool is skills at **`wayfinder/**/<name>/SKILL.md`** in the pinned pack. Repo-root one-offs are valid only when **## Method** explicitly names them.
 
@@ -418,7 +418,7 @@ In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map
 | `wayfinder/SKILL.md` | Hub — Chart, Materialize, Reconcile, Route |
 | `wayfinder/<skill>/` | Map-frontier sibling skills |
 | `wayfinder/actions/<name>/` | Implementation Method playbooks (via `implement-task`) |
-| `<one-off>/` (repo root) | Map-free or standalone utilities — includes `code-review`, `tdd`, `commit`, `writing-for-agents` |
+| `<one-off>/` (repo root) | Map-free or standalone utilities — `tdd`, `commit`, `writing-for-agents` |
 
 Install example: `npx skills@latest add KroniK907/skills/wayfinder/research`
 
@@ -442,16 +442,16 @@ Skills that **write** wayfinder state:
 | `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes holistic tracker delta (tickets, bundle clusters, route) |
 | `define-bundle` | Draft/approved bundle issue; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |
 | `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; `implemented` on Reconcile close |
-| [implement-task](implement-task/SKILL.md) | Bundle-branch implementation run; Method dispatch; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
+| [implement-task](implement-task/SKILL.md) | Bundle-branch run; Method dispatch; **code-review** after Method; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
+| [code-review](code-review/SKILL.md) | Two-axis Standards + Spec review; auto-fix obvious mistakes when invoked by implement-task; ad-hoc branch/PR/WIP review on request |
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wayfinder:prototype`** Method — throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |
 | `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
 | [research](research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
 | Cloud AFK automation (TBD) | PR + comment on AFK ticket; human approves close via Reconcile |
-| `code-review` | Read-only — diffs since a pinned ref; parallel Standards + Spec sub-agents; spec via `gh issue view` |
 
-**Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref (and is not picking up an implementation task), suggest [`code-review`](../code-review/SKILL.md). Complements built-in `review-bugbot` / `review-security` — those are fixed-prompt diff reviews; `code-review` adds standards-doc sweep and explicit spec lookup against GitHub issues.
+**Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](code-review/SKILL.md) in ad-hoc mode. Complements built-in `review-bugbot` / `review-security`. During **implement-task**, code-review runs automatically after Method — no separate Route handoff.
 
-**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → `define-bundle` → `create-tasks` → **`implement-task`** (Method e.g. **`prototype`**) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
+**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → `define-bundle` → `create-tasks` → **`implement-task`** (Method e.g. **`prototype`** → **code-review** → push) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
 
 ---
 
