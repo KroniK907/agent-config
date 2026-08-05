@@ -138,6 +138,8 @@ Skills for building, fixing, and evolving code.
 | grill-me | `wayfinder/grill-me/` |
 | design-an-interface | `wayfinder/design-an-interface/` |
 | create-tasks | `wayfinder/create-tasks/` |
+| implement-task | `wayfinder/implement-task/` |
+| prototype (action) | `wayfinder/actions/prototype/` |
 | research | `wayfinder/research/` |
 | write-a-prd | `write-a-prd/` |
 | prd-to-plan | `prd-to-plan/` |
@@ -150,6 +152,6 @@ Skills for building, fixing, and evolving code.
 | write-a-skill | `write-a-skill/` |
 | ubiquitous-language | `ubiquitous-language/` |
 
-**Layout:** Ecosystem skills and future **`wayfinder/actions/`** Method playbooks live under `wayfinder/` ([WF-ECO-GM-031](https://github.com/KroniK907/skills/issues/11)). One-off utilities stay at repo root.
+**Layout:** Ecosystem skills and **`wayfinder/actions/`** Method playbooks live under `wayfinder/` ([WF-ECO-GM-031](https://github.com/KroniK907/skills/issues/11)). One-off utilities stay at repo root.
 
 Related Cursor-focused skills (hooks, rules, canvas, SDK, CLI status line, and so on) may live in a separate `skills-cursor` tree alongside this repo on your machine; they are not bundled here.

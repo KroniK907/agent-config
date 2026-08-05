@@ -355,8 +355,10 @@ Suggest-only — user starts the recommended skill. Map ticket **Type** → defa
 | `grilling` (implementation) | `grill-me` | Ticket **Question** is the grill seed |
 | `grilling` (scope/strategy) | `strategic-ideation` | When **Question** is bundling, roadmap, or scope shape |
 | `research` | `research` | HITL v1; AFK deferred per map Notes |
-| `prototype` | `design-an-interface` or inline stub | Per ticket **Question** |
-| `task` | Agent checklist or human | Per ticket **Question** |
+| `prototype` (To Do) | `design-an-interface` or inline stub | Planning frontier; per ticket **Question** |
+| `prototype` (Implementing) | [implement-task](implement-task/SKILL.md) → Method **`prototype`** | [actions/prototype](actions/prototype/SKILL.md); bundle tasks only |
+| `task` (Implementing) | [implement-task](implement-task/SKILL.md) | Method from task **## Method**; per **What to build** |
+| `task` (To Do) | Agent checklist or human | Per ticket **Question** |
 | GM cluster ready to build | `define-bundle` | While planning To Do or fog may stay open; see [define-bundle REFERENCE](define-bundle/REFERENCE.md#route-heuristics-for-wayfinder) |
 | Approved bundle | `create-tasks` | Splits into **Implementing** tasks |
 | Small scope, no map | `write-a-prd` → `prd-to-issues` | **Not** a map Route handoff |
@@ -392,7 +394,8 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 | Build bundle | `wayfinder:bundle` |
 | To Do ticket | `wayfinder:todo` + type + mode |
 | Implementation task (draft) | `wayfinder:task` or `:prototype` + `:hitl` or `:afk` |
-| Approved implementation task | above + **`wayfinder:approved`**; body **Status:** `ready` |
+| Approved implementation task | above + **`wayfinder:approved`**; body **Status:** `ready` \| `awaiting-reconcile` |
+| AFK run lock | **`wayfinder:afk-running`** on current AFK task (GM-026) |
 
 Map-discovery artifact = **comment on map issue** (no label).
 
@@ -439,11 +442,13 @@ Skills that **write** wayfinder state:
 | `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes holistic tracker delta (tickets, bundle clusters, route) |
 | `define-bundle` | Draft/approved bundle issue; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |
 | `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; `implemented` on Reconcile close |
+| [implement-task](implement-task/SKILL.md) | Bundle-branch implementation run; Method dispatch; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
+| [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wayfinder:prototype`** Method — throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |
 | `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
 | [research](research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
 | Cloud AFK automation (TBD) | PR + comment on AFK ticket; human approves close via Reconcile |
 
-**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → `define-bundle` → `create-tasks` → implement → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
+**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → `define-bundle` → `create-tasks` → **`implement-task`** (Method e.g. **`prototype`**) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
 
 ---
 

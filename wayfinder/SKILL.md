@@ -69,7 +69,7 @@ Run when user explicitly invokes wayfinder after a sibling skill session.
 3. **Check implementation path** — If **Decision coverage** has a cluster of **`open`** rows ready to build (see [define-bundle route heuristics](define-bundle/REFERENCE.md#route-heuristics-for-wayfinder)), suggest [define-bundle](define-bundle/SKILL.md) alongside or instead of planning frontier when user wants to ship incrementally.
 4. **Suggest** — One recommended next step + skill from [routing table](REFERENCE.md#routing-table). Optional second choice if ambiguous. User picks skill and starts work — wayfinder does not resolve tickets.
 
-Approved bundles → suggest [create-tasks](create-tasks/SKILL.md). **`write-a-prd`** / **`prd-to-issues`** only for small map-free scope — not a map Route handoff.
+Approved bundles → suggest [create-tasks](create-tasks/SKILL.md). **`wayfinder:approved`** **Implementing** tasks → suggest [implement-task](implement-task/SKILL.md). **`write-a-prd`** / **`prd-to-issues`** only for small map-free scope — not a map Route handoff.
 
 ## Decision log
 
@@ -89,6 +89,8 @@ Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under pare
 | [design-an-interface](design-an-interface/SKILL.md) | `wayfinder:prototype` tickets |
 | [define-bundle](define-bundle/SKILL.md) | GM cluster → draft/approved `wayfinder:bundle` issue |
 | [create-tasks](create-tasks/SKILL.md) | Approved bundle → **Implementing** tasks |
+| [implement-task](implement-task/SKILL.md) | **`wayfinder:approved`** tasks → Method dispatch → **`awaiting-reconcile`** |
+| [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wayfinder:prototype`** Method (LOGIC / UI branches via implement-task) |
 | [research](research/SKILL.md) | `wayfinder:research` tickets → findings comment |
 
 Map-free path only: [write-a-prd](../../write-a-prd/SKILL.md) → [prd-to-issues](../../prd-to-issues/SKILL.md).

@@ -41,4 +41,4 @@ Explicit split between **`implement-task`** (orchestration: gates, branch, push,
 2. Register in wayfinder REFERENCE routing / ecosystem tables when the Method replaces an inline or root skill default
 3. Ensure `create-tasks` can set **Method:** `<name>` for the ticket types that use it
 
-**Deferred in task #28:** `actions/prototype/` — first concrete action skill lands in task #29.
+**First action skill:** [prototype](prototype/SKILL.md) — bundle **`wayfinder:prototype`** Method ([#29](https://github.com/KroniK907/skills/issues/29)).
