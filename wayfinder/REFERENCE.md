@@ -418,7 +418,7 @@ In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map
 | `wayfinder/SKILL.md` | Hub — Chart, Materialize, Reconcile, Route |
 | `wayfinder/<skill>/` | Map-frontier sibling skills |
 | `wayfinder/actions/<name>/` | Implementation Method playbooks (via `implement-task`) |
-| `<one-off>/` (repo root) | Map-free or standalone utilities |
+| `<one-off>/` (repo root) | Map-free or standalone utilities — includes `code-review`, `tdd`, `commit`, `writing-for-agents` |
 
 Install example: `npx skills@latest add KroniK907/skills/wayfinder/research`
 
@@ -447,6 +447,9 @@ Skills that **write** wayfinder state:
 | `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
 | [research](research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
 | Cloud AFK automation (TBD) | PR + comment on AFK ticket; human approves close via Reconcile |
+| `code-review` | Read-only — diffs since a pinned ref; parallel Standards + Spec sub-agents; spec via `gh issue view` |
+
+**Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref (and is not picking up an implementation task), suggest [`code-review`](../code-review/SKILL.md). Complements built-in `review-bugbot` / `review-security` — those are fixed-prompt diff reviews; `code-review` adds standards-doc sweep and explicit spec lookup against GitHub issues.
 
 **Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → `define-bundle` → `create-tasks` → **`implement-task`** (Method e.g. **`prototype`**) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
 
