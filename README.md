@@ -114,7 +114,13 @@ Skills for building, fixing, and evolving code.
 
 ## Writing & knowledge
 
-- **write-a-skill** — Create new agent skills with proper structure, progressive disclosure, and bundled resources.
+- **writing-for-agents** — Write documents agents consume (skills, AGENTS.md, Cursor rules): context pointers, information hierarchy, completion criteria, leading words. Adapted from [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents).
+
+  ```
+  npx skills@latest add KroniK907/skills/writing-for-agents
+  ```
+
+- **write-a-skill** — Router to `writing-for-agents` for backward-compatible installs when creating a new skill.
 
   ```
   npx skills@latest add KroniK907/skills/write-a-skill
@@ -149,7 +155,8 @@ Skills for building, fixing, and evolving code.
 | triage-issue | `triage-issue/` |
 | improve-codebase-architecture | `improve-codebase-architecture/` |
 | commit | `commit/` |
-| write-a-skill | `write-a-skill/` |
+| writing-for-agents | `writing-for-agents/` |
+| write-a-skill | `write-a-skill/` (router → writing-for-agents) |
 | ubiquitous-language | `ubiquitous-language/` |
 
 **Layout:** Ecosystem skills and **`wayfinder/actions/`** Method playbooks live under `wayfinder/` ([WF-ECO-GM-031](https://github.com/KroniK907/skills/issues/11)). One-off utilities stay at repo root.

@@ -409,7 +409,7 @@ Map-discovery artifact = **comment on map issue** (no label).
 
 ## Skills repo layout
 
-In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `grill-me`, `research`, `define-bundle`, `create-tasks`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, PRD tools, etc.) stay at repo root.
+In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `grill-me`, `research`, `define-bundle`, `create-tasks`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, `writing-for-agents`, PRD tools, etc.) stay at repo root.
 
 **Method path validation:** default pool is skills at **`wayfinder/**/<name>/SKILL.md`** in the pinned pack. Repo-root one-offs are valid only when **## Method** explicitly names them.
 

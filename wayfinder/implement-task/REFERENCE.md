@@ -47,7 +47,7 @@ Optional: load map **Implementing** row for mode (HITL / AFK).
 Resolve Method skill path:
 
 - Default pool: **`wayfinder/**/<name>/SKILL.md`** in the pinned skills pack
-- Repo-root one-offs (`tdd`, `commit`, `write-a-skill`, …) valid **only** when task **## Method** explicitly names them (human-set)
+- Repo-root one-offs (`tdd`, `commit`, `writing-for-agents`, …) valid **only** when task **## Method** explicitly names them (human-set)
 
 | Mode | Rule |
 |------|------|
