@@ -1,11 +1,26 @@
 ---
-name: feature-ideation
-description: Expand a rough feature seed through alternating ideation and tension rounds at idea level, then prune to clear boundaries for grill-me or PRD prep. Use when the user wants to ideate on a new feature, balloon scope before cutting it down, alternate expansion with strategic tensions, surface conflicts with existing initiatives, or produce a scoped description before implementation grilling.
+name: strategic-ideation
+description: Expand a rough feature seed through alternating ideation and tension rounds at idea level, then prune to clear boundaries for grill-me or PRD prep. Use when scope or strategy is unstable, for a wayfinder grilling ticket about feature shape, before write-a-prd when tensions remain open, or when the user wants strategic expansion and pruning—not zone triage or implementation grilling.
 ---
 
-# Feature ideation (expand → tension → prune)
+# Strategic ideation (expand → tension → prune)
 
-Take a **simple seed** (or chat history) and grow an **oversized** picture through **ideation**, stress it with **idea-level tensions** (like grill-me but not implementation), repeat bands until shape stabilizes, then **prune** to a single bounded description suitable for **[grill-me](../grill-me/SKILL.md)**.
+Take a **simple seed** (or chat history) and grow an **oversized** picture through **ideation**, stress it with **idea-level tensions** (like grill-me but not implementation), repeat bands until shape stabilizes, then **prune** to a single bounded description suitable for **[grill-me](../grill-me/SKILL.md)** or PRD prep.
+
+## Not this skill
+
+| Skill | When instead |
+|-------|----------------|
+| [feature-discovery](../feature-discovery/SKILL.md) | Chart phase: breadth-first zone triage → map-discovery comment |
+| [grill-me](../grill-me/SKILL.md) | Depth-first Q&A on one implementation branch; resolves a ticket **Question** |
+| [wayfinder](../SKILL.md) | Map/issues tracker, materialize, reconcile, next-step routing |
+
+## When to use (typical triggers)
+
+- A `wayfinder:grilling` ticket whose **Question** is scope, bundling, or strategy
+- Map **Not yet specified** notes scope is unstable before PRD
+- Optional pass before `write-a-prd` when idea-level tensions were never resolved in tickets
+- User explicitly asks for strategic expand/tension/prune (not zone discovery)
 
 ## Roles (fixed)
 
@@ -74,6 +89,7 @@ After Recap + Session state:
 - Synthesize threads into one coherent picture.
 - Produce the handoff per [REFERENCE.md](REFERENCE.md): **In scope**, **Boundaries** (positive edges), optional tiny **Explicitly not building** only when misleading defaults exist; **Tensions**; **Ready for grill-me**. Put backlog/deferred material only under **Notes for PRD**, not in the grill-me seed.
 - Offer edits until the user accepts the block.
+- If tied to a wayfinder map: tell the user to invoke **wayfinder Reconcile** to record scope decisions on the ticket/decision log when ready.
 
 ## Mechanical tracking
 
@@ -97,6 +113,6 @@ Expose this in **Session state** every turn so “what’s next” is obvious.
 
 ## Quick start
 
-User provides a one-sentence seed (or points to prior chat). Respond with Recap (start rules) + Session state + first ideation expansion. After **3** ideation rounds, switch to **2** tension rounds, then repeat until prune.
+User provides a one-sentence seed (or points to prior chat / wayfinder ticket). Respond with Recap (start rules) + Session state + first ideation expansion. After **3** ideation rounds, switch to **2** tension rounds, then repeat until prune.
 
 See [REFERENCE.md](REFERENCE.md) for the handoff template and session-state examples.
