@@ -13,8 +13,13 @@ $env:WAYFINDER_SKILLS_TAG = $Tag
 $env:WAYFINDER_SKILLS_REPO = $Repo
 
 if (Get-Command bash -ErrorAction SilentlyContinue) {
-    bash $ShScript
-    exit $LASTEXITCODE
+    Push-Location $ScriptDir
+    try {
+        bash ./install-skills.sh 2>&1 | ForEach-Object { Write-Host $_ }
+        exit $LASTEXITCODE
+    } finally {
+        Pop-Location
+    }
 }
 
 # Fallback when bash unavailable (Git for Windows usually provides it)
