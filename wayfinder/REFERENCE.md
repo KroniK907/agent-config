@@ -358,7 +358,7 @@ Suggest-only — user starts the recommended skill. Map ticket **Type** → defa
 | `prototype` (To Do) | `design-an-interface` or inline stub | Planning frontier; per ticket **Question** |
 | `prototype` (Implementing) | [implement-task](implement-task/SKILL.md) → Method **`prototype`** | [actions/prototype](actions/prototype/SKILL.md); bundle tasks only |
 | `task` (Implementing) | [implement-task](implement-task/SKILL.md) | Method from task **## Method**; per **What to build** |
-| `task` (To Do) | Agent checklist or human | Per ticket **Question** |
+| `task` (To Do) | [one-off](one-off/SKILL.md) | Map-scoped repo deliverables; trivial checklist-only errands stay *Agent checklist or human* |
 | GM cluster ready to build | `define-bundle` | While planning To Do or fog may stay open; see [define-bundle REFERENCE](define-bundle/REFERENCE.md#route-heuristics-for-wayfinder) |
 | Approved bundle | `create-tasks` | Splits into **Implementing** tasks; bundle **Branch:** already set by [define-bundle](define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027) |
 | Small scope, no map | `write-a-prd` → `prd-to-issues` | **Not** a map Route handoff |
@@ -426,7 +426,7 @@ gh issue edit <num> --remove-label "wf:needs-review"
 
 ## Skills repo layout
 
-In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `grill-me`, `research`, `define-bundle`, `create-tasks`, `code-review`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, `writing-for-agents`, PRD tools, etc.) stay at repo root.
+In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `grill-me`, `research`, `define-bundle`, `create-tasks`, `one-off`, `code-review`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, `writing-for-agents`, PRD tools, etc.) stay at repo root.
 
 **Method path validation:** default pool is skills at **`wayfinder/**/<name>/SKILL.md`** in the pinned pack. Repo-root one-offs are valid only when **## Method** explicitly names them.
 
@@ -461,6 +461,7 @@ Skills that **write** wayfinder state:
 | `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes holistic tracker delta (tickets, bundle clusters, route) |
 | `define-bundle` | Draft/approved bundle issue; proposed **Branch:** in draft; git branch create + push on **`bundle approved`**; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |
 | `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; deferred/serial **`wf:approved`** on **`tasks approved`**; `implemented` on Reconcile close |
+| [one-off](one-off/SKILL.md) | HITL To Do implementation without bundle pipeline; draft/materialize ticket; `one-off/*` branch; implement-task tail with gate waivers in one-off REFERENCE |
 | [implement-task](implement-task/SKILL.md) | Bundle-branch run; Method dispatch; **code-review** after Method; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
 | [code-review](code-review/SKILL.md) | Two-axis Standards + Spec review; auto-fix obvious mistakes when invoked by implement-task; ad-hoc branch/PR/WIP review on request |
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wf:prototype`** Method — throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |

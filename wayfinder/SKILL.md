@@ -89,6 +89,7 @@ Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under pare
 | [design-an-interface](design-an-interface/SKILL.md) | `wf:prototype` tickets |
 | [define-bundle](define-bundle/SKILL.md) | GM cluster → draft/approved `wf:bundle` issue |
 | [create-tasks](create-tasks/SKILL.md) | Approved bundle → **Implementing** tasks |
+| [one-off](one-off/SKILL.md) | HITL map **To Do** implementation without bundle pipeline |
 | [implement-task](implement-task/SKILL.md) | **`wf:approved`** tasks → Method → **code-review** → push → **`awaiting-reconcile`** |
 | [code-review](code-review/SKILL.md) | Standards + Spec review; auto-fix obvious; invoked by implement-task or ad-hoc |
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wf:prototype`** Method (LOGIC / UI branches via implement-task) |
