@@ -1,0 +1,32 @@
+---
+description: Keep skill and reference markdown portable - no repo-specific issue or map decision-log anchors
+globs: "**/*.md"
+alwaysApply: false
+---
+
+# Portable skill docs - tracker stays in issues
+
+Applies to **every tracked `.md` file** in this repo - skills, reference, bootstrap, release notes, and other operational docs. The only carve-out is **gitignored** markdown.
+
+Much of this repo ships to **other repos** via skill install. Keep the **tracker layer** (GitHub issues, map bodies, bundle/task comments) separate from **committed markdown** here.
+
+## In tracked markdown
+
+Use **generic placeholders** - never anchors that bind to this repo or a specific map instance.
+
+| Write | Not |
+| --- | --- |
+| `{MAP-SLUG}-GM-001` with a fictional slug (`CMD-PAL`, `SEARCH-PANEL`) | `WF-ECO-GM-028`, `GM-024`, or any slug from a live map in this repo |
+| `#N`, `org/repo`, `{FeatureName}:Map` | `https://github.com/KroniK907/skills/issues/N` or `#29` pointing at this repo |
+| "the map issue", "the bundle issue", "Parent: …" as prose | Markdown links to issues in `KroniK907/skills` |
+
+**Format examples** teach shape; **instance examples** pin a reader to one map. Prefer fictional slugs and `#N` over real decision-log rows or issue numbers from Wayfinder-Ecosystem or sibling maps.
+
+## Where issue and GM references belong
+
+Put concrete links and decision-log rows in the **tracker**, not in committed markdown here:
+
+- Map, bundle, task, and decision-log **issue bodies**
+- **Comments** on those issues (resolution, reconcile, research findings)
+
+When a skill needs a worked example, describe the pattern in prose or use placeholders - point humans to the live map issue for real IDs.

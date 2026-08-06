@@ -1,0 +1,67 @@
+[
+  {
+    "name": "wf:map",
+    "color": "1D76DB",
+    "description": "Wayfinder map issue for a feature"
+  },
+  {
+    "name": "wf:decision-log",
+    "color": "5319E7",
+    "description": "Authoritative decision log for a wayfinder map"
+  },
+  {
+    "name": "wf:todo",
+    "color": "FBCA04",
+    "description": "Open frontier ticket on a wayfinder map"
+  },
+  {
+    "name": "wf:research",
+    "color": "C5DEF5",
+    "description": "Research ticket — routes to research skill"
+  },
+  {
+    "name": "wf:prototype",
+    "color": "D4C5F9",
+    "description": "Prototype ticket or implementation prototype task"
+  },
+  {
+    "name": "wf:grilling",
+    "color": "F9D0C4",
+    "description": "Grilling ticket — routes to grill-me or strategic-ideation"
+  },
+  {
+    "name": "wf:task",
+    "color": "BFDADC",
+    "description": "Implementation or checklist task"
+  },
+  {
+    "name": "wf:hitl",
+    "color": "EDEDED",
+    "description": "Human-in-the-loop mode"
+  },
+  {
+    "name": "wf:afk",
+    "color": "0E8A16",
+    "description": "AFK mode — cloud automation pickup"
+  },
+  {
+    "name": "wf:approved",
+    "color": "0E8A16",
+    "description": "Implementation task approved for agent pickup"
+  },
+  {
+    "name": "wf:bundle",
+    "color": "1D76DB",
+    "description": "Wayfinder build bundle issue from define-bundle"
+  },
+  {
+    "name": "wf:afk-running",
+    "color": "B60205",
+    "description": "AFK serial queue lock — held by the current AFK implementation run"
+  },
+  {
+    "name": "wf:needs-review",
+    "color": "E11D48",
+    "description": "Awaiting human approval phrase — remove when gate phrase received"
+  }
+]
