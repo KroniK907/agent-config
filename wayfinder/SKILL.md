@@ -84,6 +84,7 @@ Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under pare
 | Skill | Role |
 |-------|------|
 | [feature-discovery](feature-discovery/SKILL.md) | Chart handoff — posts map-discovery comment on map issue |
+| [constrain-fog](constrain-fog/SKILL.md) | Groom **Not yet specified** fog — **`Constrain:`** ticket + fog-resolution artifact |
 | [strategic-ideation](strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune (ticket or pre-PRD) |
 | [grill-me](grill-me/SKILL.md) | `wf:grilling` tickets → decision log |
 | [design-an-interface](design-an-interface/SKILL.md) | `wf:prototype` tickets |

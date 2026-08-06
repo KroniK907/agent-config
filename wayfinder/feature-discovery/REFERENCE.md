@@ -61,11 +61,13 @@ Layout:
 | Type | When | Title prefix |
 |------|------|--------------|
 | `research` | Facts, prior art, constraints to gather | **Research:** |
-| `prototype` | Stub, outline, or interface exploration | **Prototype:** |
+| `prototype` | Stub, outline, or interface exploration — prefer **Prototype:** prefix for planning tickets | **Prototype:** |
 | `grilling` | Single decision needing depth-first Q&A | **Grill:** · **Ideate:** (scope/strategy) · **Constrain:** (fog line) |
 | `task` | Deliverable, bundle, or tracker work | **Task:** · **Organize:** (housekeeping — Route picks skill) |
 
 Full rules: [wayfinder ticket title conventions](../REFERENCE.md#ticket-title-conventions).
+
+**Used by [constrain-fog](../constrain-fog/SKILL.md):** CONSTRAIN phase runs **mini-discovery** per fog item using this zone matrix at triage depth; optional inline **FULL_DISCOVERY** runs all five zones for one item. Ticket candidate table shape (Title, Type, Mode, Question) is shared — constrain-fog adds **Source fog** and **Blocked by** columns on its artifact.
 
 ### Research ticket shape (materialize)
 
@@ -95,8 +97,8 @@ When **Ticket candidates** Type is `research`, wayfinder **Materialize** creates
 
 ## Discovery vs strategic-ideation vs grill-me
 
-| | feature-discovery | strategic-ideation | grill-me |
-|--|-------------------|-------------------|----------|
-| Layer | Edge-finding; inventory | Idea/strategy; scope shape | Implementation depth |
-| Pace | One zone per reply (default) | Ideation/tension bands | One question per reply |
-| Output | Map-discovery comment on map issue | Scope handoff (chat) | `{MAP-SLUG}-GM-xx` |
+| | feature-discovery | constrain-fog | strategic-ideation | grill-me |
+|--|-------------------|---------------|-------------------|----------|
+| Layer | Edge-finding; inventory | Fog grooming; per-item triage | Idea/strategy; scope shape | Implementation depth |
+| Pace | One zone per reply (default) | One fog item per CONSTRAIN reply | Ideation/tension bands | One question per reply |
+| Output | Map-discovery comment on map issue | **`## Fog resolution`** on **`Constrain:`** ticket | Scope handoff (chat) | `{MAP-SLUG}-GM-xx` |

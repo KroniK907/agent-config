@@ -120,7 +120,7 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 |--------|----------------------|-------------------|-------------|
 | **Grill:** | `wf:grilling` | [grill-me](grill-me/SKILL.md) | The decision or contract to stress-test — depth-first Q&A |
 | **Ideate:** | `wf:grilling` | [strategic-ideation](strategic-ideation/SKILL.md) · [feature-ideation](feature-ideation/SKILL.md) (stub → strategic-ideation) | Scope/strategy or feature shape to expand → tension → prune |
-| **Constrain:** | `wf:grilling` | *constrain-fog* (pending — use **Grill:** or **Organize:** meanwhile) | A **Not yet specified** fog line or cluster to sharpen |
+| **Constrain:** | `wf:grilling` | [constrain-fog](constrain-fog/SKILL.md) | A **Not yet specified** fog line or cluster to sharpen |
 | **Research:** | `wf:research` | [research](research/SKILL.md) | The investigation — facts, prior art, survey |
 | **Prototype:** | `wf:prototype` | [prototype](actions/prototype/SKILL.md) · [design-an-interface](design-an-interface/SKILL.md) on planning **To Do** | What to explore — throwaway demo, layout, interface variants |
 | **Task:** | `wf:task` | [one-off](one-off/SKILL.md) · [implement-task](implement-task/SKILL.md) · [define-bundle](define-bundle/SKILL.md) | What to ship or bundle — repo deliverable, implementation run, or GM cluster |
@@ -132,6 +132,7 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 
 | Prefix | Pick skill when… |
 |--------|------------------|
+| **Constrain:** | Map-scoped fog grooming → **constrain-fog** (auto-creates session ticket; artifact on ticket body). |
 | **Ideate:** | Scope/strategy expand → tension → prune → **strategic-ideation** (default). Legacy **feature-ideation** invoke resolves to the same skill. |
 | **Prototype:** | Planning **To Do** exploration → **design-an-interface** or inline stub. **`wf:approved`** on **Implementing** → **implement-task** → Method **prototype**. |
 | **Task:** | Map **To Do** repo deliverable → **one-off**. **`wf:approved`** on **Implementing** → **implement-task**. User wants to coalesce GM cluster → **define-bundle**. |
@@ -351,6 +352,23 @@ When resolution **New ticket candidates** are approved:
 
 Skip rows the human struck from the resolution comment before approving.
 
+### Constrain-fog
+
+Run when loading a **`Constrain:`** ticket whose body contains **`## Fog resolution`** with **Status:** `ready for reconcile`.
+
+| Signal in artifact | Propose in resolution |
+|--------------------|----------------------|
+| **New ticket candidates** rows | **New ticket candidates** table (materialize on approval — same labels as Materialize) |
+| **Cleanup** — `out of scope` | **Map updates → Out of scope** |
+| **Cleanup** — `deleted` or **Per-item** — remove | Drop line from **Not yet specified** |
+| **Remaining fog** / rewrite / split | **Map updates → Not yet specified** |
+| **Ticket invalidations** | **Ticket invalidations** section |
+| **Route hint** in artifact | **Route hint** (merge with standard inference) |
+| **Session summary** | **Session summary** |
+| Binding decision prose | **Grill / Ideate** ticket candidates only — **not** GM rows unless user explicitly requested during constrain-fog |
+
+Do **not** use **Materialize** for constrain-fog output. Do **not** append **`## Map discovery`** to the map issue.
+
 ---
 
 ## Completed workflow and approval
@@ -416,6 +434,25 @@ Suggest-only — user starts the recommended skill. Map ticket **Type** → defa
 
 After sibling session: remind user to invoke wayfinder **Reconcile** (explicit invoke — see map fog if auto-reconcile is ever desired).
 
+### Route heuristics — constrain-fog
+
+Suggest [constrain-fog](constrain-fog/SKILL.md) when **all** of:
+
+1. Map **To Do** table is **empty** (no open frontier rows)
+2. **Not yet specified** is **non-empty**
+
+**Never** auto-suggest constrain-fog when open **To Do** items exist — user may **explicitly invoke** constrain-fog anytime.
+
+When **To Do** has items, Route the planning frontier per [frontier queries](#frontier-queries) instead.
+
+**Contrast:**
+
+| Skill | When |
+|-------|------|
+| **feature-discovery** | Post-Chart whole-map breadth-first triage → **`## Map discovery`** → Materialize |
+| **constrain-fog** | Existing map; groom **Not yet specified** → **`## Fog resolution`** on **`Constrain:`** ticket → Reconcile |
+| **grill-me / strategic-ideation / research** | Existing typed tickets on **To Do** |
+
 ---
 
 ## Subfeature maps
@@ -476,7 +513,7 @@ gh issue edit <num> --remove-label "wf:needs-review"
 
 ## Skills repo layout
 
-In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `grill-me`, `research`, `define-bundle`, `create-tasks`, `one-off`, `code-review`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, `writing-for-agents`, PRD tools, etc.) stay at repo root.
+In `KroniK907/skills`, ecosystem skills live under **`wayfinder/<skill>/`**. Map-frontier siblings (`feature-discovery`, `constrain-fog`, `grill-me`, `research`, `define-bundle`, `create-tasks`, `one-off`, `code-review`, etc.) are peers of this hub skill. **`wayfinder/actions/`** holds **`implement-task` Method playbooks** — see [actions/PATTERNS.md](actions/PATTERNS.md). One-off utilities (`tdd`, `commit`, `write-a-prd`, `writing-for-agents`, PRD tools, etc.) stay at repo root.
 
 **Method path validation:** default pool is skills at **`wayfinder/**/<name>/SKILL.md`** in the pinned pack. Repo-root one-offs are valid only when **## Method** explicitly names them.
 
@@ -507,6 +544,7 @@ Skills that **write** wayfinder state:
 | Skill | Writes |
 |-------|--------|
 | `feature-discovery` | Map-discovery comment on map issue |
+| [constrain-fog](constrain-fog/SKILL.md) | Auto-created **`Constrain:`** ticket; **`## Fog resolution`** artifact; Reconcile materializes ticket candidates |
 | `strategic-ideation` | Scope handoff (chat); Reconcile records on map |
 | `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes holistic tracker delta (tickets, bundle clusters, route) |
 | `define-bundle` | Draft/approved bundle issue; proposed **Branch:** in draft; git branch create + push on **`bundle approved`**; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |

@@ -13,6 +13,7 @@ Typically runs **after** wayfinder **Chart** creates the map skeleton and decisi
 
 | Skill | When instead |
 |-------|----------------|
+| [constrain-fog](../constrain-fog/SKILL.md) | Groom existing map **Not yet specified** fog — reuses zone matrix at triage depth per item |
 | [strategic-ideation](../strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune; idea-level tradeoffs |
 | [grill-me](../grill-me/SKILL.md) | Depth-first Q&A on one branch; resolves a single ticket **Question** |
 | [wayfinder](../SKILL.md) | Create map, materialize To Do tickets, reconcile, routing |
