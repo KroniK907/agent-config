@@ -14,10 +14,13 @@ $env:WAYFINDER_SKILLS_REPO = $Repo
 
 if (Get-Command bash -ErrorAction SilentlyContinue) {
     Push-Location $ScriptDir
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
     try {
         bash ./install-skills.sh 2>&1 | ForEach-Object { Write-Host $_ }
         exit $LASTEXITCODE
     } finally {
+        $ErrorActionPreference = $prevEap
         Pop-Location
     }
 }
