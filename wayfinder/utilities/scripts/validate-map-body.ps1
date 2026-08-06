@@ -8,11 +8,11 @@ param(
 $ErrorActionPreference = "Stop"
 
 if (-not (Test-Path $Path)) {
-    Write-Error "File not found: $Path"
+    Write-Error "FAIL: file not found: $Path"
     exit 1
 }
 
-$content = [System.IO.File]::ReadAllText($Path)
+$content = [System.IO.File]::ReadAllText($Path, [System.Text.UTF8Encoding]::new($false))
 $lines = ($content -split "`r?`n").Count
 
 if ($lines -lt 40) {
