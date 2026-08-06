@@ -112,6 +112,54 @@ Use for GitHub issue body or `wayfinder/plans/{FeatureName}.Map.md`.
 
 Every To Do ticket is a **child issue** of the map, labelled `wf:todo`.
 
+### Ticket title conventions
+
+Issue **titles** are the first signal agents and humans see in map **To Do** rows, Route suggestions, and chat citations. Use a **type prefix** so the title names the **process** (for planning tickets) or the **deliverable** (for implementation tickets) — not the other way around.
+
+| Prefix | Type label (typical) | Route to skill(s) | Title names |
+|--------|----------------------|-------------------|-------------|
+| **Grill:** | `wf:grilling` | [grill-me](grill-me/SKILL.md) | The decision or contract to stress-test — depth-first Q&A |
+| **Ideate:** | `wf:grilling` | [strategic-ideation](strategic-ideation/SKILL.md) · [feature-ideation](feature-ideation/SKILL.md) (stub → strategic-ideation) | Scope/strategy or feature shape to expand → tension → prune |
+| **Constrain:** | `wf:grilling` | *constrain-fog* (pending — use **Grill:** or **Organize:** meanwhile) | A **Not yet specified** fog line or cluster to sharpen |
+| **Research:** | `wf:research` | [research](research/SKILL.md) | The investigation — facts, prior art, survey |
+| **Prototype:** | `wf:prototype` | [prototype](actions/prototype/SKILL.md) · [design-an-interface](design-an-interface/SKILL.md) on planning **To Do** | What to explore — throwaway demo, layout, interface variants |
+| **Task:** | `wf:task` | [one-off](one-off/SKILL.md) · [implement-task](implement-task/SKILL.md) · [define-bundle](define-bundle/SKILL.md) | What to ship or bundle — repo deliverable, implementation run, or GM cluster |
+| **Organize:** | `wf:task` | [wayfinder](SKILL.md) · [one-off](one-off/SKILL.md) | Tracker/map housekeeping — fog sort, map sync, labels, tables, trivial edits |
+
+**Promoted bundle issues** (output of define-bundle, not frontier entry titles) stay **`Bundle: {short name}`** per [define-bundle REFERENCE](define-bundle/REFERENCE.md). **Implementing** tasks from create-tasks stay **`Task: {short name}`**.
+
+### Route by prefix (when several skills share a prefix)
+
+| Prefix | Pick skill when… |
+|--------|------------------|
+| **Ideate:** | Scope/strategy expand → tension → prune → **strategic-ideation** (default). Legacy **feature-ideation** invoke resolves to the same skill. |
+| **Prototype:** | Planning **To Do** exploration → **design-an-interface** or inline stub. **`wf:approved`** on **Implementing** → **implement-task** → Method **prototype**. |
+| **Task:** | Map **To Do** repo deliverable → **one-off**. **`wf:approved`** on **Implementing** → **implement-task**. User wants to coalesce GM cluster → **define-bundle**. |
+| **Organize:** | Chart / Materialize / Reconcile / map table or **Not yet specified** edits → **wayfinder**. Trivial checklist only → **one-off**. |
+
+**Rules:**
+
+1. **Planning titles = process, not artifact** — `Grill:` / `Ideate:` / `Constrain:` / `Research:` / `Prototype:` titles describe the **session**; put binding deliverables in **## Question** or a follow-on **`Task:`** ticket after Reconcile.
+2. **Implementation titles = deliverable** — `Task:` titles name what lands in the repo, bundle, or tracker when done.
+3. **Prefix matches Type column** — map **To Do** Type must agree with the title prefix; fix mismatches via retitle or retype.
+4. **Materialize and Reconcile apply prefixes** — when creating issues from **Ticket candidates**, set the title from the Type column using this table (do not copy the Question verbatim as the title).
+5. **Noun after prefix is short** — topic or subsystem name; details live in the issue body.
+
+**Examples:**
+
+| Weak title | Strong title | Why |
+|------------|--------------|-----|
+| Design constrain-fog skill for map fog resolution | **Grill:** constrain-fog skill design | "Design … skill" reads like implementation; `Grill:` signals Q&A first |
+| Specify research ticket workflow | **Grill:** research ticket workflow | "Specify" is ambiguous; grilling resolves the contract |
+| Cursor cloud automations for AFK pickup | **Research:** Cursor cloud automations for AFK pickup | Names the investigation |
+| Subfeature map worked example in REFERENCE | **Prototype:** subfeature map worked example | Names exploration, not a shipped doc yet |
+| implement create-tasks skill | **Task:** implement create-tasks skill | Deliverable prefix |
+| Coalesce GM-012–015 into first bundle | **Task:** define-bundle for palette shell | Bundling work; Route → define-bundle |
+| Decision coverage backfill | **Organize:** decision coverage backfill | Tracker errand; Route → wayfinder or one-off |
+| Clear routing-table fog lines | **Organize:** routing table fog | Tracker sort; Route → wayfinder |
+
+**Agent cue:** When the user cites a map ticket by `#N` or title, read the **prefix** first — it narrows the skill set. When the prefix maps to **one** skill, start there. When it maps to **several**, use **## Question** and map context (To Do vs Implementing, fog vs deliverable vs map sync) per the table above — do not treat body prose as permission to skip the prefix family (e.g. `Grill:` → implement).
+
 ### Ticket body template (grilling, prototype, task)
 
 ```markdown
@@ -160,7 +208,7 @@ Load the artifact from [feature-discovery](feature-discovery/REFERENCE.md#map-di
 
 | Artifact section | Map / GitHub action |
 |------------------|---------------------|
-| **Ticket candidates** — sharp Question | Create child issue + **To Do** row |
+| **Ticket candidates** — sharp Question | Create child issue + **To Do** row; title per [ticket title conventions](REFERENCE.md#ticket-title-conventions) |
 | **Fog** | Append to map **Not yet specified** |
 | **Out of scope suggestions** | Confirm with user; then **Out of scope** |
 | **Zone matrix** | Stays on map-discovery comment only; do not paste into map body |
@@ -209,7 +257,9 @@ Post as a **comment on the session ticket** (grilling, research, prototype, task
 
 | Title | Type | Mode | Question | Blocked by |
 |-------|------|------|----------|------------|
-| … | research / prototype / grilling / task | HITL / AFK | One sharp Question | — or issue ref |
+| **Grill:** … / **Research:** … / etc. | research / prototype / grilling / task | HITL / AFK | One sharp Question | — or issue ref |
+
+Title prefix must match Type — see [ticket title conventions](../REFERENCE.md#ticket-title-conventions).
 
 Omit table when none. Derive **Done when** bullets for `research` rows at materialize time (see [feature-discovery — research ticket shape](feature-discovery/REFERENCE.md#research-ticket-shape-materialize)).
 

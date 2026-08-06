@@ -37,7 +37,7 @@ Skip wayfinder when the path is clear — use `grill-me` or implement directly.
 
 1. **Load map** — Confirm map issue and slug.
 2. **Ingest map-discovery artifact** — From (in order): current chat block with `## Map discovery`; latest map-issue comment with that heading and **Status:** `ready for materialize`; user paste. See [materialize rules](REFERENCE.md#materialize-from-map-discovery).
-3. **Create To Do tickets** — One child issue per **Ticket candidates** row. Labels: `wf:todo` + type + mode. Wire **blocked-by** in a second pass per materialize rules.
+3. **Create To Do tickets** — One child issue per **Ticket candidates** row. Labels: `wf:todo` + type + mode. Titles per [ticket title conventions](REFERENCE.md#ticket-title-conventions). Wire **blocked-by** in a second pass per materialize rules.
 4. **Update map** — Populate **To Do** table; copy **Fog** → **Not yet specified**; confirm **Out of scope suggestions** with user if present; set **Phase:** `deciding`. Append **Completed** gist: *Map discovery materialized — N tickets*. Reply on map-discovery comment: **Status:** `materialized`.
 5. **Route** — Suggest first frontier ticket and skill (see **Route** below).
 

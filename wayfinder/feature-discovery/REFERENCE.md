@@ -58,12 +58,14 @@ Layout:
 
 ### Ticket candidate types
 
-| Type | When |
-|------|------|
-| `research` | Facts, prior art, constraints to gather |
-| `prototype` | Stub, outline, or interface exploration |
-| `grilling` | Single decision needing depth-first Q&A (`grill-me`) |
-| `task` | Checklist, doc update, wiring, human errand |
+| Type | When | Title prefix |
+|------|------|--------------|
+| `research` | Facts, prior art, constraints to gather | **Research:** |
+| `prototype` | Stub, outline, or interface exploration | **Prototype:** |
+| `grilling` | Single decision needing depth-first Q&A | **Grill:** · **Ideate:** (scope/strategy) · **Constrain:** (fog line) |
+| `task` | Deliverable, bundle, or tracker work | **Task:** · **Organize:** (housekeeping — Route picks skill) |
+
+Full rules: [wayfinder ticket title conventions](../REFERENCE.md#ticket-title-conventions).
 
 ### Research ticket shape (materialize)
 

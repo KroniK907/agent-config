@@ -2,7 +2,7 @@
 
 ## Research ticket template
 
-Use when [feature-discovery](../feature-discovery/SKILL.md) **Materialize** or wayfinder **Materialize** creates a `wf:research` ticket. Title: short investigation name.
+Use when [feature-discovery](../feature-discovery/SKILL.md) **Materialize** or wayfinder **Materialize** creates a `wf:research` ticket. Title: **`Research: {investigation topic}`** — see [ticket title conventions](../REFERENCE.md#ticket-title-conventions).
 
 ```markdown
 ## Question
