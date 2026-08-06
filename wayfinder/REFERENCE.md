@@ -392,6 +392,47 @@ Synonyms accepted if unambiguous: “approve and close #N”, “reconcile and c
 
 **Requires:** `gh` authenticated on the target repo for issue close/edit.
 
+### Map and issue body edits (Reconcile)
+
+Reconcile, Materialize, and [create-tasks](actions/create-tasks/SKILL.md) often replace a **full map or decision-log issue body**. Collapsed single-line bodies and mojibake are a common agent failure mode on Windows.
+
+**Required workflow**
+
+1. **Fetch (read-only)** - `gh issue view <num> --json body -q .body` for inventory only.
+2. **Draft full body** - Write the complete replacement markdown to a UTF-8 `.md` file with section newlines per [map skeleton](#map-skeleton). Apply only the approved delta (To Do row move, Completed gist, Decision coverage, fog/Notes).
+3. **Validate (fail closed)** - Run validator before upload:
+
+   ```powershell
+   .\wayfinder\utilities\scripts\validate-map-body.ps1 path\to\map-body.md
+   ```
+
+   ```bash
+   bash wayfinder/utilities/scripts/validate-map-body.sh path/to/map-body.md
+   ```
+
+4. **Upload** - `gh issue edit <num> --body-file path/to/map-body.md` only.
+5. **Verify** - Re-fetch; confirm line count, section headers, and no mojibake.
+
+**Never**
+
+| Anti-pattern | Why it breaks |
+|--------------|---------------|
+| PowerShell `$body = gh issue view ...` then `-replace` then write back | Preserves collapsed lines; corrupts UTF-8 on Windows |
+| `Out-File -Encoding utf8` without BOM control on edited bodies | Encoding surprises; use UTF-8 no-BOM or agent Write tool |
+| Partial string patch on live body | Drops `\n\n` section breaks between headers |
+| Unicode em dash, en dash, middle dot in map bodies | Mojibake under round-trip; use ASCII `-` only |
+
+**Validation gates** (enforced by `validate-map-body`):
+
+| Check | Threshold |
+|-------|-----------|
+| Line count | >= 40 (collapsed broken maps are often ~10 lines) |
+| Sections | `## To Do`, `## Completed`, `## Decision coverage` each on its own line |
+| Mojibake | No `Ã`, `Γ`, `╬`, box-drawing corruption sequences |
+| Punctuation | No em dash, en dash, middle dot - ASCII hyphen only |
+
+Same workflow applies to **decision-log** issue bodies when Reconcile appends GM rows (draft full body file; validate structure if map-shaped; upload via `--body-file`).
+
 ### Implementation task Reconcile
 
 When closing a **`wf:approved`** implementation task (from [create-tasks](actions/create-tasks/SKILL.md)):

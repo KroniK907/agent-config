@@ -87,7 +87,7 @@ When the user says **`scope approved`** (optionally naming task issues):
 2. **Map Decision coverage** - each bundle-scoped GM in bundle **Decisions** → **`assigned`**, **Linked issue** → task URL (when multiple tasks cover one GM, link the primary task or the task that completes that GM)
 3. **Comment** on each task summarizing executed updates
 
-Use `gh issue edit --body-file` for full map body replacements.
+Use `gh issue edit --body-file` for full map body replacements. Validate with [validate-map-body](../../utilities/scripts/validate-map-body.ps1) before upload - see [wayfinder REFERENCE § Map body edits](../../REFERENCE.md#map-and-issue-body-edits-reconcile).
 
 **Do not** add `wf:approved` or set Status `ready` yet. Keep **`wf:needs-review`** until **`tasks approved`**.
 
