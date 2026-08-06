@@ -94,12 +94,6 @@ Skills for shaping work without a wayfinder map - small scope, PRDs, or standalo
 
 Skills for building, fixing, and evolving code.
 
-- **tdd** - Test-driven development with a red-green-refactor loop (features, fixes, integration tests).
-
-  ```
-  npx skills@latest add KroniK907/skills/tdd
-  ```
-
 - **triage-issue** - Investigate a bug by exploring the codebase, identify root cause, and file a GitHub issue with a TDD-based fix plan.
 
   ```
@@ -146,7 +140,6 @@ Skills for building, fixing, and evolving code.
 | define-bundle | `wayfinder/define-bundle/` |
 | feature-discovery | `wayfinder/feature-discovery/` |
 | strategic-ideation | `wayfinder/strategic-ideation/` |
-| feature-ideation | `wayfinder/feature-ideation/` (stub → strategic-ideation) |
 | grill-me | `wayfinder/grill-me/` |
 | design-modules | `wayfinder/design-modules/` |
 | write-code (action) | `wayfinder/actions/write-code/` |
@@ -158,7 +151,6 @@ Skills for building, fixing, and evolving code.
 | prd-to-plan | `prd-to-plan/` |
 | prd-to-issues | `prd-to-issues/` |
 | request-refactor-plan | `request-refactor-plan/` |
-| tdd | `tdd/` |
 | triage-issue | `triage-issue/` |
 | improve-codebase-architecture | `improve-codebase-architecture/` |
 | commit | `commit/` |
