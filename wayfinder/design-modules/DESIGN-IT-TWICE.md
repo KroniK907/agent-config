@@ -1,28 +1,30 @@
 # Design it twice
 
-When interface shape is open, explore alternatives with parallel sub-agents. Based on "Design It Twice" (Ousterhout) - your first idea is unlikely to be the best.
+When a **module's** interface shape is open, explore alternatives with parallel sub-agents. Based on "Design It Twice" (Ousterhout) - your first idea is unlikely to be the best.
 
-Uses vocabulary from [REFERENCE.md](REFERENCE.md) - **module**, **interface**, **seam**, **adapter**, **leverage**.
+Run **per module** after module count and seams are settled (or confirmed with the human). Uses vocabulary from [REFERENCE.md](REFERENCE.md) - **module**, **interface**, **seam**, **adapter**, **leverage**.
 
 Adapted from [mattpocock/skills - engineering/codebase-design/DESIGN-IT-TWICE](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/DESIGN-IT-TWICE.md).
 
 ## Process
 
-### 1. Frame the problem space
+### 1. Frame the problem space (this module)
 
-Before spawning sub-agents, write a user-facing explanation:
+Before spawning sub-agents, write a user-facing explanation for **this module only**:
 
 - Constraints any new interface must satisfy
+- Which bundle decisions or ticket scope this module owns
 - Dependencies and category ([DEEPENING.md](DEEPENING.md))
+- How this module relates to sibling modules (when multi-module)
 - Rough illustrative sketch - not a proposal
 
 Show this to the user, then proceed to step 2. The user reads while sub-agents work in parallel.
 
 ### 2. Spawn sub-agents
 
-Spawn 3+ sub-agents in parallel via Task tool. Each must produce a **radically different** interface.
+Spawn 3+ sub-agents in parallel via Task tool. Each must produce a **radically different** interface for **this module**.
 
-Prompt each sub-agent with a separate technical brief (bundle **Decisions**, file paths when known, dependency category, what sits behind the seam). Give each agent a different design constraint:
+Prompt each sub-agent with a separate technical brief (relevant **Decisions**, file paths when known, dependency category, what sits behind the seam). Give each agent a different design constraint:
 
 - Agent 1: "Minimize the interface - aim for 1-3 entry points max. Maximise leverage per entry point."
 - Agent 2: "Maximise flexibility - support many use cases and extension."
@@ -45,11 +47,14 @@ Give a recommendation: strongest design and why. Propose a hybrid when elements 
 
 ### 4. Capture in artifact
 
-Fold the recommendation into the [module-design artifact](REFERENCE.md#module-design-artifact-template) on the bundle or ticket comment.
+Fold the recommendation into this module's section of the [single-module artifact](REFERENCE.md#single-module-artifact-template) on the bundle or ticket comment.
+
+Repeat steps 1-4 for each module that needs exploration.
 
 ## Anti-patterns
 
 - Do not let sub-agents produce similar designs - enforce radical difference
 - Do not skip comparison - the value is in contrast
+- Do not design-it-twice before module count is reasoned about - settle seams first
 - Do not implement - this step is interface shape only unless the human explicitly requests spike code
 - Do not evaluate based on implementation effort alone

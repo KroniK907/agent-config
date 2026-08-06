@@ -18,7 +18,7 @@ Dispatched by [implement-task](../../implement-task/SKILL.md) on bundle branch a
 
 | Skill | When instead |
 |-------|----------------|
-| [design-module](../../design-module/SKILL.md) | Map **To Do** prototype tickets (planning frontier); bundle module shaping before create-tasks |
+| [design-modules](../../design-modules/SKILL.md) | Map **To Do** prototype tickets (planning frontier); bundle module shaping before create-tasks |
 | [implement-task](../../implement-task/SKILL.md) | Gates, git push, resolution comment, **`awaiting-reconcile`** |
 | [grill-me](../../grill-me/SKILL.md) | Binding decisions via Q&A |
 

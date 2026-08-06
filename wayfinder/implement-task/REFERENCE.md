@@ -105,7 +105,7 @@ After all startup gates pass:
 4. Honor task **Decisions**, **What to build**, and **Done when**
 5. Return artifacts to orchestrator for resolution **Done when** table
 
-Action skills live under **`wayfinder/actions/<name>/`** per [PATTERNS.md](../actions/PATTERNS.md). Default **`wf:task`** Method is **`write-code`**; **`prototype`** for throwaway demos. Map-frontier skills (`research`, `grill-me`, `design-module`, …) are **not** default Methods for implementation tasks unless explicitly set.
+Action skills live under **`wayfinder/actions/<name>/`** per [PATTERNS.md](../actions/PATTERNS.md). Default **`wf:task`** Method is **`write-code`**; **`prototype`** for throwaway demos. Map-frontier skills (`research`, `grill-me`, `design-modules`, …) are **not** default Methods for implementation tasks unless explicitly set.
 
 ---
 

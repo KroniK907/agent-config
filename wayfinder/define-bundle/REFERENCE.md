@@ -189,4 +189,4 @@ Suggest **define-bundle** when:
 
 Prefer planning frontier skills (grill-me, research ticket, etc.) when rows are still **`open`** because work is incomplete - not because fog exists elsewhere on the map.
 
-After approval, suggest **[design-module](design-module/SKILL.md)** when module interface shape is still open, then **create-tasks** (or direct implementation if create-tasks is unavailable). Narrate that the bundle **Branch:** is set and pushed - create-tasks and implement-task use it for all bundle task commits.
+After approval, suggest **[design-modules](design-modules/SKILL.md)** when module interface shape is still open (one or more modules), then **create-tasks** (or direct implementation if create-tasks is unavailable). Narrate that the bundle **Branch:** is set and pushed - create-tasks and implement-task use it for all bundle task commits.

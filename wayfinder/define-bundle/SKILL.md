@@ -15,7 +15,7 @@ Runs on a wayfinder map + its decision log. After approval, hand off to [create-
 |-------|----------------|
 | [wayfinder](../SKILL.md) | Chart, Materialize, Reconcile, Route only |
 | [grill-me](../grill-me/SKILL.md) | Resolve unknowns → new binding GM rows |
-| [design-module](../design-module/SKILL.md) | Shape module interface from approved bundle before task split |
+| [design-modules](../design-modules/SKILL.md) | Shape one or more module interfaces from approved bundle before task split |
 | [create-tasks](../create-tasks/SKILL.md) | Split an **approved** bundle into implementation tasks |
 | [write-a-prd](../../write-a-prd/SKILL.md) | Small map-free scope only |
 
@@ -101,7 +101,7 @@ Use `gh issue edit --body-file` for full body replacements. Requires `gh` auth.
 
 Tell the user:
 
-- **Next (recommended when module shape is unclear):** [design-module](../design-module/SKILL.md) on the approved bundle (HITL; posts module-design comment) → then [create-tasks](../create-tasks/SKILL.md)
+- **Next (recommended when module shape is unclear):** [design-modules](../design-modules/SKILL.md) on the approved bundle (HITL; posts module-design artifact comment(s)) → then [create-tasks](../create-tasks/SKILL.md)
 - **Next (when shape is clear):** [create-tasks](../create-tasks/SKILL.md) with the approved bundle link, **or** implement directly from the bundle when a single session needs no task split
 - Bundle **Branch:** is created and pushed - all bundle tasks commit on that branch via [implement-task](../implement-task/SKILL.md)
 - Planning **To Do** may stay open
@@ -118,6 +118,6 @@ Tell the user:
 
 User: "Bundle decision-log rows for a build slice on map #N."
 
-Load map #N + decision log → propose cluster → create draft `wf:bundle` issue (with proposed **Branch:**) → user says **`bundle approved`** → create branch, sync coverage + suffixes → suggest design-module (when shape open) or create-tasks.
+Load map #N + decision log → propose cluster → create draft `wf:bundle` issue (with proposed **Branch:**) → user says **`bundle approved`** → create branch, sync coverage + suffixes → suggest design-modules (when shape open) or create-tasks.
 
 See [REFERENCE.md](REFERENCE.md) for bundle template, approval phrases, and global-row rules.

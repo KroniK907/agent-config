@@ -38,10 +38,10 @@ Skills for large-feature planning and incremental implementation via GitHub map 
   npx skills@latest add KroniK907/skills/wayfinder/grill-me
   ```
 
-- **design-module** - Shape deep modules from bundle decisions or planning tickets; design-it-twice exploration; HITL only. Replaces design-an-interface.
+- **design-modules** - Shape one or more deep modules from bundle decisions or planning tickets; seam discovery and design-it-twice exploration; HITL only. Replaces design-an-interface.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/design-module
+  npx skills@latest add KroniK907/skills/wayfinder/design-modules
   ```
 
 - **write-code** (action) - Default bundle **`wf:task`** Method: TDD at pre-agreed seams via implement-task.
@@ -148,7 +148,7 @@ Skills for building, fixing, and evolving code.
 | strategic-ideation | `wayfinder/strategic-ideation/` |
 | feature-ideation | `wayfinder/feature-ideation/` (stub → strategic-ideation) |
 | grill-me | `wayfinder/grill-me/` |
-| design-module | `wayfinder/design-module/` |
+| design-modules | `wayfinder/design-modules/` |
 | write-code (action) | `wayfinder/actions/write-code/` |
 | create-tasks | `wayfinder/create-tasks/` |
 | implement-task | `wayfinder/implement-task/` |

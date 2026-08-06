@@ -106,7 +106,7 @@ Use for GitHub issue body or `wayfinder/plans/{FeatureName}.Map.md`.
 | Label | Mode typical | Resolved by | Produces |
 |-------|--------------|-------------|----------|
 | `wf:research` | HITL (v1) | [research](research/SKILL.md) | Structured findings comment; non-binding Proposed tracker updates |
-| `wf:prototype` | HITL | Stub code, outline, or `design-module` | Asset link → comment |
+| `wf:prototype` | HITL | Stub code, outline, or `design-modules` | Asset link → comment |
 | `wf:grilling` | HITL | `grill-me` or `strategic-ideation` when Question is scope/strategy | `{MAP-SLUG}-GM-xx` rows in decision log |
 | `wf:task` | HITL or AFK | Agent checklist or human errand | Done-work record → comment |
 
@@ -122,7 +122,7 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 | **Ideate:** | `wf:grilling` | [strategic-ideation](strategic-ideation/SKILL.md) - [feature-ideation](feature-ideation/SKILL.md) (stub → strategic-ideation) | Scope/strategy or feature shape to expand → tension → prune |
 | **Constrain:** | `wf:grilling` | [constrain-fog](constrain-fog/SKILL.md) | A **Not yet specified** fog line or cluster to sharpen |
 | **Research:** | `wf:research` | [research](research/SKILL.md) | The investigation - facts, prior art, survey |
-| **Prototype:** | `wf:prototype` | [prototype](actions/prototype/SKILL.md) - [design-module](design-module/SKILL.md) on planning **To Do** | What to explore - throwaway demo, layout, interface variants |
+| **Prototype:** | `wf:prototype` | [prototype](actions/prototype/SKILL.md) - [design-modules](design-modules/SKILL.md) on planning **To Do** | What to explore - throwaway demo, layout, interface variants |
 | **Task:** | `wf:task` | [one-off](one-off/SKILL.md) - [implement-task](implement-task/SKILL.md) - [define-bundle](define-bundle/SKILL.md) | What to ship or bundle - repo deliverable, implementation run, or GM cluster |
 | **Organize:** | `wf:task` | [wayfinder](SKILL.md) - [one-off](one-off/SKILL.md) | Tracker/map housekeeping - fog sort, map sync, labels, tables, trivial edits |
 
@@ -134,7 +134,7 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 |--------|------------------|
 | **Constrain:** | Map-scoped fog grooming → **constrain-fog** (auto-creates session ticket; artifact on ticket body). |
 | **Ideate:** | Scope/strategy expand → tension → prune → **strategic-ideation** (default). Legacy **feature-ideation** invoke resolves to the same skill. |
-| **Prototype:** | Planning **To Do** exploration → **design-module** or inline stub. **`wf:approved`** on **Implementing** → **implement-task** → Method **prototype**. |
+| **Prototype:** | Planning **To Do** exploration → **design-modules** or inline stub. **`wf:approved`** on **Implementing** → **implement-task** → Method **prototype**. |
 | **Task:** | Map **To Do** repo deliverable → **one-off**. **`wf:approved`** on **Implementing** → **implement-task**. User wants to coalesce GM cluster → **define-bundle**. |
 | **Organize:** | Chart / Materialize / Reconcile / map table or **Not yet specified** edits → **wayfinder**. Trivial checklist only → **one-off**. |
 
@@ -423,10 +423,10 @@ Suggest-only - user starts the recommended skill. Map ticket **Type** → defaul
 | `grilling` (implementation) | `grill-me` | Ticket **Question** is the grill seed |
 | `grilling` (scope/strategy) | `strategic-ideation` | When **Question** is bundling, roadmap, or scope shape |
 | `research` | `research` | HITL v1; AFK deferred per map Notes |
-| `prototype` (To Do) | `design-module` or inline stub | Planning frontier; per ticket **Question** |
+| `prototype` (To Do) | `design-modules` or inline stub | Planning frontier; per ticket **Question** |
 | `prototype` (Implementing) | [implement-task](implement-task/SKILL.md) → Method **`prototype`** | [actions/prototype](actions/prototype/SKILL.md); bundle tasks only |
 | `task` (Implementing) | [implement-task](implement-task/SKILL.md) | Default Method **`write-code`** for normal build; **`prototype`** for throwaway demos |
-| Approved bundle (post-approval) | [design-module](design-module/SKILL.md) | Optional HITL module shaping before [create-tasks](create-tasks/SKILL.md) |
+| Approved bundle (post-approval) | [design-modules](design-modules/SKILL.md) | Optional HITL modules shaping (one or more) before [create-tasks](create-tasks/SKILL.md) |
 | `task` (To Do) | [one-off](one-off/SKILL.md) | Map-scoped repo deliverables; trivial checklist-only errands stay *Agent checklist or human* |
 | GM cluster ready to build | `define-bundle` | While planning To Do or fog may stay open; see [define-bundle REFERENCE](define-bundle/REFERENCE.md#route-heuristics-for-wayfinder) |
 | Approved bundle | `create-tasks` | Splits into **Implementing** tasks; bundle **Branch:** already set by [define-bundle](define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027) |

@@ -6,7 +6,7 @@ Adapted from [mattpocock/skills - engineering/codebase-design/DEEPENING](https:/
 
 ## Dependency categories
 
-When assessing a candidate for deepening, classify dependencies. The category determines how the deepened module is tested across its seam.
+When assessing a candidate module for deepening, classify its dependencies. The category determines how the deepened module is tested across its seam.
 
 ### 1. In-process
 
@@ -28,10 +28,11 @@ Third-party services you do not control. Module takes the dependency as an injec
 
 - **One adapter means a hypothetical seam. Two adapters means a real one.** Do not introduce a port unless at least two adapters are justified (typically production + test).
 - **Internal seams vs external seams.** A deep module may have internal seams private to its implementation. Do not expose internal seams through the interface just because tests use them.
+- **Between modules.** When a bundle splits into multiple modules, the seam **between** them is as important as each module's external interface - document caller/callee direction and what crosses the boundary.
 
 ## Testing strategy: replace, don't layer
 
 - Old unit tests on shallow modules become waste once tests at the deepened interface exist - delete them.
-- Write new tests at the deepened module's interface. The **interface is the test surface**.
+- Write new tests at each deepened module's interface. The **interface is the test surface**.
 - Tests assert observable outcomes through the interface, not internal state.
 - If a test must change when implementation changes without behaviour change, it is testing past the interface.

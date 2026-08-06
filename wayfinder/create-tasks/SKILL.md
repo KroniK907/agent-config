@@ -15,14 +15,14 @@ Runs on an approved bundle + parent map + decision log. After **`tasks approved`
 |-------|----------------|
 | [wayfinder](../SKILL.md) | Chart, Materialize, Reconcile, Route only |
 | [define-bundle](../define-bundle/SKILL.md) | Coalesce GM rows into draft/approved bundles |
-| [design-module](../design-module/SKILL.md) | Module interface artifact on bundle before splitting |
+| [design-modules](../design-modules/SKILL.md) | Per-module design artifacts on bundle before splitting |
 | [grill-me](../grill-me/SKILL.md) | Resolve unknowns → new binding GM rows |
 | [write-a-prd](../../write-a-prd/SKILL.md) | Small map-free scope only |
 
 ## Prerequisites
 
 - Approved bundle issue (`wf:bundle`, **Status:** `approved`)
-- When bundle scope needs module shaping first, run [design-module](../design-module/SKILL.md) (HITL) and post the module-design comment on the bundle - recommended, not required
+- When bundle scope needs module shaping first, run [design-modules](../design-modules/SKILL.md) (HITL) and post module-design artifact comment(s) on the bundle - one per module when multiple apply; recommended, not required
 - Parent map with **Implementing** table and **Decision coverage**
 - `gh` authenticated on the target repo
 - Labels `wf:task` or `wf:prototype`, `wf:hitl` or `wf:afk`, `wf:approved`

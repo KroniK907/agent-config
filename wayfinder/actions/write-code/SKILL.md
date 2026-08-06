@@ -24,7 +24,7 @@ Adapted from [mattpocock/skills - engineering/implement](https://github.com/matt
 | [code-review](../../code-review/SKILL.md) | Standards + Spec review after Method (always implement-task) |
 | [prototype](../prototype/SKILL.md) | Throwaway demos when **## Method:** `prototype` |
 | [tdd](../../../tdd/SKILL.md) | Ad-hoc TDD sessions outside implement-task Method dispatch |
-| [design-module](../../design-module/SKILL.md) | Module interface shaping before tasks exist |
+| [design-modules](../../design-modules/SKILL.md) | Modules interface shaping before tasks exist |
 
 ## Rules
 
