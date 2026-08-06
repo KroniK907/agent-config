@@ -131,6 +131,6 @@ Only after HITL smoke passes:
 | [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md) | Cursor automation prompt template |
 | [RELEASE.md](RELEASE.md) | Skills repo semver release process |
 | [implement-task/SKILL.md](../../orchestrators/implement-task/SKILL.md) | AFK/HITL orchestration contract |
-| [create-tasks/REFERENCE.md](create-tasks/REFERENCE.md) | Implementation task body template |
+| [create-tasks/REFERENCE.md](../../actions/create-tasks/REFERENCE.md) | Implementation task body template |
 
 Linked from [REFERENCE.md - Ecosystem integration](REFERENCE.md#ecosystem-integration).

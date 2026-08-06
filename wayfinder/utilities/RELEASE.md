@@ -22,7 +22,7 @@ First release after AFK v1 bundle lands: **`v0.1.0`**.
 
 Run on **`main`** after the AFK v1 bundle PR merges and all Implementing tasks are reconciled:
 
-1. **Verify main** - `implement-task`, `actions/prototype`, bootstrap pack, and REFERENCE rows present on `main`.
+1. **Verify main** - `orchestrators/implement-task`, `actions/` playbooks, `utilities/bootstrap/`, and hub REFERENCE rows present on `main`.
 2. **Tag** - annotated tag preferred:
 
    ```bash
@@ -32,8 +32,16 @@ Run on **`main`** after the AFK v1 bundle PR merges and all Implementing tasks a
    git push origin v0.1.0
    ```
 
-3. **Announce** - note tag in bundle / map Completed gist; app repos bump `WAYFINDER_SKILLS_TAG`.
-4. **App repos** - follow [AFK-BOOTSTRAP.md § Pin skills pack](AFK-BOOTSTRAP.md#2-pin-skills-pack-environmentjson); trigger Cloud Agent environment rebuild.
+3. **GitHub Release** - publish official release for the tag:
+
+   ```bash
+   gh release create v0.1.0 --title "v0.1.0 - AFK v1" --notes-file release-notes.md
+   ```
+
+   Summarize: implement-task orchestration, bootstrap pack, `wf:*` labels, four-folder layout (`actions/`, `ideation/`, `orchestrators/`, `utilities/`), write-code + design-modules, one-off entry path.
+
+4. **Announce** - note tag in bundle / map Completed gist; app repos bump `WAYFINDER_SKILLS_TAG`.
+5. **App repos** - follow [AFK-BOOTSTRAP.md § Pin skills pack](AFK-BOOTSTRAP.md#2-pin-skills-pack-environmentjson); trigger Cloud Agent environment rebuild.
 
 Subsequent releases repeat with the next semver (`v0.1.1`, `v0.2.0`, …).
 
@@ -70,4 +78,3 @@ Never pin to a moving branch (`main`) in production AFK repos - always an exact 
 ## Not in scope
 
 - npm / `npx skills@latest` publish flow (orthogonal install path for HITL local dev)
-- Automated GitHub Release notes (optional future enhancement)
