@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Wayfinder
 
-**Tracker and router** for large features: map skeleton → [feature-discovery](feature-discovery/SKILL.md) → tickets → sibling skills → **Reconcile** → [define-bundle](define-bundle/SKILL.md) → [create-tasks](create-tasks/SKILL.md). Part of a **skill ecosystem** - see [REFERENCE.md](REFERENCE.md) for templates, materialize rules, approval protocol, routing table, and GitHub ops.
+**Tracker and router** for large features: map skeleton → [feature-discovery](ideation/feature-discovery/SKILL.md) → tickets → sibling skills → **Reconcile** → [define-bundle](actions/define-bundle/SKILL.md) → [create-tasks](actions/create-tasks/SKILL.md). Part of a **skill ecosystem** - see [REFERENCE.md](REFERENCE.md) for templates, materialize rules, approval protocol, routing table, and GitHub ops.
 
 **Plan, don't implement** unless the map **Notes** say otherwise. Wayfinder does **not** run discovery interviews, strategic ideation, or grilling - it creates/updates GitHub state and suggests what skill to use next.
 
@@ -29,8 +29,8 @@ Skip wayfinder when the path is clear - use `grill-me` or implement directly.
 1. **Accept seed** - User’s one-paragraph feature description (and target repo if not obvious).
 2. **Name the map** - `{FeatureName}:Map` (e.g. `CommandPalette:Map`). Derive **map slug** per [REFERENCE.md](REFERENCE.md#map-slug-and-decision-log-prefix).
 3. **Set target outcome** - What this map works toward (usually a buildable PRD). One or two lines.
-4. **Create artifacts** - GitHub issues (preferred): decision log (`wf:decision-log`) → map (`wf:map`) linking the log. Local fallback: [plans/](plans/README.md). **To Do** empty; **Phase:** `charting`.
-5. **Hand off to feature-discovery** - Tell user to continue with [feature-discovery](feature-discovery/SKILL.md) in this or a new chat. Pass: **map issue** link, target outcome, seed. **Do not** interview zones in wayfinder.
+4. **Create artifacts** - GitHub issues (preferred): decision log (`wf:decision-log`) → map (`wf:map`) linking the log. Local fallback: [plans/](utilities/plans/README.md). **To Do** empty; **Phase:** `charting`.
+5. **Hand off to feature-discovery** - Tell user to continue with [feature-discovery](ideation/feature-discovery/SKILL.md) in this or a new chat. Pass: **map issue** link, target outcome, seed. **Do not** interview zones in wayfinder.
 6. **Stop** - Chart does not create tickets. Next step after discovery: **Materialize**.
 
 ### Materialize (capture → tickets)
@@ -60,16 +60,16 @@ Run when user explicitly invokes wayfinder after a sibling skill session.
 
 **Default:** Do not reconcile mid-session without user invoke. Sibling skills may remind: *Invoke wayfinder Reconcile when ready.*
 
-**Grilling sessions:** Reconcile is the bridge from depth-first Q&A to map evolution - not only binding GM rows, but inferred frontier tickets, bundle-ready clusters, and route hints. **`bundle approved`** remains [define-bundle](define-bundle/SKILL.md); Reconcile **suggests** clusters only.
+**Grilling sessions:** Reconcile is the bridge from depth-first Q&A to map evolution - not only binding GM rows, but inferred frontier tickets, bundle-ready clusters, and route hints. **`bundle approved`** remains [define-bundle](actions/define-bundle/SKILL.md); Reconcile **suggests** clusters only.
 
 ### Route (suggest next step)
 
 1. **Load map** - Low-res body (not every ticket thread) + decision log link.
 2. **Compute planning frontier** - First open, unblocked, unclaimed **To Do** item per [REFERENCE.md](REFERENCE.md#frontier-queries).
-3. **Check implementation path** - If **Decision coverage** has a cluster of **`open`** rows ready to build (see [define-bundle route heuristics](define-bundle/REFERENCE.md#route-heuristics-for-wayfinder)), suggest [define-bundle](define-bundle/SKILL.md) alongside or instead of planning frontier when user wants to ship incrementally.
+3. **Check implementation path** - If **Decision coverage** has a cluster of **`open`** rows ready to build (see [define-bundle route heuristics](actions/define-bundle/REFERENCE.md#route-heuristics-for-wayfinder)), suggest [define-bundle](actions/define-bundle/SKILL.md) alongside or instead of planning frontier when user wants to ship incrementally.
 4. **Suggest** - One recommended next step + skill from [routing table](REFERENCE.md#routing-table). Optional second choice if ambiguous. User picks skill and starts work - wayfinder does not resolve tickets.
 
-Approved bundles → suggest [create-tasks](create-tasks/SKILL.md). **`wf:approved`** **Implementing** tasks → suggest [implement-task](implement-task/SKILL.md). **`write-a-prd`** / **`prd-to-issues`** only for small map-free scope - not a map Route handoff.
+Approved bundles → suggest [create-tasks](actions/create-tasks/SKILL.md). **`wf:approved`** **Implementing** tasks → suggest [implement-task](orchestrators/implement-task/SKILL.md). **`write-a-prd`** / **`prd-to-issues`** only for small map-free scope - not a map Route handoff.
 
 ## Decision log
 
@@ -83,19 +83,19 @@ Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under pare
 
 | Skill | Role |
 |-------|------|
-| [feature-discovery](feature-discovery/SKILL.md) | Chart handoff - posts map-discovery comment on map issue |
-| [constrain-fog](constrain-fog/SKILL.md) | Groom **Not yet specified** fog - **`Constrain:`** ticket + fog-resolution artifact |
-| [strategic-ideation](strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune (ticket or pre-PRD) |
-| [grill-me](grill-me/SKILL.md) | `wf:grilling` tickets → decision log |
-| [design-modules](design-modules/SKILL.md) | Modules shaping (one or more) - bundle step before create-tasks; planning `wf:prototype` interface exploration |
-| [define-bundle](define-bundle/SKILL.md) | GM cluster → draft/approved `wf:bundle` issue |
-| [create-tasks](create-tasks/SKILL.md) | Approved bundle → **Implementing** tasks |
-| [one-off](one-off/SKILL.md) | HITL map **To Do** implementation without bundle pipeline |
-| [implement-task](implement-task/SKILL.md) | **`wf:approved`** tasks → Method → **code-review** → push → **`awaiting-reconcile`** |
-| [code-review](code-review/SKILL.md) | Standards + Spec review; auto-fix obvious; invoked by implement-task or ad-hoc |
+| [feature-discovery](ideation/feature-discovery/SKILL.md) | Chart handoff - posts map-discovery comment on map issue |
+| [constrain-fog](ideation/constrain-fog/SKILL.md) | Groom **Not yet specified** fog - **`Constrain:`** ticket + fog-resolution artifact |
+| [strategic-ideation](ideation/strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune (ticket or pre-PRD) |
+| [grill-me](ideation/grill-me/SKILL.md) | `wf:grilling` tickets → decision log |
+| [design-modules](actions/design-modules/SKILL.md) | Modules shaping (one or more) - bundle step before create-tasks; planning `wf:prototype` interface exploration |
+| [define-bundle](actions/define-bundle/SKILL.md) | GM cluster → draft/approved `wf:bundle` issue |
+| [create-tasks](actions/create-tasks/SKILL.md) | Approved bundle → **Implementing** tasks |
+| [one-off](orchestrators/one-off/SKILL.md) | HITL map **To Do** implementation without bundle pipeline |
+| [implement-task](orchestrators/implement-task/SKILL.md) | **`wf:approved`** tasks → Method → **code-review** → push → **`awaiting-reconcile`** |
+| [code-review](actions/code-review/SKILL.md) | Standards + Spec review; auto-fix obvious; invoked by implement-task or ad-hoc |
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wf:prototype`** Method (LOGIC / UI branches via implement-task) |
 | [actions/write-code](actions/write-code/SKILL.md) | Default bundle **`wf:task`** Method (TDD build via implement-task) |
-| [research](research/SKILL.md) | `wf:research` tickets → findings comment |
+| [research](actions/research/SKILL.md) | `wf:research` tickets → findings comment |
 
 Map-free path only: [write-a-prd](../../write-a-prd/SKILL.md) → [prd-to-issues](../../prd-to-issues/SKILL.md).
 

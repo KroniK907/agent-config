@@ -2,7 +2,7 @@
 
 Method playbook for bundle **`wf:task`** build work. Implements [PATTERNS.md](../PATTERNS.md) five mandatory sections.
 
-Combines Matt Pocock [implement](https://github.com/mattpocock/skills/tree/main/skills/engineering/implement) build loop with [tdd](https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd) vertical-slice discipline. **Code review, commit, and push are excluded** - owned by [implement-task](../../implement-task/SKILL.md).
+Combines Matt Pocock [implement](https://github.com/mattpocock/skills/tree/main/skills/engineering/implement) build loop with [tdd](https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd) vertical-slice discipline. **Code review, commit, and push are excluded** - owned by [implement-task](../../orchestrators/implement-task/SKILL.md).
 
 ---
 
@@ -79,7 +79,7 @@ Adapt to the task issue's actual **Done when** bullets.
 | implement-task | write-code (this skill) |
 |----------------|-------------------------|
 | Startup gates, bundle branch, AFK serial | Agree seams; vertical-slice TDD build |
-| [code-review](../../code-review/SKILL.md) after Method | - |
+| [code-review](../code-review/SKILL.md) after Method | - |
 | `git commit` / `push` | Edit files on branch only |
 | Resolution comment + **`awaiting-reconcile`** | Supply change summary, test evidence, Done when mapping |
 | Unblock scan + AFK handoff | - |
@@ -87,4 +87,4 @@ Adapt to the task issue's actual **Done when** bullets.
 
 **HITL vs AFK:** Same build shape; seam confirmation may be chat-driven (HITL) or inferred from task text (AFK).
 
-**Default Method:** [create-tasks](../../create-tasks/REFERENCE.md#method-field) should propose **`write-code`** for normal **`wf:task`** slices unless **prototype** or a human override applies.
+**Default Method:** [create-tasks](../create-tasks/REFERENCE.md#method-field) should propose **`write-code`** for normal **`wf:task`** slices unless **prototype** or a human override applies.

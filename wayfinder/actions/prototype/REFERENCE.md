@@ -90,6 +90,6 @@ Adapt to the task issue's actual **Done when** bullets.
 
 **HITL vs AFK:** Same prototype shape; queue semantics are implement-task only.
 
-**vs design-modules:** Map **To Do** interface exploration and optional post-bundle module shaping use [design-modules](../../design-modules/SKILL.md). This action is the bundle **Method** when **## Method:** `prototype`.
+**vs design-modules:** Map **To Do** interface exploration and optional post-bundle module shaping use [design-modules](../design-modules/SKILL.md). This action is the bundle **Method** when **## Method:** `prototype`.
 
 **vs mattpocock prototype:** Same branch model and playbooks; wayfinder adds bundle-branch capture via implement-task resolution instead of ad-hoc throwaway-branch + issue pointer.

@@ -7,7 +7,7 @@ description: Build throwaway prototypes to answer a design question - logic/stat
 
 A prototype is **throwaway code that answers a question**. The question decides the shape.
 
-Dispatched by [implement-task](../../implement-task/SKILL.md) on bundle branch after startup gates. Contract: [REFERENCE.md](REFERENCE.md). Branch playbooks: [LOGIC.md](LOGIC.md) - [UI.md](UI.md).
+Dispatched by [implement-task](../../orchestrators/implement-task/SKILL.md) on bundle branch after startup gates. Contract: [REFERENCE.md](REFERENCE.md). Branch playbooks: [LOGIC.md](LOGIC.md) - [UI.md](UI.md).
 
 ## When to use
 
@@ -18,9 +18,9 @@ Dispatched by [implement-task](../../implement-task/SKILL.md) on bundle branch a
 
 | Skill | When instead |
 |-------|----------------|
-| [design-modules](../../design-modules/SKILL.md) | Map **To Do** prototype tickets (planning frontier); bundle module shaping before create-tasks |
-| [implement-task](../../implement-task/SKILL.md) | Gates, git push, resolution comment, **`awaiting-reconcile`** |
-| [grill-me](../../grill-me/SKILL.md) | Binding decisions via Q&A |
+| [design-modules](../design-modules/SKILL.md) | Map **To Do** prototype tickets (planning frontier); bundle module shaping before create-tasks |
+| [implement-task](../../orchestrators/implement-task/SKILL.md) | Gates, git push, resolution comment, **`awaiting-reconcile`** |
+| [grill-me](../../ideation/grill-me/SKILL.md) | Binding decisions via Q&A |
 
 ## Pick a branch
 
@@ -38,4 +38,4 @@ The two branches produce very different artifacts - getting this wrong wastes th
 3. **No persistence by default.** State lives in memory. Persistence is the thing the prototype is _checking_, not something it should depend on. If the question explicitly involves a database, hit a scratch DB or a local file with a clear "PROTOTYPE - wipe me" name.
 4. **Skip the polish.** No tests, no error handling beyond what makes the prototype _runnable_, no abstractions. The point is to learn something fast.
 5. **Surface the state.** After every action (logic) or on every variant switch (UI), print or render the full relevant state so the user can see what changed.
-6. **Capture the answer when done.** Record the verdict and the question it settled for [implement-task](../../implement-task/SKILL.md) resolution **Summary** / **Done when**. Prototype files stay on the **bundle branch** as primary source - implement-task commits and pushes; agents never open PRs. Fold validated decisions into real code only when the task **Done when** requires it; otherwise leave the prototype as the artifact.
+6. **Capture the answer when done.** Record the verdict and the question it settled for [implement-task](../../orchestrators/implement-task/SKILL.md) resolution **Summary** / **Done when**. Prototype files stay on the **bundle branch** as primary source - implement-task commits and pushes; agents never open PRs. Fold validated decisions into real code only when the task **Done when** requires it; otherwise leave the prototype as the artifact.

@@ -6,7 +6,7 @@ Install paths below use this repository (`KroniK907/skills`). If you use a fork,
 
 ## Wayfinder ecosystem
 
-Skills for large-feature planning and incremental implementation via GitHub map trackers. All live under `wayfinder/` except the hub skill itself at `wayfinder/SKILL.md`.
+Skills for large-feature planning and incremental implementation via GitHub map trackers. The pack lives under `wayfinder/` with subfolders `actions/`, `ideation/`, `orchestrators/`, and `utilities/`. Hub skill: `wayfinder/SKILL.md`.
 
 - **wayfinder** - Bootstrap and maintain `FeatureName:Map` GitHub trackers: map skeleton, materialize tickets from map-discovery comment, reconcile after approval, suggest next skill. Use when a feature is too big for one session.
 
@@ -14,34 +14,34 @@ Skills for large-feature planning and incremental implementation via GitHub map 
   npx skills@latest add KroniK907/skills/wayfinder
   ```
 
-- **define-bundle** - Coalesce decision-log clusters into draft `wf:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
+- **define-bundle** (action) - Coalesce decision-log clusters into draft `wf:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/define-bundle
+  npx skills@latest add KroniK907/skills/wayfinder/actions/define-bundle
   ```
 
-- **feature-discovery** - Breadth-first five-zone interview; posts a map-discovery artifact as a comment on the map issue for wayfinder Materialize.
+- **feature-discovery** (ideation) - Breadth-first five-zone interview; posts a map-discovery artifact as a comment on the map issue for wayfinder Materialize.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/feature-discovery
+  npx skills@latest add KroniK907/skills/wayfinder/ideation/feature-discovery
   ```
 
-- **strategic-ideation** - Expand/tension/prune at idea level for scope and strategy; hand off to grill-me or PRD (renamed from feature-ideation).
+- **strategic-ideation** (ideation) - Expand/tension/prune at idea level for scope and strategy; hand off to grill-me or PRD (renamed from feature-ideation).
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/strategic-ideation
+  npx skills@latest add KroniK907/skills/wayfinder/ideation/strategic-ideation
   ```
 
-- **grill-me** - Stress-test a plan or design through sequential Q&A until open branches are resolved.
+- **grill-me** (ideation) - Stress-test a plan or design through sequential Q&A until open branches are resolved.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/grill-me
+  npx skills@latest add KroniK907/skills/wayfinder/ideation/grill-me
   ```
 
-- **design-modules** - Shape one or more deep modules from bundle decisions or planning tickets; seam discovery and design-it-twice exploration; HITL only. Replaces design-an-interface.
+- **design-modules** (action) - Shape one or more deep modules from bundle decisions or planning tickets; seam discovery and design-it-twice exploration; HITL only. Replaces design-an-interface.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/design-modules
+  npx skills@latest add KroniK907/skills/wayfinder/actions/design-modules
   ```
 
 - **write-code** (action) - Default bundle **`wf:task`** Method: TDD at pre-agreed seams via implement-task.
@@ -50,16 +50,16 @@ Skills for large-feature planning and incremental implementation via GitHub map 
   npx skills@latest add KroniK907/skills/wayfinder/actions/write-code
   ```
 
-- **create-tasks** - Split an approved bundle into implementation tasks on the map **Implementing** frontier.
+- **create-tasks** (action) - Split an approved bundle into implementation tasks on the map **Implementing** frontier.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/create-tasks
+  npx skills@latest add KroniK907/skills/wayfinder/actions/create-tasks
   ```
 
-- **research** - Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
+- **research** (action) - Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/research
+  npx skills@latest add KroniK907/skills/wayfinder/actions/research
   ```
 
 ## Planning utilities (map-free)
@@ -136,17 +136,18 @@ Skills for building, fixing, and evolving code.
 
 | Skill | Folder |
 |-------|--------|
-| wayfinder | `wayfinder/` |
-| define-bundle | `wayfinder/define-bundle/` |
-| feature-discovery | `wayfinder/feature-discovery/` |
-| strategic-ideation | `wayfinder/strategic-ideation/` |
-| grill-me | `wayfinder/grill-me/` |
-| design-modules | `wayfinder/design-modules/` |
+| wayfinder (hub) | `wayfinder/` |
+| define-bundle | `wayfinder/actions/define-bundle/` |
+| feature-discovery | `wayfinder/ideation/feature-discovery/` |
+| strategic-ideation | `wayfinder/ideation/strategic-ideation/` |
+| grill-me | `wayfinder/ideation/grill-me/` |
+| design-modules | `wayfinder/actions/design-modules/` |
 | write-code (action) | `wayfinder/actions/write-code/` |
-| create-tasks | `wayfinder/create-tasks/` |
-| implement-task | `wayfinder/implement-task/` |
+| create-tasks | `wayfinder/actions/create-tasks/` |
+| implement-task | `wayfinder/orchestrators/implement-task/` |
+| one-off | `wayfinder/orchestrators/one-off/` |
 | prototype (action) | `wayfinder/actions/prototype/` |
-| research | `wayfinder/research/` |
+| research | `wayfinder/actions/research/` |
 | write-a-prd | `write-a-prd/` |
 | prd-to-plan | `prd-to-plan/` |
 | prd-to-issues | `prd-to-issues/` |
@@ -158,6 +159,6 @@ Skills for building, fixing, and evolving code.
 | write-a-skill | `write-a-skill/` (router → writing-for-agents) |
 | ubiquitous-language | `ubiquitous-language/` |
 
-**Layout:** Ecosystem skills and **`wayfinder/actions/`** Method playbooks live under `wayfinder/` ([WF-ECO-GM-031](https://github.com/KroniK907/skills/issues/11)). One-off utilities stay at repo root.
+**Layout:** Ecosystem skills under `wayfinder/actions/`, `wayfinder/ideation/`, and `wayfinder/orchestrators/`; utilities under `wayfinder/utilities/`. One-off repo-root utilities stay at repo root.
 
 Related Cursor-focused skills (hooks, rules, canvas, SDK, CLI status line, and so on) may live in a separate `skills-cursor` tree alongside this repo on your machine; they are not bundled here.
