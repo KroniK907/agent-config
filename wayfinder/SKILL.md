@@ -87,13 +87,14 @@ Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under pare
 | [constrain-fog](constrain-fog/SKILL.md) | Groom **Not yet specified** fog - **`Constrain:`** ticket + fog-resolution artifact |
 | [strategic-ideation](strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune (ticket or pre-PRD) |
 | [grill-me](grill-me/SKILL.md) | `wf:grilling` tickets → decision log |
-| [design-an-interface](design-an-interface/SKILL.md) | `wf:prototype` tickets |
+| [design-module](design-module/SKILL.md) | Module shaping - bundle step before create-tasks; planning `wf:prototype` interface exploration |
 | [define-bundle](define-bundle/SKILL.md) | GM cluster → draft/approved `wf:bundle` issue |
 | [create-tasks](create-tasks/SKILL.md) | Approved bundle → **Implementing** tasks |
 | [one-off](one-off/SKILL.md) | HITL map **To Do** implementation without bundle pipeline |
 | [implement-task](implement-task/SKILL.md) | **`wf:approved`** tasks → Method → **code-review** → push → **`awaiting-reconcile`** |
 | [code-review](code-review/SKILL.md) | Standards + Spec review; auto-fix obvious; invoked by implement-task or ad-hoc |
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wf:prototype`** Method (LOGIC / UI branches via implement-task) |
+| [actions/write-code](actions/write-code/SKILL.md) | Default bundle **`wf:task`** Method (TDD build via implement-task) |
 | [research](research/SKILL.md) | `wf:research` tickets → findings comment |
 
 Map-free path only: [write-a-prd](../../write-a-prd/SKILL.md) → [prd-to-issues](../../prd-to-issues/SKILL.md).

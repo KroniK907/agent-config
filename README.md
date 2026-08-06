@@ -38,10 +38,16 @@ Skills for large-feature planning and incremental implementation via GitHub map 
   npx skills@latest add KroniK907/skills/wayfinder/grill-me
   ```
 
-- **design-an-interface** - Generate multiple radically different interface designs for a module using parallel sub-agents.
+- **design-module** - Shape deep modules from bundle decisions or planning tickets; design-it-twice exploration; HITL only. Replaces design-an-interface.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/design-an-interface
+  npx skills@latest add KroniK907/skills/wayfinder/design-module
+  ```
+
+- **write-code** (action) - Default bundle **`wf:task`** Method: TDD at pre-agreed seams via implement-task.
+
+  ```
+  npx skills@latest add KroniK907/skills/wayfinder/actions/write-code
   ```
 
 - **create-tasks** - Split an approved bundle into implementation tasks on the map **Implementing** frontier.
@@ -142,7 +148,8 @@ Skills for building, fixing, and evolving code.
 | strategic-ideation | `wayfinder/strategic-ideation/` |
 | feature-ideation | `wayfinder/feature-ideation/` (stub → strategic-ideation) |
 | grill-me | `wayfinder/grill-me/` |
-| design-an-interface | `wayfinder/design-an-interface/` |
+| design-module | `wayfinder/design-module/` |
+| write-code (action) | `wayfinder/actions/write-code/` |
 | create-tasks | `wayfinder/create-tasks/` |
 | implement-task | `wayfinder/implement-task/` |
 | prototype (action) | `wayfinder/actions/prototype/` |

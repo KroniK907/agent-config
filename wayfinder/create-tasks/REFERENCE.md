@@ -61,6 +61,7 @@ create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`a
 **Required at draft.** Propose a skill from the ecosystem Method pool when minting each task:
 
 - Default pool: **`wayfinder/**/<name>/SKILL.md`** in the pinned skills pack (`wayfinder/actions/<name>/` for bundle build playbooks)
+- **Default for `wf:task`:** propose **`write-code`** unless the slice is throwaway exploration (**`prototype`**) or the human sets another Method
 - Repo-root one-offs (`tdd`, `commit`, `writing-for-agents`, …) valid **only** when the human explicitly sets them on **## Method**
 
 **AFK pickup:** **## Method** must name a valid skill before **`wf:approved`** - [implement-task](../implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks.
