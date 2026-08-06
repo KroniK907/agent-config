@@ -66,7 +66,7 @@ App repo `.cursor/environment.json`:
 {
   "env": {
     "WAYFINDER_SKILLS_REPO": "KroniK907/skills",
-    "WAYFINDER_SKILLS_TAG": "v0.1.0"
+    "WAYFINDER_SKILLS_TAG": "v0.1.2"
   }
 }
 ```
