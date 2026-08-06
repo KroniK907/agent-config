@@ -1,18 +1,18 @@
 ---
-description: Keep skill and reference markdown portable — no repo-specific issue or map decision-log anchors
+description: Keep skill and reference markdown portable - no repo-specific issue or map decision-log anchors
 globs: "**/*.md"
 alwaysApply: false
 ---
 
-# Portable skill docs — tracker stays in issues
+# Portable skill docs - tracker stays in issues
 
-Applies to **every tracked `.md` file** in this repo — skills, reference, bootstrap, release notes, and other operational docs. The only carve-out is **gitignored** markdown.
+Applies to **every tracked `.md` file** in this repo - skills, reference, bootstrap, release notes, and other operational docs. The only carve-out is **gitignored** markdown.
 
 Much of this repo ships to **other repos** via skill install. Keep the **tracker layer** (GitHub issues, map bodies, bundle/task comments) separate from **committed markdown** here.
 
 ## In tracked markdown
 
-Use **generic placeholders** — never anchors that bind to this repo or a specific map instance.
+Use **generic placeholders** - never anchors that bind to this repo or a specific map instance.
 
 | Write | Not |
 | --- | --- |
@@ -29,4 +29,4 @@ Put concrete links and decision-log rows in the **tracker**, not in committed ma
 - Map, bundle, task, and decision-log **issue bodies**
 - **Comments** on those issues (resolution, reconcile, research findings)
 
-When a skill needs a worked example, describe the pattern in prose or use placeholders — point humans to the live map issue for real IDs.
+When a skill needs a worked example, describe the pattern in prose or use placeholders - point humans to the live map issue for real IDs.

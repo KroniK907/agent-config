@@ -1,6 +1,6 @@
 # Action skill patterns
 
-Shared scaffold for **`wayfinder/actions/<name>/`** skills — Method playbooks dispatched by [`implement-task`](../implement-task/SKILL.md). Map-frontier skills (e.g. `research`, `grill-me`) live as **`wayfinder/<skill>/`** peers, not under `actions/`.
+Shared scaffold for **`wayfinder/actions/<name>/`** skills - Method playbooks dispatched by [`implement-task`](../implement-task/SKILL.md). Map-frontier skills (e.g. `research`, `grill-me`) live as **`wayfinder/<skill>/`** peers, not under `actions/`.
 
 Each action skill is a **`wayfinder/**/<name>/SKILL.md`** entry in the Method pool. Default pool: skills at **`wayfinder/**/<name>/SKILL.md`** in the pinned pack; repo-root one-offs are valid only when task **## Method** explicitly names them. `create-tasks` sets **## Method** to the skill `name` from frontmatter.
 
@@ -10,7 +10,7 @@ Every action skill **REFERENCE.md** (or equivalent detail doc referenced from a 
 
 ### 1. Output artifact
 
-What tangible deliverable this Method produces for the implementation task — file paths, issue comment shape, branch state, or other verifiable artifact. Be specific enough that `implement-task` resolution **Done when** can cite it.
+What tangible deliverable this Method produces for the implementation task - file paths, issue comment shape, branch state, or other verifiable artifact. Be specific enough that `implement-task` resolution **Done when** can cite it.
 
 ### 2. Prerequisites
 
@@ -22,7 +22,7 @@ Step-by-step playbook the delegated agent follows after `implement-task` startup
 
 ### 4. Done when mapping
 
-How each bullet in the task issue **Done when** maps to workflow steps or output checks. Table or bullet mapping preferred — resolution comment **Done when** section copies this mapping at end-of-run.
+How each bullet in the task issue **Done when** maps to workflow steps or output checks. Table or bullet mapping preferred - resolution comment **Done when** section copies this mapping at end-of-run.
 
 ### 5. Division of labor
 
@@ -41,4 +41,4 @@ Explicit split between **`implement-task`** (orchestration: gates, branch, push,
 2. Register in wayfinder REFERENCE routing / ecosystem tables when the Method replaces an inline or root skill default
 3. Ensure `create-tasks` can set **Method:** `<name>` for the ticket types that use it
 
-**First action skill:** [prototype](prototype/SKILL.md) — bundle **`wf:prototype`** Method.
+**First action skill:** [prototype](prototype/SKILL.md) - bundle **`wf:prototype`** Method.

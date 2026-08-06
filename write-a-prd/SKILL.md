@@ -1,17 +1,17 @@
 ---
 name: write-a-prd
-description: Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue. Use when user wants to write a PRD, create a product requirements document, plan a new feature, or coordinate a large refactor—after decisions are already captured elsewhere.
+description: Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue. Use when user wants to write a PRD, create a product requirements document, plan a new feature, or coordinate a large refactor - after decisions are already captured elsewhere.
 ---
 
 When **not** to use this skill: if the change is small enough that there are **no binding engineering decisions** (behavior-only tweaks, obvious one-file fixes), skip the PRD and implement directly.
 
-**This skill does not run grill-me.** Depth-first Q&A belongs in a separate session (e.g. the `grill-me` skill) so this workflow does not lose instructions mid-chat. Run that first—or produce an equivalent artifact—then invoke `write-a-prd`.
+**This skill does not run grill-me.** Depth-first Q&A belongs in a separate session (e.g. the `grill-me` skill) so this workflow does not lose instructions mid-chat. Run that first - or produce an equivalent artifact - then invoke `write-a-prd`.
 
 ### Inputs required (gate)
 
 Before doing meaningful work, confirm **at least one** of:
 
-1. **Long discussion in context:** the current conversation already contains a substantial back-and-forth about the feature (decisions, constraints, structure, tradeoffs)—typically from a prior grill-me or design session; **or**
+1. **Long discussion in context:** the current conversation already contains a substantial back-and-forth about the feature (decisions, constraints, structure, tradeoffs) - typically from a prior grill-me or design session; **or**
 2. **Decision artifact file:** a Markdown or plain-text path the user points you to (plan, notes, RFC fragment, exported chat) that records enough implementation detail and **binding decisions** to build the `GM-xx` log without inventing them.
 
 If **neither** is true, **stop.** Tell the user you need either a pasted/summarized long discussion in the thread or a file path to a detailed artifact, and that running `grill-me` (or similar) first is the right way to produce that raw material.
@@ -39,8 +39,8 @@ If the sources are ambiguous on module boundaries, ask **targeted** clarifying q
 - Each `GM-xx` entry is **one paragraph** (freeform) that states the decision and any non-negotiable constraints. Include a **one-line context prefix** only if the decision would be cryptic without it.
 - **No numeric word cap.** Aim for the **shortest paragraph that preserves every constraint** someone would regret losing if it were omitted.
 - **Spawning rows from one batch:** you may start daughter rows with **Same decision batch as `GM-012`** (or repeat a one-line scope phrase) to avoid noise, then give that row’s decision paragraph.
-- **Bulky artifacts** (big tables, directory trees, mermaid): put them in **appendices** with **stable headings** (e.g. `## Appendix A — Target layout`). Each `GM-xx` that depends on that artifact must **name the appendix in prose** (e.g. “see Appendix A”). **Markdown anchor links** are optional—useful for long PRDs humans will navigate; plain pointers are enough for agents.
-- **Repo paths and filenames** are allowed wherever they are part of the **agreed outcome** (refactors, ownership, routing). Use **full repo links only sparingly**—when the name alone would be ambiguous (many `handlers.go`, similarly named packages). Prefer searchable paths in prose otherwise.
+- **Bulky artifacts** (big tables, directory trees, mermaid): put them in **appendices** with **stable headings** (e.g. `## Appendix A - Target layout`). Each `GM-xx` that depends on that artifact must **name the appendix in prose** (e.g. “see Appendix A”). **Markdown anchor links** are optional - useful for long PRDs humans will navigate; plain pointers are enough for agents.
+- **Repo paths and filenames** are allowed wherever they are part of the **agreed outcome** (refactors, ownership, routing). Use **full repo links only sparingly** - when the name alone would be ambiguous (many `handlers.go`, similarly named packages). Prefer searchable paths in prose otherwise.
 - If the work genuinely has **no binding engineering decisions**, write a single line under the decision log: **`No binding engineering decisions`** (rare for PRDs created through this skill).
 
 <prd-template>

@@ -5,7 +5,7 @@ description: Break a PRD into independently-grabbable GitHub issues using tracer
 
 # PRD to Issues
 
-Break a PRD into independently-grabbable GitHub issues using **vertical slices** (tracer bullets) so work can proceed **in parallel** with minimal merge thrash—**not** broad horizontal layers.
+Break a PRD into independently-grabbable GitHub issues using **vertical slices** (tracer bullets) so work can proceed **in parallel** with minimal merge thrash - **not** broad horizontal layers.
 
 **Assumption:** You usually have **only the PRD text + codebase context**, not the original grill-me chat. All commitments must come from the **parent PRD** (especially the **`GM-xx` decision log**).
 
@@ -97,9 +97,9 @@ A concise description of this vertical slice. End-to-end behavior and boundaries
 
 Paste the full text from the parent PRD for each relevant row:
 
-**GM-00x** — …verbatim paragraph from PRD…
+**GM-00x** - …verbatim paragraph from PRD…
 
-**GM-00y** — …
+**GM-00y** - …
 
 (Add rows as needed.)
 

@@ -4,12 +4,12 @@
 
 Emit one compact line after **Recap**:
 
-`Session state: Phase DISCOVERY · Zone [name] · Round [current]/5 · Next: [next zone or post map-discovery comment]`
+`Session state: Phase DISCOVERY - Zone [name] - Round [current]/5 - Next: [next zone or post map-discovery comment]`
 
 Examples:
 
-- `Session state: Phase DISCOVERY · Zone Surfaces & experience · Round 1/5 · Next: Behavior & correctness`
-- `Session state: Phase DISCOVERY · Zone Change, risk & evidence · Round 5/5 · Next: post map-discovery comment · Status ready for materialize`
+- `Session state: Phase DISCOVERY - Zone Surfaces & experience - Round 1/5 - Next: Behavior & correctness`
+- `Session state: Phase DISCOVERY - Zone Change, risk & evidence - Round 5/5 - Next: post map-discovery comment - Status ready for materialize`
 
 **First reply:** Recap states seed and map issue #; Session state starts at Surfaces & experience 1/5.
 
@@ -61,13 +61,13 @@ Layout:
 | Type | When | Title prefix |
 |------|------|--------------|
 | `research` | Facts, prior art, constraints to gather | **Research:** |
-| `prototype` | Stub, outline, or interface exploration — prefer **Prototype:** prefix for planning tickets | **Prototype:** |
-| `grilling` | Single decision needing depth-first Q&A | **Grill:** · **Ideate:** (scope/strategy) · **Constrain:** (fog line) |
-| `task` | Deliverable, bundle, or tracker work | **Task:** · **Organize:** (housekeeping — Route picks skill) |
+| `prototype` | Stub, outline, or interface exploration - prefer **Prototype:** prefix for planning tickets | **Prototype:** |
+| `grilling` | Single decision needing depth-first Q&A | **Grill:** - **Ideate:** (scope/strategy) - **Constrain:** (fog line) |
+| `task` | Deliverable, bundle, or tracker work | **Task:** - **Organize:** (housekeeping - Route picks skill) |
 
 Full rules: [wayfinder ticket title conventions](../REFERENCE.md#ticket-title-conventions).
 
-**Used by [constrain-fog](../constrain-fog/SKILL.md):** CONSTRAIN phase runs **mini-discovery** per fog item using this zone matrix at triage depth; optional inline **FULL_DISCOVERY** runs all five zones for one item. Ticket candidate table shape (Title, Type, Mode, Question) is shared — constrain-fog adds **Source fog** and **Blocked by** columns on its artifact.
+**Used by [constrain-fog](../constrain-fog/SKILL.md):** CONSTRAIN phase runs **mini-discovery** per fog item using this zone matrix at triage depth; optional inline **FULL_DISCOVERY** runs all five zones for one item. Ticket candidate table shape (Title, Type, Mode, Question) is shared - constrain-fog adds **Source fog** and **Blocked by** columns on its artifact.
 
 ### Research ticket shape (materialize)
 
@@ -75,11 +75,11 @@ When **Ticket candidates** Type is `research`, wayfinder **Materialize** creates
 
 | Field | Materialize action |
 |-------|-------------------|
-| **Question** column | Becomes `## Question` — one sharp investigation, fact-gathering not binding decision |
-| **Done when** | Add section with 1–3 verifiable acceptance bullets derived from the question and zone context |
+| **Question** column | Becomes `## Question` - one sharp investigation, fact-gathering not binding decision |
+| **Done when** | Add section with 1-3 verifiable acceptance bullets derived from the question and zone context |
 | **Map** | Auto-link parent map issue |
-| **Source hints** | Optional — add when discovery notes name docs, repos, or code paths |
-| **Perspectives** | Optional — add when discovery notes name stakeholders or alternate framings |
+| **Source hints** | Optional - add when discovery notes name docs, repos, or code paths |
+| **Perspectives** | Optional - add when discovery notes name stakeholders or alternate framings |
 
 **Mode:** Default `HITL` for research in v1 ([research](../research/SKILL.md) skill). Labels: `wf:todo` + `wf:research` + `wf:hitl`.
 

@@ -5,7 +5,7 @@ description: Breadth-first discovery interview across five coverage zones to fin
 
 # Feature discovery (breadth-first zone triage)
 
-Walk all **five coverage zones** once at **triage depth** — collect what is **known**, **unknown**, or **needs research**. Do **not** depth-first grill; do **not** resolve unknowns. On completion, post a **[map-discovery artifact](REFERENCE.md#map-discovery-artifact)** as a **comment on the map issue** for wayfinder **Materialize**.
+Walk all **five coverage zones** once at **triage depth** - collect what is **known**, **unknown**, or **needs research**. Do **not** depth-first grill; do **not** resolve unknowns. On completion, post a **[map-discovery artifact](REFERENCE.md#map-discovery-artifact)** as a **comment on the map issue** for wayfinder **Materialize**.
 
 Typically runs **after** wayfinder **Chart** creates the map skeleton and decision log.
 
@@ -13,7 +13,7 @@ Typically runs **after** wayfinder **Chart** creates the map skeleton and decisi
 
 | Skill | When instead |
 |-------|----------------|
-| [constrain-fog](../constrain-fog/SKILL.md) | Groom existing map **Not yet specified** fog — reuses zone matrix at triage depth per item |
+| [constrain-fog](../constrain-fog/SKILL.md) | Groom existing map **Not yet specified** fog - reuses zone matrix at triage depth per item |
 | [strategic-ideation](../strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune; idea-level tradeoffs |
 | [grill-me](../grill-me/SKILL.md) | Depth-first Q&A on one branch; resolves a single ticket **Question** |
 | [wayfinder](../SKILL.md) | Create map, materialize To Do tickets, reconcile, routing |
@@ -22,11 +22,11 @@ Typically runs **after** wayfinder **Chart** creates the map skeleton and decisi
 
 Wayfinder **Chart** must have created `{FeatureName}:Map` (with target outcome in the body).
 
-**Local fallback:** If GitHub is unavailable, write the artifact to `wayfinder/plans/{FeatureName}.Map-Discovery.md` — same layout per [REFERENCE.md](REFERENCE.md#map-discovery-artifact).
+**Local fallback:** If GitHub is unavailable, write the artifact to `wayfinder/plans/{FeatureName}.Map-Discovery.md` - same layout per [REFERENCE.md](REFERENCE.md#map-discovery-artifact).
 
 ## Coverage zones
 
-Same five as [grill-me](../grill-me/SKILL.md) — read each zone file through **Quick triage** only:
+Same five as [grill-me](../grill-me/SKILL.md) - read each zone file through **Quick triage** only:
 
 | Zone | Reference |
 |------|-----------|
@@ -40,11 +40,11 @@ Same five as [grill-me](../grill-me/SKILL.md) — read each zone file through **
 
 **Default: one zone per assistant reply** (five zones → five discovery rounds minimum).
 
-1. **Recap** — Last exchange, or on first reply: seed + **map issue** link + starting zone.
-2. **Session state** — Per [REFERENCE.md](REFERENCE.md#session-state-line).
-3. **Body** — For the **current zone only**: summarize **known**, **unknown**, **needs research** (with the question to answer). Invite corrections; optionally propose blue-sky edges.
-4. **Accumulate** — Track ticket candidates, fog, and notes internally (or in chat) as zones progress.
-5. **Stop** — Wait for user reply before the next zone.
+1. **Recap** - Last exchange, or on first reply: seed + **map issue** link + starting zone.
+2. **Session state** - Per [REFERENCE.md](REFERENCE.md#session-state-line).
+3. **Body** - For the **current zone only**: summarize **known**, **unknown**, **needs research** (with the question to answer). Invite corrections; optionally propose blue-sky edges.
+4. **Accumulate** - Track ticket candidates, fog, and notes internally (or in chat) as zones progress.
+5. **Stop** - Wait for user reply before the next zone.
 
 **Multi-session discovery:** After each zone (or band), you may post a **partial** map-discovery comment on the map issue with **Status:** `in progress` so work survives chat changes. Replace content by posting an updated full comment (see [REFERENCE.md](REFERENCE.md#persist-as-map-comment)).
 
@@ -54,7 +54,7 @@ After all five zones are visited, post the **final** map-discovery comment with 
 
 ## Every reply: recap first
 
-**Recap is mandatory** on every turn. On the **first** reply: state the feature seed, map issue link, and that discovery starts at **Surfaces & experience · Round 1/5**.
+**Recap is mandatory** on every turn. On the **first** reply: state the feature seed, map issue link, and that discovery starts at **Surfaces & experience - Round 1/5**.
 
 ## Completion
 
@@ -65,15 +65,15 @@ When all zones are captured:
 3. Set **Status:** `ready for materialize` in the comment.
 4. Tell the user to invoke **wayfinder Materialize** with the map link (same or new chat).
 
-Do **not** create **To Do** tickets — that is wayfinder **Materialize**.
+Do **not** create **To Do** tickets - that is wayfinder **Materialize**.
 
 ## Interaction rules
 
-1. **Breadth, not depth** — Do not drill into one unknown across zones; note it and move on.
-2. **One zone per reply** — Default; user may ask to batch two adjacent zones in one reply.
-3. **No stacked zones** — Finish the current zone’s turn before advancing the zone counter.
-4. **Blue-sky OK** — Surface possible scope edges; wayfinder sorts ticket vs fog vs out-of-scope at materialize.
-5. **Comment on map** — The canonical artifact lives as a map-issue comment, not a separate issue.
+1. **Breadth, not depth** - Do not drill into one unknown across zones; note it and move on.
+2. **One zone per reply** - Default; user may ask to batch two adjacent zones in one reply.
+3. **No stacked zones** - Finish the current zone’s turn before advancing the zone counter.
+4. **Blue-sky OK** - Surface possible scope edges; wayfinder sorts ticket vs fog vs out-of-scope at materialize.
+5. **Comment on map** - The canonical artifact lives as a map-issue comment, not a separate issue.
 
 ## Quick start
 

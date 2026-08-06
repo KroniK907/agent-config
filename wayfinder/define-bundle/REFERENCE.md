@@ -9,19 +9,19 @@ Use for GitHub issue body. Title: `Bundle: {short name}`.
 
 **Status:** draft | approved
 
-**Branch:** afk/bundle-{issue-num}-{slug}   *(draft: proposed; approved: confirmed — see [Bundle branch](#bundle-branch-wf-eco-gm-027))*
+**Branch:** afk/bundle-{issue-num}-{slug}   *(draft: proposed; approved: confirmed - see [Bundle branch](#bundle-branch-wf-eco-gm-027))*
 
 ## Map
 
-Parent: [{FeatureName}:Map](map-issue-url) · slug `{MAP-SLUG}` · decision log [#N](log-url)
+Parent: [{FeatureName}:Map](map-issue-url) - slug `{MAP-SLUG}` - decision log [#N](log-url)
 
 ## Name
 
-{One line — build-oriented name}
+{One line - build-oriented name}
 
 ## Scope summary
 
-{What this bundle delivers; 1–3 paragraphs. List concrete deliverables when meta/infra.}
+{What this bundle delivers; 1-3 paragraphs. List concrete deliverables when meta/infra.}
 
 ## Boundaries
 
@@ -36,15 +36,15 @@ Parent: [{FeatureName}:Map](map-issue-url) · slug `{MAP-SLUG}` · decision log 
 
 ## Decisions
 
-*(Covered GM rows — binding prose verbatim from decision log)*
+*(Covered GM rows - binding prose verbatim from decision log)*
 
-**{MAP-SLUG}-GM-NNN** — …
+**{MAP-SLUG}-GM-NNN** - …
 
 ## Constraints
 
-*(Auto-included `[global]` rows — not claimed by this bundle)*
+*(Auto-included `[global]` rows - not claimed by this bundle)*
 
-**{MAP-SLUG}-GM-NNN** — …
+**{MAP-SLUG}-GM-NNN** - …
 
 ## Open questions
 
@@ -52,7 +52,7 @@ Parent: [{FeatureName}:Map](map-issue-url) · slug `{MAP-SLUG}` · decision log 
 
 ## User stories or Outcomes
 
-N/A — meta/infra
+N/A - meta/infra
 
 - …
 ```
@@ -82,12 +82,12 @@ Synonyms accepted if unambiguous: "approve the bundle", "approve bundle #N".
 | `[global]` in log row text | **Constraints** only |
 | Decision coverage status **`global`** | **Constraints** only |
 | Coverage **`open`**, no suffix | May be **claimed** in **Decisions** |
-| `- bundled via [#N]` suffix | Already claimed — exclude |
+| `- bundled via [#N]` suffix | Already claimed - exclude |
 | Coverage **`scoped`** / **`assigned`** / **`implemented`** | Exclude from new bundles |
 
 On **`bundle approved`**, only rows listed in **Decisions** receive the suffix and **`scoped`** coverage update.
 
-Reconcile proposes **`[global]`** vs bundle-scoped when appending new rows; human confirms. Default **`[global]` when unsure**. Reconcile may also propose **bundle cluster suggestions** in the resolution comment — human runs define-bundle to draft/approve bundle issues.
+Reconcile proposes **`[global]`** vs bundle-scoped when appending new rows; human confirms. Default **`[global]` when unsure**. Reconcile may also propose **bundle cluster suggestions** in the resolution comment - human runs define-bundle to draft/approve bundle issues.
 
 ---
 
@@ -105,11 +105,11 @@ Later lifecycle (create-tasks / implementation Reconcile):
 
 | Status | Meaning | Linked issue |
 |--------|---------|--------------|
-| `open` | Decided, not yet bundled | — |
+| `open` | Decided, not yet bundled | - |
 | `scoped` | In approved bundle | Bundle issue |
 | `assigned` | Implementation task exists | Task issue |
 | `implemented` | Shipped | Task issue (closed) |
-| `global` | Infrastructure; never bundled | — |
+| `global` | Infrastructure; never bundled | - |
 
 ---
 
@@ -118,7 +118,7 @@ Later lifecycle (create-tasks / implementation Reconcile):
 Append to the **end** of each covered row paragraph (after any `(from …)` source link):
 
 ```markdown
- — bundled via [#N](https://github.com/org/repo/issues/N)
+ - bundled via [#N](https://github.com/org/repo/issues/N)
 ```
 
 Do not alter binding prose before the suffix.
@@ -127,7 +127,7 @@ Do not alter binding prose before the suffix.
 
 ## Bundle branch (WF-ECO-GM-027)
 
-All implementation tasks for a bundle commit and **push** on one shared branch. **Agents never open PRs** — humans open a PR when the bundle is complete.
+All implementation tasks for a bundle commit and **push** on one shared branch. **Agents never open PRs** - humans open a PR when the bundle is complete.
 
 ### Naming pattern
 
@@ -138,7 +138,7 @@ afk/bundle-{issue-num}-{slug}
 | Part | Rule |
 |------|------|
 | `{issue-num}` | Bundle issue number (e.g. `23` for `#23`) |
-| `{slug}` | Short kebab-case from bundle **Name** (e.g. `afk-v1` from "AFK v1 — skills…") |
+| `{slug}` | Short kebab-case from bundle **Name** (e.g. `afk-v1` from "AFK v1 - skills…") |
 
 Example: bundle [#23](https://github.com/KroniK907/skills/issues/23) → **`afk/bundle-23-afk-v1`**
 
@@ -158,8 +158,8 @@ Do **not** create the git branch while Status is `draft`.
 
 After setting Status `approved` and before handoff to create-tasks:
 
-1. **Confirm branch name** — use the draft **Branch:** line; human may edit the slug in chat before approval (e.g. "bundle approved with branch `afk/bundle-23-my-name`")
-2. **Create branch** — from default branch (usually `main`):
+1. **Confirm branch name** - use the draft **Branch:** line; human may edit the slug in chat before approval (e.g. "bundle approved with branch `afk/bundle-23-my-name`")
+2. **Create branch** - from default branch (usually `main`):
 
 ```powershell
 git fetch origin
@@ -169,7 +169,7 @@ git checkout -b <branch-name>
 git push -u origin <branch-name>
 ```
 
-3. **Persist** — set **Branch:** on the bundle body to the confirmed name (`gh issue edit`)
+3. **Persist** - set **Branch:** on the bundle body to the confirmed name (`gh issue edit`)
 
 [implement-task](../implement-task/SKILL.md) reads **Branch:** from the approved bundle at pickup; [create-tasks](../create-tasks/SKILL.md) does not create branches.
 
@@ -187,6 +187,6 @@ Suggest **define-bundle** when:
 - **Decision coverage** has a cluster of **`open`** rows clearly describing one deliverable
 - User wants to ship while planning **To Do** or **Not yet specified** remain non-empty
 
-Prefer planning frontier skills (grill-me, research ticket, etc.) when rows are still **`open`** because work is incomplete — not because fog exists elsewhere on the map.
+Prefer planning frontier skills (grill-me, research ticket, etc.) when rows are still **`open`** because work is incomplete - not because fog exists elsewhere on the map.
 
-After approval, suggest **create-tasks** (or direct implementation if create-tasks is unavailable). Narrate that the bundle **Branch:** is set and pushed — create-tasks and implement-task use it for all bundle task commits.
+After approval, suggest **create-tasks** (or direct implementation if create-tasks is unavailable). Narrate that the bundle **Branch:** is set and pushed - create-tasks and implement-task use it for all bundle task commits.

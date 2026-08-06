@@ -6,7 +6,7 @@
 
 **Common skip signals**
 
-- **No** new scenarios, rules, or state transitions—only rearranging code without changing outcomes.
+- **No** new scenarios, rules, or state transitions - only rearranging code without changing outcomes.
 - Purely **presentational** tweak with zero validation or side-effect changes (rare; verify).
 
 If **any** **if/else**, **validation**, **status machine**, **retry**, **ordering**, or **consistency** rule is introduced or altered, this zone is **in scope**.

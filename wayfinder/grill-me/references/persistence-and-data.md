@@ -2,7 +2,7 @@
 
 ## Quick triage (read every session)
 
-**Likely N/A when:** **no** durable state changes—no DB, no object store, no new files written, no cache semantics changed, no retention/PII impact. Pure ephemeral compute or config-only changes might qualify (verify audit needs).
+**Likely N/A when:** **no** durable state changes - no DB, no object store, no new files written, no cache semantics changed, no retention/PII impact. Pure ephemeral compute or config-only changes might qualify (verify audit needs).
 
 **Common skip signals**
 

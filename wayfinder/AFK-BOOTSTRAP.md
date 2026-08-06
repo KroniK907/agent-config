@@ -2,7 +2,7 @@
 
 Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Complete every step in an **app implementation repo** before adding `wf:afk` tasks or enabling label-trigger automation.
 
-**Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/skills`](https://github.com/KroniK907/skills) pinned to a **semver tag**; one automation per repo; agents **never open PRs** — bundle branch + resolution comment only.
+**Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/skills`](https://github.com/KroniK907/skills) pinned to a **semver tag**; one automation per repo; agents **never open PRs** - bundle branch + resolution comment only.
 
 ---
 
@@ -12,7 +12,7 @@ Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Comp
 - [ ] `gh` CLI authenticated with issue write on the app repo
 - [ ] `jq` available for Unix label bootstrap script (`bootstrap-labels.sh`)
 - [ ] Cursor Cloud Agents / Automations access for the org or user
-- [ ] Skills repo **semver tag** published (see [RELEASE.md](RELEASE.md) — pin `v0.1.0` or later)
+- [ ] Skills repo **semver tag** published (see [RELEASE.md](RELEASE.md) - pin `v0.1.0` or later)
 
 ---
 
@@ -30,7 +30,7 @@ Run once per app repo from any checkout that includes this skills pack:
 bash wayfinder/bootstrap/bootstrap-labels.sh
 ```
 
-Manifest: [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) — includes **`wf:afk-running`** (serial queue lock) and **`wf:needs-review`** (approval gate pending).
+Manifest: [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) - includes **`wf:afk-running`** (serial queue lock) and **`wf:needs-review`** (approval gate pending).
 
 Verify:
 
@@ -47,7 +47,7 @@ gh label list --limit 100 | Select-String wf:
 3. Set **`WAYFINDER_SKILLS_TAG`** in `environment.json` to the exact semver tag you released (e.g. `v0.1.0`).
 4. Commit both files under `.cursor/`.
 
-The **`install`** command runs on Cloud Agent Build creation. It must be **idempotent** — see [bootstrap/install-skills.sh](bootstrap/install-skills.sh).
+The **`install`** command runs on Cloud Agent Build creation. It must be **idempotent** - see [bootstrap/install-skills.sh](bootstrap/install-skills.sh).
 
 **Local smoke (optional):**
 
@@ -66,7 +66,7 @@ Cloud agents need **`gh`** and GitHub API access for issue edits, comments, and 
 
 | Source | When |
 |--------|------|
-| Cursor dashboard **Secrets** | Default — set `GH_TOKEN` (PAT or fine-grained token with repo + issues scope) |
+| Cursor dashboard **Secrets** | Default - set `GH_TOKEN` (PAT or fine-grained token with repo + issues scope) |
 | `environment.json` **`env.GH_TOKEN`** | Optional override when dashboard secret is not set |
 
 Do **not** commit tokens. Verify in a Cloud Agent shell:
@@ -80,12 +80,12 @@ gh auth status
 ## 4. Duplicate Cursor automation (one per repo)
 
 1. Open Cursor **Automations** for the app repo.
-2. Create **one** repo-scoped automation — trigger: **`wf:approved` label added**.
+2. Create **one** repo-scoped automation - trigger: **`wf:approved` label added**.
 3. Paste prompt from [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md).
 4. **Disable PR creation** in automation settings.
 5. Save and note the automation name for your runbook.
 
-The prompt references **`implement-task`** as the sole orchestration entry. Task bodies are identical for HITL and AFK — contract lives in implement-task + this automation.
+The prompt references **`implement-task`** as the sole orchestration entry. Task bodies are identical for HITL and AFK - contract lives in implement-task + this automation.
 
 ---
 
@@ -96,7 +96,7 @@ Run at least **one** implementation task manually before enabling AFK on product
 1. Chart / define-bundle / create-tasks through to a **`wf:approved`** HITL task with **Status:** `ready`.
 2. In chat: `/implement-task` on that task (or invoke implement-task skill with issue `#N`).
 3. Confirm: bundle branch checkout, Method build, code-review, push, resolution comment, **Status:** `awaiting-reconcile`.
-4. Reconcile with **`Approved — reconcile and close`**.
+4. Reconcile with **`Approved - reconcile and close`**.
 
 Only after HITL smoke passes:
 
@@ -112,8 +112,8 @@ Only after HITL smoke passes:
 |-------|--------|
 | Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump `WAYFINDER_SKILLS_TAG` in app `.cursor/environment.json`; rebuild Cloud Agent environment |
 | New wayfinder label | Add to [labels-manifest.json](bootstrap/labels-manifest.json) in skills repo; re-run bootstrap script in app repos |
-| Bundle complete | Human opens **one PR** from `afk/bundle-{N}-{slug}` — agents do not |
-| Task shipped | Human Reconcile **`Approved — reconcile and close`** per task resolution comment |
+| Bundle complete | Human opens **one PR** from `afk/bundle-{N}-{slug}` - agents do not |
+| Task shipped | Human Reconcile **`Approved - reconcile and close`** per task resolution comment |
 
 ---
 
@@ -133,4 +133,4 @@ Only after HITL smoke passes:
 | [implement-task/SKILL.md](implement-task/SKILL.md) | AFK/HITL orchestration contract |
 | [create-tasks/REFERENCE.md](create-tasks/REFERENCE.md) | Implementation task body template |
 
-Linked from [REFERENCE.md — Ecosystem integration](REFERENCE.md#ecosystem-integration).
+Linked from [REFERENCE.md - Ecosystem integration](REFERENCE.md#ecosystem-integration).

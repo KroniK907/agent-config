@@ -11,27 +11,27 @@ Use for GitHub issue body. Title: `Task: {short name}`.
 
 ## Parent bundle
 
-[Bundle: {name}](bundle-url) · map [{FeatureName}:Map](map-url) · decision log [#N](log-url)
+[Bundle: {name}](bundle-url) - map [{FeatureName}:Map](map-url) - decision log [#N](log-url)
 
 ## What to build
 
-{Concrete deliverables for this vertical slice; 1–2 paragraphs + bullet list when helpful.}
+{Concrete deliverables for this vertical slice; 1-2 paragraphs + bullet list when helpful.}
 
 ## Method
 
 **Skill:** {skill-name}
 
-{One line — why this Method for this slice. Propose from `wayfinder/` or `wayfinder/actions/`; repo-root one-offs only when human sets explicitly.}
+{One line - why this Method for this slice. Propose from `wayfinder/` or `wayfinder/actions/`; repo-root one-offs only when human sets explicitly.}
 
 ## Decisions
 
 *(Bundle Decisions verbatim + inherited Constraints this task must honor)*
 
-**{MAP-SLUG}-GM-NNN** — …
+**{MAP-SLUG}-GM-NNN** - …
 
 ## Outcomes / stories covered
 
-N/A — meta/infra
+N/A - meta/infra
 
 - …
 
@@ -41,7 +41,7 @@ N/A — meta/infra
 
 ## Blocked by
 
-—
+ - 
 ```
 
 For product tasks with user stories, replace the `N/A` line with story bullets and use **Done when** as acceptance criteria.
@@ -54,7 +54,7 @@ For product tasks with user stories, replace the `N/A` line with story bullets a
 | `ready` | create-tasks on **`tasks approved`** | Eligible for [implement-task](../implement-task/SKILL.md) pickup |
 | `awaiting-reconcile` | **implement-task only** | Work pushed; resolution posted; awaits human Reconcile |
 
-create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`awaiting-reconcile`** — do not use that status when splitting or approving tasks.
+create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`awaiting-reconcile`** - do not use that status when splitting or approving tasks.
 
 ### Method field
 
@@ -63,7 +63,7 @@ create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`a
 - Default pool: **`wayfinder/**/<name>/SKILL.md`** in the pinned skills pack (`wayfinder/actions/<name>/` for bundle build playbooks)
 - Repo-root one-offs (`tdd`, `commit`, `writing-for-agents`, …) valid **only** when the human explicitly sets them on **## Method**
 
-**AFK pickup:** **## Method** must name a valid skill before **`wf:approved`** — [implement-task](../implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks.
+**AFK pickup:** **## Method** must name a valid skill before **`wf:approved`** - [implement-task](../implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks.
 
 **Validation at pickup:** see [implement-task REFERENCE § Method validation](../implement-task/REFERENCE.md#method-validation).
 
@@ -88,32 +88,32 @@ On **`tasks approved`**, set **Status:** `ready` for **all** approved tasks. Add
 
 | Blocker state | Label action |
 |---------------|--------------|
-| No blockers (or **Blocked by:** `—`) | Add **`wf:approved`** per one-eligible-task rule below |
-| One or more blockers still **open** | **Defer** label — task stays `ready` without **`wf:approved`** |
-| Blocker closed or **`awaiting-reconcile`** | Eligible for label add — [implement-task](../implement-task/SKILL.md) may add when unblocking dependents |
+| No blockers (or **Blocked by:** ` - `) | Add **`wf:approved`** per one-eligible-task rule below |
+| One or more blockers still **open** | **Defer** label - task stays `ready` without **`wf:approved`** |
+| Blocker closed or **`awaiting-reconcile`** | Eligible for label add - [implement-task](../implement-task/SKILL.md) may add when unblocking dependents |
 
-When blockers remain, defer the label — [implement-task](../implement-task/SKILL.md) adds **`wf:approved`** when blockers clear ([REFERENCE § Unblock and handoff](../implement-task/REFERENCE.md#unblock-and-handoff)).
+When blockers remain, defer the label - [implement-task](../implement-task/SKILL.md) adds **`wf:approved`** when blockers clear ([REFERENCE § Unblock and handoff](../implement-task/REFERENCE.md#unblock-and-handoff)).
 
 #### One eligible task per approval decision
 
-When multiple tasks are **`ready`** and unblocked after **`tasks approved`**, add **`wf:approved`** to **one** task only — the next logical slice in build order.
+When multiple tasks are **`ready`** and unblocked after **`tasks approved`**, add **`wf:approved`** to **one** task only - the next logical slice in build order.
 
 **Pick prompt** (narrate to human or AFK operator after approval):
 
 ```text
 Eligible tasks (ready, unblocked): [#N title], [#M title], …
-Recommended next: #N — {one line: rollout order, dependency, or bundle scope summary rationale}
+Recommended next: #N - {one line: rollout order, dependency, or bundle scope summary rationale}
 Add wf:approved to #N only; defer others until #N ships or reaches awaiting-reconcile.
 ```
 
 Heuristics for the pick:
 
-1. **Rollout order** — when bundle body lists an Implementing frontier order, pick the first unblocked item
-2. **Blocked-by chain** — downstream tasks stay deferred until upstream clears
-3. **Dependency / foundation first** — infra or shared contract before consumers
-4. **Single remaining task** — add label to that task
+1. **Rollout order** - when bundle body lists an Implementing frontier order, pick the first unblocked item
+2. **Blocked-by chain** - downstream tasks stay deferred until upstream clears
+3. **Dependency / foundation first** - infra or shared contract before consumers
+4. **Single remaining task** - add label to that task
 
-Do **not** add **`wf:approved`** to every unblocked task in one approval pass — serial pickup (especially AFK) expects one frontier task at a time.
+Do **not** add **`wf:approved`** to every unblocked task in one approval pass - serial pickup (especially AFK) expects one frontier task at a time.
 
 ---
 
@@ -121,14 +121,14 @@ Do **not** add **`wf:approved`** to every unblocked task in one approval pass �
 
 | Signal | Split |
 |--------|-------|
-| Meta/infra bundle (single skill folder + doc updates) | **One task** — skip lengthy split debate |
-| Distinct subsystems or deploy order | **2–3 tasks** — one vertical slice each |
+| Meta/infra bundle (single skill folder + doc updates) | **One task** - skip lengthy split debate |
+| Distinct subsystems or deploy order | **2-3 tasks** - one vertical slice each |
 | Task would exceed one focused agent session | Propose smaller slices |
 | Hard dependency between slices | Earlier slice first; **Blocked by** on downstream task |
 
 Default cap: **3 tasks per bundle session** unless user asks for more. When unsure, propose fewer larger slices and let the user split further.
 
-**Single-task bundles:** Still create a task issue — implements approval gates and **Implementing** tracking even when split is obvious.
+**Single-task bundles:** Still create a task issue - implements approval gates and **Implementing** tracking even when split is obvious.
 
 ---
 
@@ -148,7 +148,7 @@ When multiple tasks cover one bundle, all share the same GM row until implementa
 
 ### On implementation Reconcile
 
-When wayfinder **Reconcile** closes a shipped task (`Approved — reconcile and close`):
+When wayfinder **Reconcile** closes a shipped task (`Approved - reconcile and close`):
 
 ```markdown
 | {MAP-SLUG}-GM-NNN | implemented | [#task](task-url) |
@@ -169,7 +169,7 @@ Remove **`wf:approved`** from the closed task. Move **Implementing** row gist to
 Add on **`scope approved`**:
 
 ```markdown
-| [Task: {name}](task-url) | [#bundle](bundle-url) | HITL / AFK | draft | — |
+| [Task: {name}](task-url) | [#bundle](bundle-url) | HITL / AFK | draft | - |
 ```
 
 Update Status to **`ready`** on **`tasks approved`**.
@@ -191,12 +191,12 @@ Default (matches [define-bundle](../define-bundle/REFERENCE.md#bundle-issue-temp
 
 | Topic | Default |
 |-------|---------|
-| Split heuristics | 1–3 tasks; single task for meta/infra one-session bundles |
+| Split heuristics | 1-3 tasks; single task for meta/infra one-session bundles |
 | Reconcile ownership | create-tasks documents gates; wayfinder Reconcile owns post-ship close + **`implemented`** |
 | Sub-issues vs body links | Body **Parent bundle** link required; sub-issues optional |
 | Single-task bundles | Still mint a task issue; skip split debate when obvious |
-| Global re-tag pass | **Deferred** — separate Reconcile pass; not part of create-tasks |
-| Map-free PRD workflow | **Constraint only** — write-a-prd Route stays in wayfinder REFERENCE; not bundled here |
+| Global re-tag pass | **Deferred** - separate Reconcile pass; not part of create-tasks |
+| Map-free PRD workflow | **Constraint only** - write-a-prd Route stays in wayfinder REFERENCE; not bundled here |
 
 ---
 
@@ -205,13 +205,13 @@ Default (matches [define-bundle](../define-bundle/REFERENCE.md#bundle-issue-temp
 After an agent or human ships a **`wf:approved`** task:
 
 1. Post resolution comment on the task issue (what shipped, checklist against **Done when**)
-2. Human: **`Approved — reconcile and close`**
+2. Human: **`Approved - reconcile and close`**
 3. wayfinder **Reconcile** executes:
-   - Close task; remove **`wf:approved`**
-   - **Implementing** → **Completed** gist
-   - Decision coverage **`implemented`** for GMs fully delivered by this task
+ - Close task; remove **`wf:approved`**
+ - **Implementing** → **Completed** gist
+ - Decision coverage **`implemented`** for GMs fully delivered by this task
 
-create-tasks does **not** run implementation Reconcile — remind the user to invoke wayfinder when ready.
+create-tasks does **not** run implementation Reconcile - remind the user to invoke wayfinder when ready.
 
 ---
 

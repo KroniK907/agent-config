@@ -2,7 +2,7 @@
 
 Method playbook for bundle **`wf:prototype`** tasks. Implements [PATTERNS.md](../PATTERNS.md) five mandatory sections.
 
-Playbook shape adapted from [mattpocock/skills — engineering/prototype](https://github.com/mattpocock/skills/tree/main/skills/engineering/prototype): **LOGIC** vs **UI** branch, throwaway code, capture verdict on bundle branch.
+Playbook shape adapted from [mattpocock/skills - engineering/prototype](https://github.com/mattpocock/skills/tree/main/skills/engineering/prototype): **LOGIC** vs **UI** branch, throwaway code, capture verdict on bundle branch.
 
 ---
 
@@ -13,14 +13,14 @@ Branch-dependent deliverables on the **bundle branch** (implement-task pushes):
 | Branch | Artifact | Typical shape |
 |--------|----------|---------------|
 | **Logic** ([LOGIC.md](LOGIC.md)) | Shareable HTML demo | Single self-contained `.html` next to target module; pure liftable logic in `<script>`; free-play + tabbed walkthroughs |
-| **UI** ([UI.md](UI.md)) | Multi-variant route | 3–5 structurally different variants on one route via `?variant=`; floating bottom switcher; sub-shape A (existing page) preferred |
+| **UI** ([UI.md](UI.md)) | Multi-variant route | 3-5 structurally different variants on one route via `?variant=`; floating bottom switcher; sub-shape A (existing page) preferred |
 
 **Always capture for resolution:**
 
 - Stated **question** the prototype answers (one paragraph)
-- **Verdict** — what was learned; preferred variant or validated model (or open gaps)
-- **Paths** — files, route URL, run command (`double-click file` or `pnpm dev …`)
-- **Liftable bits** — pure logic module or winning variant name for follow-on tasks
+- **Verdict** - what was learned; preferred variant or validated model (or open gaps)
+- **Paths** - files, route URL, run command (`double-click file` or `pnpm dev …`)
+- **Liftable bits** - pure logic module or winning variant name for follow-on tasks
 
 No production merge, PR, or tests unless task **Done when** explicitly requires folding a validated piece into real code.
 
@@ -45,23 +45,23 @@ Before picking a branch:
 
 ## 3. Workflow
 
-1. **Load task** — **What to build**, **Done when**, **Decisions**, constraints.
+1. **Load task** - **What to build**, **Done when**, **Decisions**, constraints.
 
-2. **Pick branch** — [SKILL.md § Pick a branch](SKILL.md#pick-a-branch):
-   - Logic / state / API shape → [LOGIC.md](LOGIC.md)
-   - Layout / page look → [UI.md](UI.md)
+2. **Pick branch** - [SKILL.md § Pick a branch](SKILL.md#pick-a-branch):
+ - Logic / state / API shape → [LOGIC.md](LOGIC.md)
+ - Layout / page look → [UI.md](UI.md)
 
-3. **Follow branch playbook** — complete all steps in LOGIC or UI (state question → build → hand over → capture).
+3. **Follow branch playbook** - complete all steps in LOGIC or UI (state question → build → hand over → capture).
 
-4. **Obey shared rules** — [SKILL.md § Rules that apply to both](SKILL.md#rules-that-apply-to-both).
+4. **Obey shared rules** - [SKILL.md § Rules that apply to both](SKILL.md#rules-that-apply-to-both).
 
-5. **Return to implement-task** — verdict, question, artifact paths, run instructions, **Done when** evidence table inputs. Do not push, post resolution, or edit task **Status**.
+5. **Return to implement-task** - verdict, question, artifact paths, run instructions, **Done when** evidence table inputs. Do not push, post resolution, or edit task **Status**.
 
 ---
 
 ## 4. Done when mapping
 
-Map task bullets to branch artifacts — resolution comment copies verbatim.
+Map task bullets to branch artifacts - resolution comment copies verbatim.
 
 | Typical task bullet | Branch | Verification |
 |--------------------|--------|----------------|
@@ -85,7 +85,7 @@ Adapt to the task issue's actual **Done when** bullets.
 | Startup gates, bundle branch, AFK serial | Pick LOGIC vs UI branch; build throwaway artifact |
 | `git commit` / `push` | Write prototype files on branch |
 | Resolution comment + **`awaiting-reconcile`** | Supply verdict, paths, run instructions, Done when evidence |
-| Unblock scan + AFK handoff | — |
+| Unblock scan + AFK handoff | - |
 | Never close task; never open PR | Never close task; never push or post resolution |
 
 **HITL vs AFK:** Same prototype shape; queue semantics are implement-task only.

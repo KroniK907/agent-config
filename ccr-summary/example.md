@@ -14,16 +14,16 @@ This example shows how the skill maps a **compliant small system** report. Your 
 | PWSID | AK2211677 |
 | Period | 2025 (Annual Drinking Water Quality Report) |
 | Source | Two groundwater wells; treatment at well #1 (arsenic, iron, H₂S); chlorine residual |
-| Electronic delivery | Cover promotes online report: `https://ccrwriter.com/report/AK2211677` and QR — **§ 141.156(c)(1) likely applies** if primary delivery is electronic |
+| Electronic delivery | Cover promotes online report: `https://ccrwriter.com/report/AK2211677` and QR - **§ 141.156(c)(1) likely applies** if primary delivery is electronic |
 | **(d)(6)** | Detected Impurities tables: all listed rows `Violation` = **N** |
 | Testing scope | “Water Quality Testing”: routinely monitored for applicable impurities; **only detected** impurities listed in Detected Impurities table |
-| **(d)(8)** | Lead 2023: 4.8 ppb (90th), 0 samples > AL — **no AL exceedance** |
+| **(d)(8)** | Lead 2023: 4.8 ppb (90th), 0 samples > AL - **no AL exceedance** |
 | **(f)** | No monitoring/reporting violation narratives |
 | **(h)(6)** | No Groundwater Rule deficiency section |
 | **(h)(7)** | No RTCR assessment / E. coli section |
 | **(h)(2)** contact | System: (907) 344-0111, 9499 Brayton #68, Anchorage; Operator: Northern Utility Services (907) 222-4084, info@nusalaska.com |
 | Subpart Q | Not stated |
-| Biannual / (e) | Small mobile home park — not ≥ 10,000 persons |
+| Biannual / (e) | Small mobile home park - not ≥ 10,000 persons |
 
 **Non-violation notes (do not summarize as violations):**
 
@@ -37,7 +37,7 @@ This example shows how the skill maps a **compliant small system** report. Your 
 
 Layout assumptions: the report template supplies the section **title** and **“About this report”** heading; the summary body starts with plain paragraphs.
 
-**Headings (required):** Every subsection below the opening paragraphs uses **`#####` (markdown h5) — five hash marks, not two (`##`).** Wrong: `## Your water at a glance`. Right: `##### Your water at a glance`. See the **Heading rule** section in `SKILL.md`.
+**Headings (required):** Every subsection below the opening paragraphs uses **`#####` (markdown h5) - five hash marks, not two (`##`).** Wrong: `## Your water at a glance`. Right: `##### Your water at a glance`. See the **Heading rule** section in `SKILL.md`.
 
 The **paper copy** subsection does not repeat online/URL content (covered elsewhere on the printed report). The **§ 141.156(f)** sharing paragraph has no heading when the layout provides one. **Deliver to the user in a copyable markdown code block** (see `SKILL.md` Deliverables).
 
@@ -50,9 +50,9 @@ We test your water for many contaminants required by federal and state rules. Th
 Our 2025 monitoring results show that your water **met all drinking water standards**. We did not identify any violations during the period covered by this report. Several contaminants were detected, including arsenic and chlorine, but all were **below the allowable limits** listed in this report. We were not required to run some tests (such as asbestos and certain synthetic organic chemicals) because they do not apply to our system. Skipping those tests is **not** a violation.
 
 ##### How to get more information
-**Southwood Manor Mobile Home Park** — Phone: (907) 344-0111 — Address: 9499 Brayton #68, Anchorage, AK 99507  
+**Southwood Manor Mobile Home Park** - Phone: (907) 344-0111 - Address: 9499 Brayton #68, Anchorage, AK 99507  
 
-**Operator: Northern Utility Services** — Phone: (907) 222-4084 (office 8:00–5:00 Mon–Fri; 24-hour emergency answering service) — Email: info@nusalaska.com  
+**Operator: Northern Utility Services** - Phone: (907) 222-4084 (office 8:00-5:00 Mon-Fri; 24-hour emergency answering service) - Email: info@nusalaska.com  
 
 You may contact us to request lead tap sampling results or our service line inventory.
 

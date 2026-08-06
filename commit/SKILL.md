@@ -9,7 +9,7 @@ description: Stages and commits only working-tree changes attributable to the cu
 
 Turn edits from **this conversation** into one or more **clean commits**: correct staging, messages that match project style if obvious, and **logical splitting** when multiple independent changes landed in **this chat**.
 
-**Default scope:** Only paths you can tie to **the current chat** (or a transcript/session the user explicitly points you at *for this run*). **Do not** stage or commit other dirty files just because `git status` lists them—those may be from another chat, manual work, or another branch of work unless the user clearly says otherwise.
+**Default scope:** Only paths you can tie to **the current chat** (or a transcript/session the user explicitly points you at *for this run*). **Do not** stage or commit other dirty files just because `git status` lists them - those may be from another chat, manual work, or another branch of work unless the user clearly says otherwise.
 
 ## Preconditions
 
@@ -20,7 +20,7 @@ Turn edits from **this conversation** into one or more **clean commits**: correc
 
 ### 1. Locate the repo and inventory changes
 
-Use `git status` / `git diff` to see the full working tree, but treat that listing as **inventory only**. You will stage **only** the subset that belongs to this chat (next section)—not “everything changed.”
+Use `git status` / `git diff` to see the full working tree, but treat that listing as **inventory only**. You will stage **only** the subset that belongs to this chat (next section) - not “everything changed.”
 
 From the workspace (or path the user gives), run:
 
@@ -41,13 +41,13 @@ gh repo view --json nameWithOwner,defaultBranchRef,url
 
 1. **Attribution:** Decide which paths were **actually produced or intentionally modified in this chat** (or in a **user-supplied** transcript/session the user asked you to use for this commit). Use the conversation: files touched, tasks completed, explicit user requests, tool edits traceable to this thread.
 2. **`git diff` confirms content**, not inclusion: a file appearing in `git diff` does **not** mean it belongs in this commit if this chat never discussed or changed it.
-3. **Exclude by default:** Leave untouched in the working tree (unstaged) any changed or untracked paths **not** attributable to this chat’s scope—**even if** the user would like a “clean” status. They must **explicitly** ask to commit “everything,” “all local changes,” named paths, or work from another context before you widen what you `git add`.
+3. **Exclude by default:** Leave untouched in the working tree (unstaged) any changed or untracked paths **not** attributable to this chat’s scope - **even if** the user would like a “clean” status. They must **explicitly** ask to commit “everything,” “all local changes,” named paths, or work from another context before you widen what you `git add`.
 4. If it is **unclear** whether a path belongs to this chat, **ask one short question** or commit only the obvious subset and mention what was left out.
 5. If the user points at a transcript or session, use it only to recall *which* files and *what* themes belong to *that* scope; still verify with `git diff`.
 
 ### 3. Decide one commit vs several
 
-Apply this **only to paths you already attributed to this chat** in step 2—not to the whole repo diff.
+Apply this **only to paths you already attributed to this chat** in step 2 - not to the whole repo diff.
 
 **Prefer a single commit** when:
 
@@ -76,7 +76,7 @@ For each commit:
 git commit -m "type(scope): short summary" -m "Optional body with rationale."
 ```
 
-Repeat until **chat-attributed** work is committed. **Expect** other local changes to remain modified or untracked—that is normal when scope is chat-only.
+Repeat until **chat-attributed** work is committed. **Expect** other local changes to remain modified or untracked - that is normal when scope is chat-only.
 
 ### 5. Use `gh` after commits (when relevant)
 

@@ -7,7 +7,7 @@ description: Investigate a wf:research ticket, post structured findings as an is
 
 Load a **`wf:research`** ticket, investigate per [behavior rules](REFERENCE.md#behavior-rules), post a **structured findings comment** on the ticket, and hand off **non-binding Proposed tracker updates**. Does **not** append decision-log rows, post Reconcile approval phrases, or edit the map without human review.
 
-**v1 is human-initiated HITL only** — cloud AFK pickup deferred.
+**v1 is human-initiated HITL only** - cloud AFK pickup deferred.
 
 ## Not this skill
 
@@ -43,7 +43,7 @@ From the map: slug, decision log link, **Notes**, relevant **Not yet specified**
 
 Follow [behavior rules](REFERENCE.md#behavior-rules):
 
-- **Primary sources first** — docs, specs, code, official APIs
+- **Primary sources first** - docs, specs, code, official APIs
 - **Secondary sources** only when labeled; lower weight in Findings
 - Seek **≥1 alternate viewpoint** for Viewpoints/alternatives
 - If Coverage fails on a **valid premise**, run **one scope-expansion pass** then stop
@@ -58,7 +58,7 @@ Summary → Findings → Gaps & follow-ups → Viewpoints/alternatives → Cover
 
 **Coverage:** Map each **Done when** bullet to `satisfied` / `partial` / `not satisfied` with brief evidence.
 
-**Invalid premise:** Include only for logical/category ticket errors (wrong question type, impossible ask, mis-scoped ticket) — not missing data.
+**Invalid premise:** Include only for logical/category ticket errors (wrong question type, impossible ask, mis-scoped ticket) - not missing data.
 
 ### 4. Post comment
 
@@ -76,19 +76,19 @@ Each session posts a **new** comment; prior runs stay in the thread.
 
 Tell the user:
 
-- Findings are **non-binding** — review **Proposed tracker updates** before any map or log edits
+- Findings are **non-binding** - review **Proposed tracker updates** before any map or log edits
 - **Binding decisions:** run [grill-me](../grill-me/SKILL.md) on findings, or invoke wayfinder **Reconcile** after explicit human approval
 - **Follow-up research:** start a new session on the same ticket (new comment); or close via wayfinder **Reconcile** when **Done when** is satisfied and user approves
 
-End with: *Review the findings — invoke wayfinder **Reconcile** when ready to sync approved outcomes to the map.*
+End with: *Review the findings - invoke wayfinder **Reconcile** when ready to sync approved outcomes to the map.*
 
 ## Interaction rules
 
-1. **Non-binding only** — never append decision-log rows; never post **Approved — reconcile and close**
-2. **Comment, not file** — findings live on the ticket thread, not repo Markdown
-3. **One scope-expansion pass** — if Coverage still fails after expansion, note gaps and stop
-4. **HITL v1** — wait for human direction before follow-up research or Reconcile
-5. **Invalid premise is rare** — distinguish from insufficient evidence
+1. **Non-binding only** - never append decision-log rows; never post **Approved - reconcile and close**
+2. **Comment, not file** - findings live on the ticket thread, not repo Markdown
+3. **One scope-expansion pass** - if Coverage still fails after expansion, note gaps and stop
+4. **HITL v1** - wait for human direction before follow-up research or Reconcile
+5. **Invalid premise is rare** - distinguish from insufficient evidence
 
 ## Quick start
 

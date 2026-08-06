@@ -22,18 +22,18 @@ First release after AFK v1 bundle lands: **`v0.1.0`**.
 
 Run on **`main`** after the AFK v1 bundle PR merges and all Implementing tasks are reconciled:
 
-1. **Verify main** — `implement-task`, `actions/prototype`, bootstrap pack, and REFERENCE rows present on `main`.
-2. **Tag** — annotated tag preferred:
+1. **Verify main** - `implement-task`, `actions/prototype`, bootstrap pack, and REFERENCE rows present on `main`.
+2. **Tag** - annotated tag preferred:
 
    ```bash
    git checkout main
    git pull origin main
-   git tag -a v0.1.0 -m "AFK v1 — implement-task, bootstrap pack, wayfinder layout"
+   git tag -a v0.1.0 -m "AFK v1 - implement-task, bootstrap pack, wayfinder layout"
    git push origin v0.1.0
    ```
 
-3. **Announce** — note tag in bundle / map Completed gist; app repos bump `WAYFINDER_SKILLS_TAG`.
-4. **App repos** — follow [AFK-BOOTSTRAP.md § Pin skills pack](AFK-BOOTSTRAP.md#2-pin-skills-pack-environmentjson); trigger Cloud Agent environment rebuild.
+3. **Announce** - note tag in bundle / map Completed gist; app repos bump `WAYFINDER_SKILLS_TAG`.
+4. **App repos** - follow [AFK-BOOTSTRAP.md § Pin skills pack](AFK-BOOTSTRAP.md#2-pin-skills-pack-environmentjson); trigger Cloud Agent environment rebuild.
 
 Subsequent releases repeat with the next semver (`v0.1.1`, `v0.2.0`, …).
 
@@ -63,7 +63,7 @@ App repo `.cursor/environment.json`:
 }
 ```
 
-Never pin to a moving branch (`main`) in production AFK repos — always an exact tag.
+Never pin to a moving branch (`main`) in production AFK repos - always an exact tag.
 
 ---
 

@@ -8,49 +8,49 @@ Install paths below use this repository (`KroniK907/skills`). If you use a fork,
 
 Skills for large-feature planning and incremental implementation via GitHub map trackers. All live under `wayfinder/` except the hub skill itself at `wayfinder/SKILL.md`.
 
-- **wayfinder** — Bootstrap and maintain `FeatureName:Map` GitHub trackers: map skeleton, materialize tickets from map-discovery comment, reconcile after approval, suggest next skill. Use when a feature is too big for one session.
+- **wayfinder** - Bootstrap and maintain `FeatureName:Map` GitHub trackers: map skeleton, materialize tickets from map-discovery comment, reconcile after approval, suggest next skill. Use when a feature is too big for one session.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder
   ```
 
-- **define-bundle** — Coalesce decision-log clusters into draft `wf:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
+- **define-bundle** - Coalesce decision-log clusters into draft `wf:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/define-bundle
   ```
 
-- **feature-discovery** — Breadth-first five-zone interview; posts a map-discovery artifact as a comment on the map issue for wayfinder Materialize.
+- **feature-discovery** - Breadth-first five-zone interview; posts a map-discovery artifact as a comment on the map issue for wayfinder Materialize.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/feature-discovery
   ```
 
-- **strategic-ideation** — Expand/tension/prune at idea level for scope and strategy; hand off to grill-me or PRD (renamed from feature-ideation).
+- **strategic-ideation** - Expand/tension/prune at idea level for scope and strategy; hand off to grill-me or PRD (renamed from feature-ideation).
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/strategic-ideation
   ```
 
-- **grill-me** — Stress-test a plan or design through sequential Q&A until open branches are resolved.
+- **grill-me** - Stress-test a plan or design through sequential Q&A until open branches are resolved.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/grill-me
   ```
 
-- **design-an-interface** — Generate multiple radically different interface designs for a module using parallel sub-agents.
+- **design-an-interface** - Generate multiple radically different interface designs for a module using parallel sub-agents.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/design-an-interface
   ```
 
-- **create-tasks** — Split an approved bundle into implementation tasks on the map **Implementing** frontier.
+- **create-tasks** - Split an approved bundle into implementation tasks on the map **Implementing** frontier.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/create-tasks
   ```
 
-- **research** — Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
+- **research** - Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
 
   ```
   npx skills@latest add KroniK907/skills/wayfinder/research
@@ -58,27 +58,27 @@ Skills for large-feature planning and incremental implementation via GitHub map 
 
 ## Planning utilities (map-free)
 
-Skills for shaping work without a wayfinder map — small scope, PRDs, or standalone design.
+Skills for shaping work without a wayfinder map - small scope, PRDs, or standalone design.
 
-- **write-a-prd** — Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue (after decisions exist; use grill-me separately if you need depth-first Q&A first).
+- **write-a-prd** - Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue (after decisions exist; use grill-me separately if you need depth-first Q&A first).
 
   ```
   npx skills@latest add KroniK907/skills/write-a-prd
   ```
 
-- **prd-to-plan** — Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices (saved under `./plans/`).
+- **prd-to-plan** - Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices (saved under `./plans/`).
 
   ```
   npx skills@latest add KroniK907/skills/prd-to-plan
   ```
 
-- **prd-to-issues** — Break a PRD into independently-grabbable GitHub issues using vertical slices.
+- **prd-to-issues** - Break a PRD into independently-grabbable GitHub issues using vertical slices.
 
   ```
   npx skills@latest add KroniK907/skills/prd-to-issues
   ```
 
-- **request-refactor-plan** — Create a detailed refactor plan with tiny commits via user interview, then file it as a GitHub issue.
+- **request-refactor-plan** - Create a detailed refactor plan with tiny commits via user interview, then file it as a GitHub issue.
 
   ```
   npx skills@latest add KroniK907/skills/request-refactor-plan
@@ -88,25 +88,25 @@ Skills for shaping work without a wayfinder map — small scope, PRDs, or standa
 
 Skills for building, fixing, and evolving code.
 
-- **tdd** — Test-driven development with a red-green-refactor loop (features, fixes, integration tests).
+- **tdd** - Test-driven development with a red-green-refactor loop (features, fixes, integration tests).
 
   ```
   npx skills@latest add KroniK907/skills/tdd
   ```
 
-- **triage-issue** — Investigate a bug by exploring the codebase, identify root cause, and file a GitHub issue with a TDD-based fix plan.
+- **triage-issue** - Investigate a bug by exploring the codebase, identify root cause, and file a GitHub issue with a TDD-based fix plan.
 
   ```
   npx skills@latest add KroniK907/skills/triage-issue
   ```
 
-- **improve-codebase-architecture** — Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and testability.
+- **improve-codebase-architecture** - Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and testability.
 
   ```
   npx skills@latest add KroniK907/skills/improve-codebase-architecture
   ```
 
-- **commit** — Stage and commit only changes attributable to the current agent chat (split into logical commits when appropriate; uses `git` and `gh`).
+- **commit** - Stage and commit only changes attributable to the current agent chat (split into logical commits when appropriate; uses `git` and `gh`).
 
   ```
   npx skills@latest add KroniK907/skills/commit
@@ -114,19 +114,19 @@ Skills for building, fixing, and evolving code.
 
 ## Writing & knowledge
 
-- **writing-for-agents** — Write documents agents consume (skills, AGENTS.md, Cursor rules): context pointers, information hierarchy, completion criteria, leading words. Adapted from [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents).
+- **writing-for-agents** - Write documents agents consume (skills, AGENTS.md, Cursor rules): context pointers, information hierarchy, completion criteria, leading words. Adapted from [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents).
 
   ```
   npx skills@latest add KroniK907/skills/writing-for-agents
   ```
 
-- **write-a-skill** — Router to `writing-for-agents` for backward-compatible installs when creating a new skill.
+- **write-a-skill** - Router to `writing-for-agents` for backward-compatible installs when creating a new skill.
 
   ```
   npx skills@latest add KroniK907/skills/write-a-skill
   ```
 
-- **ubiquitous-language** — Extract a DDD-style ubiquitous language glossary from the current conversation; saves to `UBIQUITOUS_LANGUAGE.md`.
+- **ubiquitous-language** - Extract a DDD-style ubiquitous language glossary from the current conversation; saves to `UBIQUITOUS_LANGUAGE.md`.
 
   ```
   npx skills@latest add KroniK907/skills/ubiquitous-language

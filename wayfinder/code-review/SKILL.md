@@ -1,16 +1,16 @@
 ---
 name: code-review
-description: Two-axis code review (Standards + Spec) since a pinned ref — parallel generalPurpose sub-agents, optional auto-fix for obvious mistakes. Runs automatically after implement-task Method dispatch; also use for ad-hoc branch, PR, WIP, or review-since-a-ref requests.
+description: Two-axis code review (Standards + Spec) since a pinned ref - parallel generalPurpose sub-agents, optional auto-fix for obvious mistakes. Runs automatically after implement-task Method dispatch; also use for ad-hoc branch, PR, WIP, or review-since-a-ref requests.
 ---
 
 # Code review
 
 Two-axis review of the diff between `HEAD` and a **fixed point**:
 
-- **Standards** — documented coding standards + Fowler smell baseline where the repo is silent
-- **Spec** — faithful implementation of the originating issue / spec
+- **Standards** - documented coding standards + Fowler smell baseline where the repo is silent
+- **Spec** - faithful implementation of the originating issue / spec
 
-Both axes run as **parallel sub-agents** (Task tool, `generalPurpose`). Aggregate under separate `## Standards` and `## Spec` headings — do **not** merge or rerank across axes.
+Both axes run as **parallel sub-agents** (Task tool, `generalPurpose`). Aggregate under separate `## Standards` and `## Spec` headings - do **not** merge or rerank across axes.
 
 Detail: [REFERENCE.md](REFERENCE.md)
 
@@ -18,9 +18,9 @@ Detail: [REFERENCE.md](REFERENCE.md)
 
 | Skill | When instead |
 |-------|----------------|
-| `review-bugbot` | Fixed-prompt bug diff review — no spec lookup |
+| `review-bugbot` | Fixed-prompt bug diff review - no spec lookup |
 | `review-security` | Fixed-prompt security diff review |
-| [implement-task](../implement-task/SKILL.md) | Full orchestration — this skill is invoked **by** implement-task after Method |
+| [implement-task](../implement-task/SKILL.md) | Full orchestration - this skill is invoked **by** implement-task after Method |
 
 ## Invocation modes
 
@@ -54,4 +54,4 @@ One message, two Task calls (`generalPurpose`). Prompts: [REFERENCE § Sub-agent
 
 ### 4. Aggregate
 
-[Output format](REFERENCE.md#output-format) — present to user; no auto-fix unless user asks.
+[Output format](REFERENCE.md#output-format) - present to user; no auto-fix unless user asks.

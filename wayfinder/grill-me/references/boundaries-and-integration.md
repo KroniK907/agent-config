@@ -2,7 +2,7 @@
 
 ## Quick triage (read every session)
 
-**Likely N/A when:** the change stays **inside one process** with **no** new or altered **external** contract—no HTTP/RPC, no queues/events/webhooks, no new third-party calls, no new file formats exchanged.
+**Likely N/A when:** the change stays **inside one process** with **no** new or altered **external** contract - no HTTP/RPC, no queues/events/webhooks, no new third-party calls, no new file formats exchanged.
 
 **Common skip signals**
 
@@ -17,7 +17,7 @@ If **any** new **endpoint**, **event type**, **topic**, **webhook**, **partner A
 - **Contracts:** request/response shapes, errors, versioning, deprecation strategy, compatibility guarantees.
 - **Transport assumptions:** timeouts, retries, backoff, idempotency keys, duplicate delivery.
 - **Routing & discovery:** how callers find this capability (paths, service names, DNS, gateways).
-- **Side integrations:** email/SMS/push providers, payment, maps, identity providers—failure modes and fallbacks.
+- **Side integrations:** email/SMS/push providers, payment, maps, identity providers - failure modes and fallbacks.
 
 ### Web app overlay (use when relevant)
 
