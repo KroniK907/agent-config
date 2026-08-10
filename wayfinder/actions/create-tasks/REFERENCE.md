@@ -64,7 +64,7 @@ create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`a
 - **Default for `wf:task`:** propose **`write-code`** unless the slice is throwaway exploration (**`prototype`**) or the human sets another Method
 - Repo-root one-offs (`tdd`, `commit`, `writing-for-agents`, …) valid **only** when the human explicitly sets them on **## Method**
 
-**AFK pickup:** **## Method** must name a valid skill before **`wf:approved`** - [implement-task](../../orchestrators/implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks.
+**AFK pickup:** **## Method** must name a valid skill before **`wf:approved`**. Post pickup comment with **`Approved - AFK implement`** when adding the label - [implement-task](../../orchestrators/implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks. Label **`wf:approved`** is human reviewer signal + startup gate; v1 automation trigger is the comment phrase ([afk-pickup-comment.md](../../orchestrators/implement-task/references/afk-pickup-comment.md)).
 
 **Validation at pickup:** see [implement-task REFERENCE § Method validation](../../orchestrators/implement-task/REFERENCE.md#method-validation).
 
@@ -75,7 +75,7 @@ create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`a
 | User says | Agent may |
 |-----------|-----------|
 | **scope approved** | Add map **Implementing** rows; set Decision coverage **`assigned`** + task links for bundle-scoped GMs; keep **`wf:needs-review`** until **`tasks approved`** |
-| **tasks approved** / **task approved** / issue comment **approved** | Set task Status `ready`; remove **`wf:needs-review`**; add **`wf:approved`** when **unblocked** (see deferred approval below); update Implementing Status → `ready` |
+| **tasks approved** / **task approved** / issue comment **approved** | Set task Status `ready`; remove **`wf:needs-review`**; add **`wf:approved`** when **unblocked** (see deferred approval below); for **`wf:afk`** tasks also post AFK pickup comment **`Approved - AFK implement`** ([afk-pickup-comment.md](../../orchestrators/implement-task/references/afk-pickup-comment.md)); update Implementing Status → `ready` |
 | (edits requested) | Update draft task bodies in place; keep Status `draft`; keep **`wf:needs-review`**; no `wf:approved` |
 | (no approval) | Narrate or post drafts only; add **`wf:needs-review`** on each draft task; **do not** write Implementing or coverage |
 
@@ -89,11 +89,11 @@ On **`tasks approved`**, set **Status:** `ready` for **all** approved tasks. Add
 
 | Blocker state | Label action |
 |---------------|--------------|
-| No blockers (or **Blocked by:** ` - `) | Add **`wf:approved`** per one-eligible-task rule below |
-| One or more blockers still **open** | **Defer** label - task stays `ready` without **`wf:approved`** |
-| Blocker closed or **`awaiting-reconcile`** | Eligible for label add - [implement-task](../../orchestrators/implement-task/SKILL.md) may add when unblocking dependents |
+| No blockers (or **Blocked by:** ` - `) | Add **`wf:approved`** per one-eligible-task rule below; **AFK:** post pickup comment **`Approved - AFK implement`** |
+| One or more blockers still **open** | **Defer** label and pickup comment - task stays `ready` without **`wf:approved`** |
+| Blocker closed or **`awaiting-reconcile`** | Eligible for label add (+ AFK pickup comment) - [implement-task](../../orchestrators/implement-task/SKILL.md) may add when unblocking dependents |
 
-When blockers remain, defer the label - [implement-task](../../orchestrators/implement-task/SKILL.md) adds **`wf:approved`** when blockers clear ([REFERENCE § Unblock and handoff](../../orchestrators/implement-task/REFERENCE.md#unblock-and-handoff)).
+When blockers remain, defer the label and pickup comment - [implement-task](../../orchestrators/implement-task/SKILL.md) adds **`wf:approved`** (+ AFK pickup comment) when blockers clear ([REFERENCE § Unblock and handoff](../../orchestrators/implement-task/REFERENCE.md#unblock-and-handoff)).
 
 #### One eligible task per approval decision
 
@@ -105,6 +105,7 @@ When multiple tasks are **`ready`** and unblocked after **`tasks approved`**, ad
 Eligible tasks (ready, unblocked): [#N title], [#M title], …
 Recommended next: #N - {one line: rollout order, dependency, or bundle scope summary rationale}
 Add wf:approved to #N only; defer others until #N ships or reaches awaiting-reconcile.
+For wf:afk on #N: post AFK pickup comment with Approved - AFK implement (see implement-task references/afk-pickup-comment.md).
 ```
 
 Heuristics for the pick:

@@ -162,13 +162,14 @@ See [Unblock and handoff](#unblock-and-handoff) below.
 
 | Topic | HITL | AFK |
 |-------|------|-----|
-| Pickup | Human starts chat with task link / `#N` | Automation on **`wf:approved`** label add |
+| Pickup | Human starts chat with task link / `#N` | Cursor automation on issue comment **`Approved - AFK implement`** ([afk-pickup-comment.md](references/afk-pickup-comment.md)) |
+| **`wf:approved`** | Startup gate; added by create-tasks or unblock | Same - **plus** human reviewer signal; **not** the v1 automation trigger |
 | **`wf:afk-running`** | Never | Acquire at startup; remove at end-of-run |
 | Serial queue | N/A | One AFK run per repo; handoff after end-of-run |
 | **`@cursor` bypass** | N/A | Comment on task skips serial gate |
 | Method | Default from task; session override OK | **## Method** required; no override |
 | Resolution + **`awaiting-reconcile`** | Same | Same |
-| Unblock scan | Same | Same |
+| Unblock scan | Label **`wf:approved`** only | Label + AFK pickup comment |
 | Reconcile close | Human **`Approved - reconcile and close`** | Same - automation never closes task |
 
 Task bodies are **identical** for HITL and AFK. Mode is label-only.
@@ -185,15 +186,17 @@ Scan implementation tasks (map **Implementing** or bundle siblings) that list th
 
 - When **all** blockers for a dependent are **closed** or **`awaiting-reconcile`** / reconciled as shipped, and dependent **Status** is **`ready`** with **`scope approved`** already applied:
  - Add **`wf:approved`** to the dependent (create-tasks deferred label when blocked; implement-task restores when unblocked)
+ - **AFK only** (`wf:afk`): post pickup comment per [references/afk-pickup-comment.md](references/afk-pickup-comment.md) - trigger phrase **`Approved - AFK implement`**
 - Do **not** start the dependent automatically in HITL unless the human asks
 
-create-tasks owns deferring **`wf:approved`** while blockers exist; implement-task performs the **add** when blockers clear.
+create-tasks owns deferring **`wf:approved`** while blockers exist; implement-task performs the **add** (+ AFK pickup comment) when blockers clear.
 
 ### AFK serial handoff (AFK only)
 
 1. Remove **`wf:afk-running`** from the current task
-2. Find next eligible AFK task: **`wf:approved`**, **`ready`**, unblocked, no **`afk-running`** elsewhere
-3. Hand off to automation (next pickup) - do **not** implement the next task in the same orchestration run unless explicitly configured
+2. Find next eligible AFK task: **`wf:approved`** or ready to receive it, **`ready`**, unblocked, no **`afk-running`** elsewhere, **`wf:afk`** label
+3. If next task lacks **`wf:approved`**: add label, then post AFK pickup comment per [references/afk-pickup-comment.md](references/afk-pickup-comment.md)
+4. Hand off to automation (comment trigger) - do **not** implement the next task in the same orchestration run unless explicitly configured
 
 If no eligible task, queue idle.
 
@@ -218,6 +221,6 @@ Suggest **implement-task** when:
 
 - Map **Implementing** row has **`wf:approved`** and **Status:** `ready`
 - User says "implement task #N" or "pick up #N" on an approved implementation task
-- AFK automation triggers on **`wf:approved`** add
+- AFK automation triggers on issue comment **`Approved - AFK implement`** (see [references/afk-pickup-comment.md](references/afk-pickup-comment.md))
 
 After **`awaiting-reconcile`**, suggest wayfinder **Reconcile** - not another implement-task pass unless human requests rework (reset **Status** to **`ready`** explicitly before re-run).

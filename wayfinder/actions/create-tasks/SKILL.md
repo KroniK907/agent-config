@@ -97,17 +97,18 @@ When the user says **`tasks approved`**, **`task approved`**, or issue comment *
 
 1. **Task issue(s)** - set **Status:** `ready` in body for all approved tasks; remove label **`wf:needs-review`**
 2. **`wf:approved`** - add **only when unblocked**; when multiple tasks are ready and unblocked, add to **one** eligible task per approval decision ([REFERENCE § Deferred approval](REFERENCE.md#deferred-wayfinderapproved-wf-eco-gm-026) - use pick prompt)
-3. **Map Implementing** - update Status column to `ready` for approved tasks
-4. **Comment** on each task - ready for implementation; note deferred label if blockers remain
+3. **AFK pickup comment** - when step 2 adds **`wf:approved`** to a **`wf:afk`** task, post pickup comment with trigger phrase **`Approved - AFK implement`** per [implement-task afk-pickup-comment.md](../../orchestrators/implement-task/references/afk-pickup-comment.md) (HITL tasks: label only)
+4. **Map Implementing** - update Status column to `ready` for approved tasks
+5. **Comment** on each task - ready for implementation; note deferred label if blockers remain
 
-**Default:** do not start implementation without **`wf:approved`** on the task. AFK pickup requires **## Method** populated before the label is added.
+**Default:** do not start implementation without **`wf:approved`** on the task. AFK pickup requires **## Method** populated and the pickup comment posted (v1 comment trigger; **`wf:approved`** is reviewer signal + implement-task gate).
 
 ### 6. Hand off
 
 Tell the user:
 
 - **Next:** implement from the ready task(s) with **`wf:approved`** - [implement-task](../../orchestrators/implement-task/SKILL.md) on bundle **Branch:** from [define-bundle](../define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027)
-- Deferred tasks: label added when blockers clear (implement-task unblock scan) or on a later **`tasks approved`** pass with the one-eligible-task pick
+- Deferred tasks: label + AFK pickup comment added when blockers clear (implement-task unblock scan) or on a later **`tasks approved`** pass with the one-eligible-task pick
 - On completion: invoke wayfinder **Reconcile** with **`Approved - reconcile and close`** on the task issue
 
 ## Implementation Reconcile (after ship)
