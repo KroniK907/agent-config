@@ -605,11 +605,11 @@ Skills that **write** wayfinder state:
 | [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wf:prototype`** Method - throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |
 | `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
 | [research](actions/research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
-| Cloud AFK automation | Label trigger on **`wf:approved`**; runs [implement-task](orchestrators/implement-task/SKILL.md) on bundle branch; **push + resolution comment** (no agent PRs); human Reconcile closes task - setup via [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md) |
+| Cloud AFK automation | Issue comment trigger **`Approved - AFK implement`** (v1); label **`wf:approved`** for reviewer + gates; runs [implement-task](orchestrators/implement-task/SKILL.md) on bundle branch; **push + resolution comment** (no agent PRs); human Reconcile closes task - setup via [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md) |
 
 **Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](actions/code-review/SKILL.md) in ad-hoc mode. Complements built-in `review-bugbot` / `review-security`. During **implement-task**, code-review runs automatically after Method - no separate Route handoff.
 
-**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → **`define-bundle`** ( **`bundle approved`** → create **Branch:** `afk/bundle-{N}-{slug}` ) → **`create-tasks`** ( **`tasks approved`** → one **`wf:approved`** when unblocked ) → **`implement-task`** (checkout bundle branch → Method → **code-review** → push) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
+**Handoff chain:** Chart → feature-discovery → Materialize → sibling skills → Reconcile → **`define-bundle`** ( **`bundle approved`** → create **Branch:** `afk/bundle-{N}-{slug}` ) → **`create-tasks`** ( **`tasks approved`** → **`wf:approved`** + AFK pickup comment when unblocked ) → **`implement-task`** (checkout bundle branch → Method → **code-review** → push) → Reconcile. Map-free: grill-me → `write-a-prd` → `prd-to-issues`.
 
 ---
 
