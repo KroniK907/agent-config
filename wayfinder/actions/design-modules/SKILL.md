@@ -1,6 +1,6 @@
 ---
 name: design-modules
-description: Shape one or more deep modules from bundle decisions or planning tickets - vocabulary, seam discovery, deepening, and design-it-twice exploration. HITL only. Posts a module-design artifact per module as issue comment(s). Use after bundle approved before create-tasks, on wf:prototype interface exploration, or when user wants module interface design.
+description: design-modules, module interface design, module design, design an interface, after bundle approved, before create-tasks, wf:prototype interface exploration, wayfinder Route design-modules, deep module shaping
 ---
 
 # Design modules

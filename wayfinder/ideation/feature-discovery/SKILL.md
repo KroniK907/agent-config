@@ -1,6 +1,6 @@
 ---
 name: feature-discovery
-description: Breadth-first discovery interview across five coverage zones to find feature edges and post a map-discovery artifact as a comment on the wayfinder map issue. Use when wayfinder Chart hands off, when exploring known vs unknown at feature start, or when the user mentions feature discovery or zone triage before grilling.
+description: feature discovery, wayfinder Chart handoff, zone triage, map-discovery artifact, ready for materialize, breadth-first discovery, known vs unknown, five coverage zones, wayfinder Materialize, feature start, before grilling
 ---
 
 # Feature discovery (breadth-first zone triage)

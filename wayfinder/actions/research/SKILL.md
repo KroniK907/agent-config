@@ -1,6 +1,6 @@
 ---
 name: research
-description: Investigate a wf:research ticket, post structured findings as an issue comment, and propose non-binding tracker updates. Use when a wf:research ticket is ready, wayfinder Route suggests research, or the user wants fact-gathering on a map research ticket.
+description: research, wf:research, research ticket ready, map research ticket, fact-gathering, investigate research ticket, wayfinder Route research
 ---
 
 # Research

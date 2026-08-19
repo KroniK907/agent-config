@@ -1,6 +1,6 @@
 ---
 name: write-a-prd
-description: Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue. Use when user wants to write a PRD, create a product requirements document, plan a new feature, or coordinate a large refactor - after decisions are already captured elsewhere.
+description: write a PRD, product requirements document, after grill-me or decision artifact, GM-xx decision log, plan a new feature (large scope), coordinate large refactor, binding engineering decisions already captured
 ---
 
 When **not** to use this skill: if the change is small enough that there are **no binding engineering decisions** (behavior-only tweaks, obvious one-file fixes), skip the PRD and implement directly.

@@ -1,6 +1,6 @@
 ---
 name: write-code
-description: Implement task deliverables with TDD at pre-agreed seams - typecheck and targeted tests during work, full suite at end. Method playbook for wf:task bundle work; dispatched by implement-task. Excludes code review, commit, and push.
+description: write-code, wf:task, Method write-code, implement-task dispatch write-code, bundle task implementation, implement approved task, build task deliverables
 ---
 
 # Write code

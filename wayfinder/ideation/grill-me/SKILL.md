@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Stress-test a plan or design through sequential Q&A - one question per turn - walking depth-first until resolved, seeded from five canonical coverage zones (including explicit UI/UX and rough layout for each layout-bearing surface). Use when the user wants to stress-test a plan, get grilled on their design, or mentions "grill me".
+description: grill me, stress-test plan, stress-test design, get grilled, wf:grilling, Grill: ticket, wayfinder Reconcile, depth-first Q&A, coverage zones, Surfaces & experience, layout-bearing surface, rough layout, five zones
 ---
 
 # Grill me

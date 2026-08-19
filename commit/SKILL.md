@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Stages and commits only working-tree changes attributable to the current agent chat (unless the user explicitly widens scope), using git and GitHub CLI for repo context and follow-ups. Ignores unrelated local edits from other sessions. Splits into multiple logical commits when this chat produced distinct changes; single commit for small cohesive edits. Use when the user wants to commit work from this chat, snapshot chat changes, or asks to git-commit agent output.
+description: commit this chat, git commit agent output, snapshot chat changes, commit work from this conversation, commit only this session's changes, split commits from this chat
 ---
 
 # Commit changes from an agent chat

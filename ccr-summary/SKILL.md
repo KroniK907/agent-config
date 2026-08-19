@@ -1,11 +1,6 @@
 ---
 name: ccr-summary
-description: >-
-  Analyzes a Consumer Confidence Report (CCR) PDF and drafts the § 141.156
-  summary required at the beginning of the report. Summary subsection headings
-  must use markdown h5 (#####) only - never ##. Use when the user asks to
-  summarize a CCR, write a CCR summary, analyze a water quality report PDF,
-  or comply with 40 CFR 141.156.
+description: CCR summary, summarize a CCR, Consumer Confidence Report PDF, water quality report PDF, 40 CFR 141.156, § 141.156 summary
 disable-model-invocation: true
 ---
 

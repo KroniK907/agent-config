@@ -1,6 +1,6 @@
 ---
 name: strategic-ideation
-description: Expand a rough feature seed through alternating ideation and tension rounds at idea level, then prune to clear boundaries for grill-me or PRD prep. Use when scope or strategy is unstable, for a wayfinder grilling ticket about feature shape, before write-a-prd when tensions remain open, or when the user wants strategic expansion and pruning - not zone triage or implementation grilling.
+description: strategic ideation, scope unstable, strategy unstable, wf:grilling feature shape, Ideate: ticket, expand tension prune, before write-a-prd, Not yet specified scope, strategic expansion, strategic pruning, grill-me handoff, idea-level tensions, not zone triage
 ---
 
 # Strategic ideation (expand → tension → prune)

@@ -1,6 +1,6 @@
 ---
 name: prd-to-issues
-description: Break a PRD into independently-grabbable GitHub issues using tracer-bullet vertical slices. Use when user wants to convert a PRD to issues, create implementation tickets, or break down a PRD into work items.
+description: tracer bullets, PRD to issues, convert PRD to GitHub issues, implementation tickets from PRD, break PRD into work items, vertical slice issues
 ---
 
 # PRD to Issues

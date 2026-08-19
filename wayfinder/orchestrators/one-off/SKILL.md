@@ -1,6 +1,6 @@
 ---
 name: one-off
-description: HITL entry for map To Do implementation with repo deliverables - draft/materialize ticket, dedicated branch, implement-task tail with gate waivers. Use when shipping a small map-scoped slice without define-bundle, or wayfinder Route suggests one-off for a task (To Do) ticket.
+description: one-off, wayfinder Route one-off, map To Do implementation, To Do ticket repo deliverables, small map-scoped slice, without define-bundle, one-off intent, materialize To Do ticket
 ---
 
 # One-off

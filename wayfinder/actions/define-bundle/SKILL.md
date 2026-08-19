@@ -1,6 +1,6 @@
 ---
 name: define-bundle
-description: Coalesce map decision-log clusters into draft build bundle issues and promote them on bundle approved. Use when a GM cluster is ready to implement while planning To Do or fog remain open, when wayfinder Route suggests bundling, or when the user mentions define-bundle or build bundles.
+description: define-bundle, build bundles, bundle approved, GM cluster ready, coalesce decisions into bundle, wayfinder Route bundling, wayfinder Route define-bundle, wf:bundle draft
 ---
 
 # Define bundle

@@ -1,6 +1,6 @@
 ---
 name: implement-task
-description: Orchestrate pickup and completion of wf:approved implementation tasks - startup gates, bundle-branch git, Method dispatch, code-review (auto-fix obvious), resolution comment, awaiting-reconcile, and AFK queue handoff. Use when a wf:approved task is ready to implement (HITL or AFK), or wayfinder Route suggests implement-task.
+description: implement-task, wf:approved, wf:approved task ready, pick up task, implement bundle task, wayfinder Route implement-task, HITL task pickup, AFK task pickup, awaiting-reconcile
 ---
 
 # Implement task

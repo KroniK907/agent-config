@@ -1,6 +1,6 @@
 ---
 name: write-a-skill
-description: Create new agent skills. Use write-a-skill when the user wants to create, write, or build a skill - loads writing-for-agents guidance.
+description: write-a-skill, create a skill, write a skill, build an agent skill, new Cursor skill
 disable-model-invocation: true
 ---
 

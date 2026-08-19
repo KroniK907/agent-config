@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Two-axis code review (Standards + Spec) since a pinned ref - parallel generalPurpose sub-agents, optional auto-fix for obvious mistakes. Runs automatically after implement-task Method dispatch; also use for ad-hoc branch, PR, WIP, or review-since-a-ref requests.
+description: code review, review since ref, review since a ref, review branch, review PR, review WIP, ad-hoc code review, implement-task code review, after implement-task Method, wayfinder code review
 ---
 
 # Code review

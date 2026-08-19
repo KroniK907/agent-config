@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Build throwaway prototypes to answer a design question - logic/state demos or multi-variant UI on a route. Method playbook for wf:prototype bundle tasks; dispatched by implement-task.
+description: prototype, wf:prototype, Method prototype, implement-task dispatch prototype, throwaway prototype, logic demo, UI variant exploration, prototype task
 ---
 
 # Prototype

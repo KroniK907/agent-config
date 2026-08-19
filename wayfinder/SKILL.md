@@ -1,6 +1,6 @@
 ---
 name: wayfinder
-description: Bootstrap and maintain FeatureName:Map GitHub trackers - create map skeleton, materialize tickets from map-discovery artifact, reconcile session output after human approval, and suggest next frontier skill. Use when starting a large feature, syncing chat to map/issues, or navigating wayfinder To Do tickets across sessions.
+description: wayfinder, FeatureName:Map, wf:map, wf:decision-log, Chart handoff, Materialize, map-discovery artifact, Reconcile, Route, frontier, To Do tickets, sync chat to map, starting large feature, subfeature map, wf:needs-review, Approved - reconcile and close, navigate wayfinder across sessions
 disable-model-invocation: true
 ---
 

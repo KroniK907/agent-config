@@ -1,6 +1,6 @@
 ---
 name: create-tasks
-description: Split an approved wayfinder bundle into draft implementation tasks and sync map Implementing rows on scope and task approval. Use when a wf:bundle is approved, wayfinder Route suggests create-tasks, or the user wants implementation tasks from a bundle.
+description: create-tasks, wf:bundle approved, bundle approved, scope approved, tasks approved, split bundle into tasks, implementation tasks from bundle, wayfinder Route create-tasks, wf:task draft
 ---
 
 # Create tasks

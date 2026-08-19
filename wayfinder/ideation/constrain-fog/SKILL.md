@@ -1,6 +1,6 @@
 ---
 name: constrain-fog
-description: HITL orchestrator for grooming map Not yet specified fog on existing maps - auto-creates Constrain ticket, CLEANUP/CONSTRAIN/FULL_DISCOVERY phases, fog-resolution artifact, and Reconcile handoff. Use when map To Do is empty with open fog, user invokes constrain fog on a map, or wayfinder Route suggests constrain-fog.
+description: constrain fog, wayfinder Route, Not yet specified fog, empty To Do open fog, Constrain: ticket, fog-resolution artifact, groom map fog, ready for reconcile, wf:grilling, wf:hitl, invoke constrain fog on map
 ---
 
 # Constrain fog
