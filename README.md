@@ -132,6 +132,14 @@ Skills for building, fixing, and evolving code.
   npx skills@latest add KroniK907/skills/ubiquitous-language
   ```
 
+- **unslop** - Cut AI tells from any writing; rewrite for plain human voice. **Always on** via description + optional rule. Adapted from [cursor/plugins/pstack](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop).
+
+  ```
+  npx skills@latest add KroniK907/skills/unslop
+  ```
+
+  For global always-on behavior in every project, copy `.cursor/rules/unslop.mdc` to `~/.cursor/rules/unslop.mdc`.
+
 ## Skills in this repo
 
 | Skill | Folder |
@@ -158,6 +166,7 @@ Skills for building, fixing, and evolving code.
 | writing-for-agents | `writing-for-agents/` |
 | write-a-skill | `write-a-skill/` (router → writing-for-agents) |
 | ubiquitous-language | `ubiquitous-language/` |
+| unslop | `unslop/` |
 
 **Layout:** Ecosystem skills under `wayfinder/actions/`, `wayfinder/ideation/`, and `wayfinder/orchestrators/`; utilities under `wayfinder/utilities/`. One-off repo-root utilities stay at repo root.
 
