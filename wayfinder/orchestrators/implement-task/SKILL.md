@@ -7,7 +7,7 @@ description: implement-task, wf:approved, wf:approved task ready, pick up task, 
 
 **Orchestration-only** entry for **`wf:approved`** implementation tasks. Fail-closed startup → bundle-branch git → **Method dispatch** → **[code-review](../../actions/code-review/SKILL.md)** (auto-fix obvious; defer rest) → push → [resolution comment](references/resolution-comment.md) → **`Status: awaiting-reconcile`**. Does **not** close the task, remove **`wf:approved`**, or post Reconcile approval phrases.
 
-Detail: [REFERENCE.md](REFERENCE.md) - resolution templates: [references/resolution-comment.md](references/resolution-comment.md)
+Detail: [REFERENCE.md](REFERENCE.md) - resolution templates: [references/resolution-comment.md](references/resolution-comment.md) - AFK pickup comment: [references/afk-pickup-comment.md](references/afk-pickup-comment.md)
 
 ## Not this skill
 
@@ -29,8 +29,8 @@ Run in order. **Stop at first gate failure** - post **Blocked** resolution per [
 6. **Code review** - [code-review](../../actions/code-review/SKILL.md) in **implement-task mode** on `<pre-method-sha>...HEAD`; auto-fix obvious mistakes; capture [return artifact](../../actions/code-review/REFERENCE.md#implement-task-return-artifact) ([REFERENCE § Code review](REFERENCE.md#code-review))
 7. **Push** - commit Method + auto-fixes on bundle branch; push to remote
 8. **Resolve** - post success resolution comment (include **Code review** section); set body **Status:** `awaiting-reconcile` (keep **`wf:approved`**); add label **`wf:needs-review`**
-9. **Unblock** - scan dependents; add **`wf:approved`** where **Blocked by** cleared ([REFERENCE § Unblock and handoff](REFERENCE.md#unblock-and-handoff))
-10. **AFK only** - remove **`wf:afk-running`**; serial handoff to next eligible AFK task
+9. **Unblock** - scan dependents; for each cleared AFK dependent: add **`wf:approved`** + post AFK pickup comment ([references/afk-pickup-comment.md](references/afk-pickup-comment.md)); HITL dependents: label only ([REFERENCE § Unblock and handoff](REFERENCE.md#unblock-and-handoff))
+10. **AFK only** - remove **`wf:afk-running`**; serial handoff to next eligible AFK task (**`wf:approved`** + pickup comment per [afk-pickup-comment.md](references/afk-pickup-comment.md))
 
 **Invariants:** Never close task - never remove own **`wf:approved`** - never post **`Approved - reconcile and close`**
 

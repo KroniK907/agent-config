@@ -1,6 +1,6 @@
 # AFK bootstrap checklist
 
-Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Complete every step in an **app implementation repo** before adding `wf:afk` tasks or enabling label-trigger automation.
+Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Complete every step in an **app implementation repo** before adding `wf:afk` tasks or enabling comment-trigger automation.
 
 **Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/skills`](https://github.com/KroniK907/skills) pinned to a **semver tag**; one automation per repo; agents **never open PRs** - bundle branch + resolution comment only.
 
@@ -80,12 +80,12 @@ gh auth status
 ## 4. Duplicate Cursor automation (one per repo)
 
 1. Open Cursor **Automations** for the app repo.
-2. Create **one** repo-scoped automation - trigger: **`wf:approved` label added**.
+2. Create **one** repo-scoped automation - trigger: **issue comment** containing **`Approved - AFK implement`** (exact phrase).
 3. Paste prompt from [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md).
 4. **Disable PR creation** in automation settings.
 5. Save and note the automation name for your runbook.
 
-The prompt references **`implement-task`** as the sole orchestration entry. Task bodies are identical for HITL and AFK - contract lives in implement-task + this automation.
+The prompt references **`implement-task`** as the sole orchestration entry. Task bodies are identical for HITL and AFK - contract lives in implement-task + this automation. Skills add label **`wf:approved`** for reviewer visibility; the **comment phrase** starts the automation until issue-label triggers are supported ([afk-pickup-comment.md](../orchestrators/implement-task/references/afk-pickup-comment.md)).
 
 ---
 
@@ -101,8 +101,9 @@ Run at least **one** implementation task manually before enabling AFK on product
 Only after HITL smoke passes:
 
 - [ ] Add **`wf:afk`** label to AFK-mode tasks at create-tasks approval time
-- [ ] Enable the label automation from step 4
+- [ ] Enable the comment automation from step 4 (phrase **`Approved - AFK implement`**)
 - [ ] Confirm serial queue: only one open issue should hold **`wf:afk-running`** at a time
+- [ ] Confirm first AFK pickup posts **`wf:approved`** + pickup comment (create-tasks or implement-task handoff)
 
 ---
 
