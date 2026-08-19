@@ -5,7 +5,7 @@ description: ubiquitous language, DDD glossary, domain model terms, build a glos
 
 # Ubiquitous Language
 
-Extract and formalize domain terminology from the current conversation into a consistent glossary, saved to a local file.
+Extract domain terms from the current conversation into a consistent glossary and save it locally.
 
 ## Process
 
@@ -17,6 +17,8 @@ Extract and formalize domain terminology from the current conversation into a co
 3. **Propose a canonical glossary** with opinionated term choices
 4. **Write to `UBIQUITOUS_LANGUAGE.md`** in the working directory using the format below
 5. **Output a summary** inline in the conversation
+
+**Done when:** `UBIQUITOUS_LANGUAGE.md` exists (or is updated) and the summary lists term count, new entries, and flagged ambiguities.
 
 ## Output Format
 
@@ -77,8 +79,12 @@ When invoked again in the same conversation:
 5. Re-flag any new ambiguities
 6. Rewrite the example dialogue to incorporate new terms
 
-## Post-output instruction
+## Post-output
 
-After writing the file, state:
+After writing the file, tell the user:
 
-> I've written/updated `UBIQUITOUS_LANGUAGE.md`. From this point forward I will use these terms consistently. If I drift from this language or you notice a term that should be added, let me know.
+- The file path
+- How many terms are defined
+- Any flagged ambiguities
+
+State that you will use these terms consistently in this conversation. If the user spots drift or a missing term, they can invoke this skill again.

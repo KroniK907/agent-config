@@ -2,7 +2,7 @@
 
 ## Quick triage (read every session)
 
-**Likely N/A when:** the change stays **inside one process** with **no** new or altered **external** contract - no HTTP/RPC, no queues/events/webhooks, no new third-party calls, no new file formats exchanged.
+Skip this zone when the change stays **inside one process** with **no** new or altered **external** contract - no HTTP/RPC, no queues/events/webhooks, no new third-party calls, no new file formats exchanged.
 
 **Common skip signals**
 

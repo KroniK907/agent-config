@@ -22,13 +22,13 @@ You are picking up a wayfinder implementation task in AFK (unattended) mode.
 1. Read the triggered issue number from the automation context (the issue that received the pickup comment).
 2. Invoke the **implement-task** skill on that issue (`/implement-task` or load wayfinder/orchestrators/implement-task/SKILL.md from ~/.cursor/skills/).
 3. Follow implement-task exactly - orchestration only:
- - Fail-closed startup gates (Status, labels, Method, bundle branch, AFK serial lock)
+ - Run startup gates; stop on first failure (Status, labels, Method, bundle branch, AFK serial lock)
  - Checkout/pull bundle branch from parent bundle **Branch:** line
  - Method dispatch from task **## Method** (required for AFK - no session override)
  - Code review after Method (implement-task mode)
  - Commit + push to bundle branch - **never open PRs**
  - Post resolution comment; set task **Status:** awaiting-reconcile
- - Never close the task; never remove wf:approved; never post Reconcile approval phrases
+ - Keep the task open with wf:approved until wayfinder Reconcile closes it
 4. On startup gate failure, post Blocked resolution per implement-task references/resolution-comment.md - no repo edits.
 5. At end-of-run: remove wf:afk-running from this task; hand off to next eligible AFK task (wf:approved + pickup comment Approved - AFK implement) if any.
 

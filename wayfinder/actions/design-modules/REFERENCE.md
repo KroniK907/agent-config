@@ -14,13 +14,13 @@ Use these terms exactly - consistent language is the point.
 
 **Implementation** - code inside the module. Distinct from **Adapter** (concrete thing at a seam).
 
-**Depth** - leverage at the interface: behaviour exercisable per unit of interface learned. **Deep** = lots of behaviour behind a small interface; **shallow** = interface nearly as complex as implementation.
+**Depth** - behaviour you can exercise per unit of interface learned. **Deep** = lots of behaviour behind a small interface; **shallow** = interface nearly as complex as implementation.
 
 **Seam** _(Michael Feathers)_ - where behaviour can change without editing in that place; where a module's interface lives. **Seam discovery** - finding boundaries between modules in a bundle's decision cluster.
 
 **Adapter** - concrete thing satisfying an interface at a seam.
 
-**Leverage** - capability callers get from depth.
+**Caller payoff** - capability callers get from depth.
 
 **Locality** - maintainers get change concentrated in one place.
 
@@ -175,7 +175,7 @@ Each module gets its **own** complete artifact - whether alone or as part of a m
 
 #### Recommendation
 
-{Which shape and why - depth, locality, leverage}
+{Which shape and why - depth, locality, caller payoff}
 
 #### Task split hints
 

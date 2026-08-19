@@ -2,7 +2,7 @@
 
 When a **module's** interface shape is open, explore alternatives with parallel sub-agents. Based on "Design It Twice" (Ousterhout) - your first idea is unlikely to be the best.
 
-Run **per module** after module count and seams are settled (or confirmed with the human). Uses vocabulary from [REFERENCE.md](REFERENCE.md) - **module**, **interface**, **seam**, **adapter**, **leverage**.
+Run **per module** after module count and seams are settled (or confirmed with the human). Uses vocabulary from [REFERENCE.md](REFERENCE.md) - **module**, **interface**, **seam**, **adapter**, **caller payoff**.
 
 Adapted from [mattpocock/skills - engineering/codebase-design/DESIGN-IT-TWICE](https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/DESIGN-IT-TWICE.md).
 
@@ -26,7 +26,7 @@ Spawn 3+ sub-agents in parallel via Task tool. Each must produce a **radically d
 
 Prompt each sub-agent with a separate technical brief (relevant **Decisions**, file paths when known, dependency category, what sits behind the seam). Give each agent a different design constraint:
 
-- Agent 1: "Minimize the interface - aim for 1-3 entry points max. Maximise leverage per entry point."
+- Agent 1: "Minimize the interface - aim for 1-3 entry points max. Get the most behaviour from each entry point."
 - Agent 2: "Maximise flexibility - support many use cases and extension."
 - Agent 3: "Optimise for the most common caller - make the default case trivial."
 - Agent 4 (if applicable): "Design around ports and adapters for cross-seam dependencies."
@@ -37,11 +37,11 @@ Each sub-agent outputs:
 2. Usage example
 3. What the implementation hides behind the seam
 4. Dependency strategy and adapters ([DEEPENING.md](DEEPENING.md))
-5. Trade-offs - where leverage is high, where it is thin
+5. Trade-offs - where caller payoff is high, where it is thin
 
 ### 3. Present and compare
 
-Present designs sequentially. Compare in prose by **depth** (leverage at the interface), **locality** (where change concentrates), and **seam placement**.
+Present designs sequentially. Compare in prose by **depth**, **locality** (where change concentrates), and **seam placement**. See [REFERENCE.md](REFERENCE.md) glossary.
 
 Give a recommendation: strongest design and why. Propose a hybrid when elements from different designs combine well. Be opinionated - the user wants a strong read, not just a menu.
 
@@ -53,8 +53,8 @@ Repeat steps 1-4 for each module that needs exploration.
 
 ## Anti-patterns
 
-- Do not let sub-agents produce similar designs - enforce radical difference
-- Do not skip comparison - the value is in contrast
-- Do not design-it-twice before module count is reasoned about - settle seams first
-- Do not implement - this step is interface shape only unless the human explicitly requests spike code
-- Do not evaluate based on implementation effort alone
+- Sub-agents must produce distinct designs - enforce radical difference
+- Comparison is the value - do not skip it
+- Settle module count and seams before design-it-twice
+- Interface shape only unless the human explicitly requests spike code
+- Pick the shape that hides the most complexity, not the one that looks easiest to build

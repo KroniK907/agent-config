@@ -1,6 +1,6 @@
 # Code review reference
 
-Disclosed reference for [SKILL.md](SKILL.md).
+Reference for [SKILL.md](SKILL.md).
 
 ---
 

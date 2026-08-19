@@ -64,7 +64,7 @@ create-tasks sets **`draft`** and **`ready`**. Only **implement-task** sets **`a
 - **Default for `wf:task`:** propose **`write-code`** unless the slice is throwaway exploration (**`prototype`**) or the human sets another Method
 - Repo-root one-offs (`tdd`, `commit`, `writing-for-agents`, …) valid **only** when the human explicitly sets them on **## Method**
 
-**AFK pickup:** **## Method** must name a valid skill before **`wf:approved`**. Post pickup comment with **`Approved - AFK implement`** when adding the label - [implement-task](../../orchestrators/implement-task/SKILL.md) fail-closes on missing or invalid Method for AFK tasks. Label **`wf:approved`** is human reviewer signal + startup gate; v1 automation trigger is the comment phrase ([afk-pickup-comment.md](../../orchestrators/implement-task/references/afk-pickup-comment.md)).
+**AFK pickup:** **## Method** must name a valid skill before **`wf:approved`**. Post pickup comment with **`Approved - AFK implement`** when adding the label - [implement-task](../../orchestrators/implement-task/SKILL.md) stops on missing or invalid Method for AFK tasks. Label **`wf:approved`** is human reviewer signal + startup gate; v1 automation trigger is the comment phrase ([afk-pickup-comment.md](../../orchestrators/implement-task/references/afk-pickup-comment.md)).
 
 **Validation at pickup:** see [implement-task REFERENCE § Method validation](../../orchestrators/implement-task/REFERENCE.md#method-validation).
 

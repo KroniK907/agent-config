@@ -84,7 +84,7 @@ End with: *Review the findings - invoke wayfinder **Reconcile** when ready to sy
 
 ## Interaction rules
 
-1. **Non-binding only** - never append decision-log rows; never post **Approved - reconcile and close**
+1. **Non-binding only** - post findings and proposed tracker updates; leave decision-log rows and Reconcile approval to the human
 2. **Comment, not file** - findings live on the ticket thread, not repo Markdown
 3. **One scope-expansion pass** - if Coverage still fails after expansion, note gaps and stop
 4. **HITL v1** - wait for human direction before follow-up research or Reconcile

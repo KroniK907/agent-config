@@ -17,7 +17,7 @@ If the question is "what should this look like" - wrong branch. Use [UI.md](UI.m
 
 ### 1. State the question
 
-Before writing code, write down what state model and what question you're prototyping. One paragraph, at the top of the demo (in a visible intro, not just a comment). A logic prototype that answers the wrong question is pure waste - make the question explicit so it can be checked later, whether the user is watching now or returning to it AFK.
+Before writing code, write down what state model and what question you're prototyping. One paragraph, at the top of the demo (in a visible intro, not just a comment). A logic prototype that answers the wrong question is wasted effort - make the question explicit so it can be checked later, whether the user is watching now or returning to it AFK.
 
 Pull the question from the task **What to build** when present; otherwise infer from codebase context.
 
@@ -49,7 +49,7 @@ Lay it out with a clean hierarchy, top to bottom:
 
 Choose scenarios that demonstrate the awkward cases - the happy path, a tricky edge case, an attempt at something that should be illegal - the ones hard to reason about on paper.
 
-Keep it beautiful but restrained: clean typography, generous spacing, one accent colour. No animations, no gimmicks - nothing that competes with the state and the buttons.
+Keep typography clean with generous spacing and one accent colour. No animations or gimmicks - nothing that competes with the state and the buttons.
 
 Place the file close to the module being prototyped; include `prototype` in the filename or path.
 

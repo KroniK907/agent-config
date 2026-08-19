@@ -10,11 +10,11 @@ When assessing a candidate module for deepening, classify its dependencies. The 
 
 ### 1. In-process
 
-Pure computation, in-memory state, no I/O. Always deepenable - merge modules and test through the new interface directly. No adapter needed.
+Pure computation, in-memory state, no I/O. Safe to deepen - merge modules and test through the new interface directly. No adapter needed.
 
 ### 2. Local-substitutable
 
-Dependencies with local test stand-ins (PGLite for Postgres, in-memory filesystem). Deepenable if the stand-in exists. Test with the stand-in in-suite. Seam is internal; no port at the module's external interface.
+Dependencies with local test stand-ins (PGLite for Postgres, in-memory filesystem). Safe to deepen if the stand-in exists. Test with the stand-in in-suite. Seam is internal; no port at the module's external interface.
 
 ### 3. Remote but owned (Ports & Adapters)
 

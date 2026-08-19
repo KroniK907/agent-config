@@ -1,17 +1,17 @@
 ---
-description: Apply unslop to every prose surface before sending. Must always apply.
+description: Apply unslop to every text you send. Must always apply.
 alwaysApply: true
 ---
 
 # Unslop (always on)
 
-Every prose surface you generate must pass **unslop** as you draft it. Do not write slop and clean up afterward.
+Every text you generate must pass **unslop** as you draft it. Do not write slop and clean up afterward.
 
-**Surfaces:** chat replies, issue bodies, PR descriptions, commit messages, docs, skill text, resolution comments.
+Applies to chat replies, issue bodies, PR descriptions, commit messages, docs, skill text, and resolution comments.
 
-**Before sending:** read the **unslop** skill if its full pattern list is not already in context; run the 4-step process (scan, rewrite, add soul, self-audit).
+Before sending, read the **unslop** skill if its full pattern list is not already in context. Run scan, rewrite, add voice, self-audit.
 
-**Non-negotiables while drafting:**
+**Non-negotiables while drafting**
 
 - Short declarative sentences; one thought per sentence.
 - No colon as a mid-sentence connector (colons before lists are fine).
@@ -22,4 +22,6 @@ Every prose surface you generate must pass **unslop** as you draft it. Do not wr
 - Active voice when the actor matters.
 - Say what it does with a concrete fact or mechanism, not how it feels.
 
-Full pattern list: **unslop** skill (`~/.cursor/skills/unslop/SKILL.md` when installed personally).
+Full pattern list lives in the **unslop** skill (`~/.cursor/skills/unslop/SKILL.md` when installed personally).
+
+Self-audit before send: what would still read as AI-generated?

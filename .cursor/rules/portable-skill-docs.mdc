@@ -30,3 +30,13 @@ Put concrete links and decision-log rows in the **tracker**, not in committed ma
 - **Comments** on those issues (resolution, reconcile, research findings)
 
 When a skill needs a worked example, describe the pattern in prose or use placeholders - point humans to the live map issue for real IDs.
+
+## Author checklist
+
+Before committing skill or reference markdown:
+
+- [ ] No live issue URLs from this repo (`KroniK907/skills/issues/N`)
+- [ ] GM examples use fictional slugs (`CMD-PAL-GM-001`), not rows from a live map
+- [ ] Format examples use `#N` and `{FeatureName}:Map`, not pinned instance IDs
+
+Domain skills with real worked examples (e.g. ccr-summary) may keep factual contact data when the example is the point.

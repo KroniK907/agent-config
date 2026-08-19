@@ -11,7 +11,7 @@ Adapted from [cursor/plugins/pstack - unslop](https://github.com/cursor/plugins/
 
 ## Always on
 
-Apply this skill to **every prose surface before you send it**: chat replies, issue bodies, PR descriptions, commit messages, docs, skill text, resolution comments.
+Apply this skill to **every text you send** before you send it: chat replies, issue bodies, PR descriptions, commit messages, docs, skill text, resolution comments.
 
 Write clean as you draft. Do not generate slop and run a cleanup pass afterward.
 
@@ -21,10 +21,10 @@ For global enforcement across all projects, copy [`.cursor/rules/unslop.mdc`](..
 
 1. Scan for the patterns below.
 2. Rewrite. Preserve meaning, match intended tone.
-3. Add soul (see next section).
+3. Add soul (see **Voice** section).
 4. Self-audit: "What makes this obviously AI generated?" Fix remaining tells.
 
-## Adding soul
+## Voice
 
 Removing patterns is half the job. Sterile, voiceless writing is just as obvious.
 

@@ -5,7 +5,7 @@ description: design-modules, module interface design, module design, design an i
 
 # Design modules
 
-Turn bundled **Decisions** (or a planning ticket **Question**) into **deep module** shapes: small interfaces, clear **seams**, dependency categories, and recommended designs with rationale. A bundle may warrant **one module or several** - notice natural seams in the decision cluster and propose multiple modules when separation improves depth, locality, or task split. Output is structured comment(s) on the bundle or ticket - not repo edits unless the human explicitly requests spike code.
+Turn bundled **Decisions** (or a planning ticket **Question**) into **deep module** shapes: small interfaces, clear **seams**, dependency categories, and recommended designs with rationale. A bundle may warrant **one module or several**. Notice natural seams in the decision cluster and propose multiple modules when separation improves depth, locality, or task split. Output is structured comment(s) on the bundle or ticket - not repo edits unless the human explicitly requests spike code.
 
 Vocabulary and deepening: [REFERENCE.md](REFERENCE.md). Parallel exploration: [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md). Dependency categories: [DEEPENING.md](DEEPENING.md).
 
@@ -18,7 +18,7 @@ Adapted from [mattpocock/skills - engineering/codebase-design](https://github.co
 | Skill | When instead |
 |-------|----------------|
 | [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
-| [define-bundle](../define-bundle/SKILL.md) | Coalesce GM rows into draft/approved bundles |
+| [define-bundle](../define-bundle/SKILL.md) | Group GM rows into draft/approved bundles |
 | [create-tasks](../create-tasks/SKILL.md) | Split approved bundle into implementation tasks |
 | [prototype](../actions/prototype/SKILL.md) | Throwaway code on bundle branch when **## Method:** `prototype` |
 | [improve-codebase-architecture](../../improve-codebase-architecture/SKILL.md) | Codebase-wide exploration → GitHub RFC issues |
@@ -39,7 +39,11 @@ Adapted from [mattpocock/skills - engineering/codebase-design](https://github.co
 | Clear subsystem or responsibility seams in **Decisions** | **Multiple modules** - one artifact each; brief overview tying them together |
 | Ambiguous | Present **recommended count** with rationale; offer single-module alternative; human confirms before design-it-twice |
 
-Multiple modules is an **option**, not a requirement. Do not split for splitting's sake.
+Multiple modules is an **option**, not a requirement. Split only when seams improve depth or task boundaries.
+
+## Completion
+
+**Done when:** Module-design artifact comment(s) are posted on the bundle or ticket and you have suggested the next skill ([create-tasks](../create-tasks/SKILL.md) for bundles, or Reconcile for planning tickets).
 
 ## Quick start
 
