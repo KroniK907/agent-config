@@ -5,7 +5,7 @@ description: grill me, stress-test plan, stress-test design, get grilled, wf:gri
 
 # Grill me
 
-Explore the plan or design until you and the user share a clear picture. Work **depth-first**: choose **one** branch of the decision tree, drill into it until every detail that matters for that branch is settled, then move to the **next** branch. **Never** hop between unrelated branches in parallel; finish the current branch (or explicitly agree it is deferred) before starting another.
+Explore the plan or design until every tracked branch is settled or explicitly deferred. Work **depth-first**: choose **one** branch of the decision tree, drill into it until every detail that matters for that branch is settled, then move to the **next** branch. Finish the current branch (or explicitly agree it is deferred) before starting another.
 
 ## Coverage zones (canonical branches)
 
@@ -77,12 +77,12 @@ Your recommendation for how to answer the **Question** above only - briefly, inc
 
 ## Interaction rules (non-negotiable)
 
-1. Ask **exactly one** question per reply - in the **Question:** section only (or, on a **Session complete** closing turn only, as plain prose). No multi-part "Question 1 / Question 2", no bullet lists of questions, no trailing "also, ...?" in the same message.
+1. Ask **exactly one** question per reply - in the **Question:** section only (or, on a **Session complete** closing turn only, as plain prose). One question, one branch, one turn.
 2. **Wait** for the user's answer before asking the next question.
 3. Use the answer to pick the next question along the **same** branch until that branch is nailed down; only then switch to a sibling or parent branch.
-4. Put your suggested answer **only** in **Recommendation:**, scoped to the current **Question:**. Do not let it become a second question in the same turn.
+4. Put your suggested answer **only** in **Recommendation:**, scoped to the current **Question:**.
 5. If the question can be answered by exploring the codebase, **explore first**, then ask **one** follow-up only if something is still ambiguous.
 6. **Coverage:** Follow **Session startup** every time: triage all five zone references, seed **Branches**, then deep-read only what is still in scope.
-7. **UI layouts:** When **Surfaces & experience** is in scope for product UI, follow **UI layout articulation** - do not complete that branch without a rough layout per layout-bearing surface or an explicit deferral per surface.
+7. **UI layouts:** When **Surfaces & experience** is in scope for product UI, follow **UI layout articulation** - mark that branch complete only after a rough layout per layout-bearing surface or an explicit deferral per surface.
 
 On normal turns, the **Question:** section must end with one clear question the user can answer in their next reply. **Session complete** closing turns have no **Question:** section; the single closing question still applies.

@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Wayfinder
 
-**Tracker and router** for large features: map skeleton → [feature-discovery](ideation/feature-discovery/SKILL.md) → tickets → sibling skills → **Reconcile** → [define-bundle](actions/define-bundle/SKILL.md) → [create-tasks](actions/create-tasks/SKILL.md). Part of a **skill ecosystem** - see [REFERENCE.md](REFERENCE.md) for templates, materialize rules, approval protocol, routing table, and GitHub ops.
+**Tracker and router** for large features: map skeleton → [feature-discovery](ideation/feature-discovery/SKILL.md) → tickets → related skills → **Reconcile** → [define-bundle](actions/define-bundle/SKILL.md) → [create-tasks](actions/create-tasks/SKILL.md). Part of a **skill ecosystem** - see [REFERENCE.md](REFERENCE.md) for templates, materialize rules, approval protocol, routing table, and GitHub ops.
 
 **Plan, don't implement** unless the map **Notes** say otherwise. Wayfinder does **not** run discovery interviews, strategic ideation, or grilling - it creates/updates GitHub state and suggests what skill to use next.
 
@@ -58,16 +58,18 @@ Run when user explicitly invokes wayfinder after a sibling skill session.
 4. **On approval** - When user says an [approval phrase](REFERENCE.md#approval-phrases), agent executes approved sections: close issue (if full approval), move row To Do → **Completed**, append decision log **body**, update **Decision coverage**, update fog/Notes/Out of scope, **materialize approved ticket candidates** (create child issues + **To Do** rows), apply ticket invalidations. Remove label **`wf:needs-review`**. Requires `gh` auth on target repo. For **map or decision-log body** replacements, follow [REFERENCE § Map body edits](REFERENCE.md#map-and-issue-body-edits-reconcile) (draft file → validate → `--body-file`; never string round-trip).
 5. **Partial approval** - **Approved - reconcile, keep open** → apply comments/log/map notes and optional ticket creates without closing the source ticket.
 
-**Default:** Do not reconcile mid-session without user invoke. Sibling skills may remind: *Invoke wayfinder Reconcile when ready.*
+**Default:** Reconcile only when the user invokes wayfinder after a sibling skill session. Related skills may remind: *Invoke wayfinder Reconcile when ready.*
 
-**Grilling sessions:** Reconcile is the bridge from depth-first Q&A to map evolution - not only binding GM rows, but inferred frontier tickets, bundle-ready clusters, and route hints. **`bundle approved`** remains [define-bundle](actions/define-bundle/SKILL.md); Reconcile **suggests** clusters only.
+**Grilling sessions:** Reconcile is how depth-first Q&A becomes map state. It proposes decision-log rows, frontier tickets, bundle-ready clusters, and route hints. **`bundle approved`** remains [define-bundle](actions/define-bundle/SKILL.md). Reconcile **suggests** clusters only.
 
 ### Route (suggest next step)
 
 1. **Load map** - Low-res body (not every ticket thread) + decision log link.
 2. **Compute planning frontier** - First open, unblocked, unclaimed **To Do** item per [REFERENCE.md](REFERENCE.md#frontier-queries).
 3. **Check implementation path** - If **Decision coverage** has a cluster of **`open`** rows ready to build (see [define-bundle route heuristics](actions/define-bundle/REFERENCE.md#route-heuristics-for-wayfinder)), suggest [define-bundle](actions/define-bundle/SKILL.md) alongside or instead of planning frontier when user wants to ship incrementally.
-4. **Suggest** - One recommended next step + skill from [routing table](REFERENCE.md#routing-table). Optional second choice if ambiguous. User picks skill and starts work - wayfinder does not resolve tickets.
+4. **Suggest** - One recommended next step + skill from [routing table](REFERENCE.md#routing-table). Optional second choice if ambiguous. User picks skill and starts work.
+
+**Done when:** You have named one skill and one ticket (or bundle) as the recommended next step.
 
 Approved bundles → suggest [create-tasks](actions/create-tasks/SKILL.md). **`wf:approved`** **Implementing** tasks → suggest [implement-task](orchestrators/implement-task/SKILL.md). **`write-a-prd`** / **`prd-to-issues`** only for small map-free scope - not a map Route handoff.
 
@@ -79,7 +81,7 @@ Each map owns a **scoped decision log** (`{MAP-SLUG}-GM-NNN`). Sibling skills an
 
 Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under parent **Subfeatures**. Parent stays integration index. See [REFERENCE.md](REFERENCE.md#subfeature-maps).
 
-## Ecosystem (sibling skills)
+## Ecosystem (related skills)
 
 | Skill | Role |
 |-------|------|

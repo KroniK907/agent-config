@@ -5,7 +5,7 @@ description: create-tasks, wf:bundle approved, bundle approved, scope approved, 
 
 # Create tasks
 
-Split an **approved** bundle issue (`wf:bundle`, Status `approved`) into agent-run-sized **thin vertical slices** as draft implementation issues, then on human approval sync map **Implementing** + **Decision coverage**. Does **not** implement product code unless the task itself is the work.
+Split an **approved** bundle issue (`wf:bundle`, Status `approved`) into **thin vertical slices** sized for one session or one PR as draft implementation issues, then on human approval sync map **Implementing** + **Decision coverage**. Does **not** implement product code unless the task itself is the work.
 
 Runs on an approved bundle + parent map + decision log. After **`tasks approved`**, hand off to implementation; on ship, invoke [wayfinder](../SKILL.md) **Reconcile** to close the task and move coverage to **`implemented`**.
 
@@ -14,7 +14,7 @@ Runs on an approved bundle + parent map + decision log. After **`tasks approved`
 | Skill | When instead |
 |-------|----------------|
 | [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
-| [define-bundle](../define-bundle/SKILL.md) | Coalesce GM rows into draft/approved bundles |
+| [define-bundle](../define-bundle/SKILL.md) | Group GM rows into draft/approved bundles |
 | [design-modules](../design-modules/SKILL.md) | Per-module design artifacts on bundle before splitting |
 | [grill-me](../../ideation/grill-me/SKILL.md) | Resolve unknowns → new binding GM rows |
 | [write-a-prd](../../write-a-prd/SKILL.md) | Small map-free scope only |

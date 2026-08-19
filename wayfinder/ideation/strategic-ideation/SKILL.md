@@ -5,7 +5,7 @@ description: strategic ideation, scope unstable, strategy unstable, wf:grilling 
 
 # Strategic ideation (expand → tension → prune)
 
-Take a **simple seed** (or chat history) and grow an **oversized** picture through **ideation**, stress it with **idea-level tensions** (like grill-me but not implementation), repeat bands until shape stabilizes, then **prune** to a single bounded description suitable for **[grill-me](../grill-me/SKILL.md)** or PRD prep.
+Take a **simple seed** (or chat history) and expand scope deliberately past the target size through **ideation**, stress it with **idea-level tensions** (like grill-me but not implementation), repeat bands until shape stabilizes, then **prune** to a single bounded description suitable for **[grill-me](../grill-me/SKILL.md)** or PRD prep.
 
 ## Not this skill
 
@@ -26,7 +26,7 @@ Take a **simple seed** (or chat history) and grow an **oversized** picture throu
 
 | Mode | Job |
 |------|-----|
-| **Ideation** | Expansion: new contexts, use cases, surfaces, future-proofing, synergy if adjacent areas grow. Add branches and possibilities - bias toward **too big** before pruning. |
+| **Ideation** | Expansion: new contexts, use cases, surfaces, future-proofing, adjacent areas that might grow together. Add branches and possibilities - bias toward **too big** before pruning. |
 | **Tension** | Idea/strategy stress-test: conflicts with existing features or roadmap, separation vs bundling, **internal consistency** of goals. **One question per assistant reply.** Not API/load-testing - that belongs in grill-me. |
 | **Prune** | Consolidate into a **handoff artifact** (template in [REFERENCE.md](REFERENCE.md)): positive **In scope** + **Boundaries**; **no** default “out of scope / deferred” dumps for grill-me (see REFERENCE handoff rules). |
 
@@ -37,11 +37,11 @@ Default loop:
 1. **Ideation band:** **3 rounds** (each round = **one full exchange**: user message → assistant reply).
 2. **Tension band:** **2 rounds** (each tension reply asks **exactly one** question).
 
-**One assistant reply = one round only.** Never combine rounds in a single message (for example, do **not** complete ideation round 3 and start tension round 1 in the same reply). When a round ends, **stop** and **wait for the user’s next message** before advancing the round counter or switching phase/band - even at ideation→tension or tension→ideation boundaries.
+**One assistant reply = one round only.** Address exactly one round per message. When a round ends, stop and wait for the user's next message before advancing the round counter or switching phase/band - including at ideation→tension and tension→ideation boundaries.
 
 Repeat until entering **prune**. Adjust band lengths only when the user asks or when the seed is tiny - see [REFERENCE.md](REFERENCE.md).
 
-Forked takes (optional): During ideation, occasionally offer **2-3 deliberately different, intentionally oversized** interpretations of the seed so expansion stays vivid - merge user picks into the running picture.
+Forked takes (optional): During ideation, occasionally offer **2-3 deliberately different, expanded** interpretations of the seed so expansion stays vivid - merge user picks into the running picture.
 
 ## Entering prune mode
 
@@ -104,12 +104,12 @@ Expose this in **Session state** every turn so “what’s next” is obvious.
 ## Interaction rules (non-negotiable)
 
 1. **Round** = **one full exchange** (user message → assistant reply).
-2. **No stacked rounds:** Each assistant message must address **exactly one** round in the current phase. You may describe in **Session state** what comes *next* after the user replies, but you must **not** perform the next round (or next phase) until the user sends another message.
+2. **One round per reply:** Each assistant message addresses exactly one round in the current phase. You may note in **Session state** what comes next, but wait for the user's message before performing it.
 3. **Recap** first every time; never skip because the reply is long or late in session.
 4. **Tension:** exactly **one** question per tension reply.
 5. **Prune suggestion:** soft invitation only; user controls exit from expansion loops.
-6. **Grill-me handoff content:** Give grill-me mostly **what to build** and open decisions on that slice. **Do not** fill the grill seed with big out-of-scope or “later” lists - see [REFERENCE.md](REFERENCE.md) - unless the user asks for a separate human-only appendix.
-7. **Not a replacement for grill-me:** If ideation and grilling happen in one chat, **label the mode** each turn so behavior stays correct.
+6. **Grill-me handoff content:** Give grill-me mostly **what to build** and open decisions on that slice. Put backlog material under **Notes for PRD**, not in the grill seed - see [REFERENCE.md](REFERENCE.md).
+7. **Label the mode** each turn when ideation and grilling happen in one chat.
 
 ## Quick start
 

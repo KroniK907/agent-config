@@ -3,66 +3,100 @@ name: request-refactor-plan
 description: refactor plan, refactoring RFC, plan a refactor, incremental refactor steps, tiny-commit refactor plan, break refactor into safe steps
 ---
 
-This skill will be invoked when the user wants to create a refactor request. You should go through the steps below. You may skip steps if you don't consider them necessary.
+# Request refactor plan
 
-1. Ask the user for a long, detailed description of the problem they want to solve and any potential ideas for solutions.
+Walk the user through a refactor and file a GitHub issue with a tiny-commit plan. Skip a step only when the user already answered it in full.
 
-2. Explore the repo to verify their assertions and understand the current state of the codebase.
+## Process
 
-3. Ask whether they have considered other options, and present other options to them.
+### 1. Capture the problem
 
-4. Interview the user about the implementation. Be extremely detailed and thorough.
+Ask for a detailed description of the problem and any solution ideas they already have.
 
-5. Hammer out the exact scope of the implementation. Work out what you plan to change and what you plan not to change.
+**Done when:** You can restate the problem in one paragraph without guessing.
 
-6. Look in the codebase to check for test coverage of this area of the codebase. If there is insufficient test coverage, ask the user what their plans for testing are.
+### 2. Verify against the repo
 
-7. Break the implementation into a plan of tiny commits. Remember Martin Fowler's advice to "make each refactoring step as small as possible, so that you can always see the program working."
+Explore the repo to check their claims and understand the current code.
 
-8. Create a GitHub issue with the refactor plan. Use the following template for the issue description:
+**Done when:** You have traced the affected code paths and noted existing tests.
+
+### 3. Surface alternatives
+
+Ask whether they considered other options. Present at least two alternatives with trade-offs.
+
+**Done when:** The user picks a direction or confirms the original approach.
+
+### 4. Interview on implementation
+
+Ask targeted questions about interfaces, callers, rollout, and failure modes. One topic at a time until the shape is clear.
+
+**Done when:** Module boundaries, data flow, and non-goals are written down.
+
+### 5. Lock scope
+
+Write what will change and what will not. Get explicit confirmation before drafting the plan.
+
+**Done when:** The user agrees to the in/out list.
+
+### 6. Check test coverage
+
+Look for tests on the affected area. If coverage is thin, ask what tests they want before or during the refactor.
+
+**Done when:** You know which modules get new or updated tests.
+
+### 7. Draft tiny commits
+
+Break the work into the smallest commits that each leave the codebase working. Follow Fowler's rule: each step should be independently verifiable.
+
+**Done when:** You have an ordered commit list with a one-line purpose per commit.
+
+### 8. Create the GitHub issue
+
+Create the issue with `gh issue create`. Use the template below.
+
+**Done when:** The issue URL is posted to the user.
 
 <refactor-plan-template>
 
 ## Problem Statement
 
-The problem that the developer is facing, from the developer's perspective.
+The problem from the developer's perspective.
 
 ## Solution
 
-The solution to the problem, from the developer's perspective.
+The chosen approach from the developer's perspective.
 
 ## Commits
 
-A LONG, detailed implementation plan. Write the plan in plain English, breaking down the implementation into the tiniest commits possible. Each commit should leave the codebase in a working state.
+An ordered implementation plan in plain English. Each commit is as small as possible and leaves the codebase in a working state.
 
 ## Decision Document
 
-A list of implementation decisions that were made. This can include:
+Implementation decisions made during the interview:
 
-- The modules that will be built/modified
-- The interfaces of those modules that will be modified
+- Modules to build or modify
+- Interface changes
 - Technical clarifications from the developer
 - Architectural decisions
 - Schema changes
 - API contracts
 - Specific interactions
 
-Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
+Do not include file paths or code snippets. They go stale quickly.
 
 ## Testing Decisions
 
-A list of testing decisions that were made. Include:
-
-- A description of what makes a good test (only test external behavior, not implementation details)
+- What makes a good test here (behavior at public boundaries, not internals)
 - Which modules will be tested
-- Prior art for the tests (i.e. similar types of tests in the codebase)
+- Similar tests already in the codebase
 
 ## Out of Scope
 
-A description of the things that are out of scope for this refactor.
+What this refactor explicitly does not touch.
 
 ## Further Notes (optional)
 
-Any further notes about the refactor.
+Anything else worth recording.
 
 </refactor-plan-template>

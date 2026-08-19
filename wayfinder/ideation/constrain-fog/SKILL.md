@@ -5,7 +5,7 @@ description: constrain fog, wayfinder Route, Not yet specified fog, empty To Do 
 
 # Constrain fog
 
-**HITL-only** orchestrator for grooming **Not yet specified** fog on **existing** maps (post Chart/Materialize). Not depth-first Q&A - session cleanup, per-item mini-discovery, optional inline full discovery, and a **`## Fog resolution`** artifact on an auto-created **`Constrain:`** ticket. Approved ticket candidates materialize via wayfinder **Reconcile** - not **Materialize**.
+**HITL-only** orchestrator for grooming **Not yet specified** fog on **existing** maps (post Chart/Materialize). Runs session cleanup, per-item mini-discovery, optional inline full discovery, and a **`## Fog resolution`** artifact on an auto-created **`Constrain:`** ticket. Approved ticket candidates materialize via wayfinder **Reconcile**, not **Materialize**.
 
 Detail: [REFERENCE.md](REFERENCE.md)
 
@@ -92,7 +92,7 @@ When artifact **Status:** `ready for reconcile`:
 3. **No map To Do edits** until Reconcile approval
 4. **To Do dedup** - before proposing a ticket candidate, check open **To Do** and recent **Completed** for overlapping **Question**; narrate merge/skip/supersede
 5. **Recap + Session state** - mandatory every reply
-6. **Never auto-close** - human **`Approved - reconcile and close`** required
+6. **Human closes the ticket** - requires **`Approved - reconcile and close`**
 
 ## Quick start
 

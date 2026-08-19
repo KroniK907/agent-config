@@ -3,11 +3,21 @@ name: writing-for-agents
 description: writing for agents, create or edit skills, AGENTS.md, CLAUDE.md, Cursor rules, skill description pointers, context pointers, leading words
 ---
 
-Reference for writing any document an agent consumes - a skill, an `AGENTS.md` / `CLAUDE.md`, a Cursor rule, a doc reached by a pointer. The packaging differs; the writing does not: the same levers make each one predictable - the agent taking the same _process_ every run, not producing the same output.
+Reference for writing any document an agent consumes - a skill, an `AGENTS.md` / `CLAUDE.md`, a Cursor rule, a doc reached by a pointer. The packaging differs. The writing does not. The same levers make each one predictable - the agent taking the same _process_ every run, not producing the same output.
 
 Adapted from [mattpocock/skills - writing-for-agents](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents).
 
-When the document you're writing is a skill, read [`SKILL-MECHANICS.md`](SKILL-MECHANICS.md) for frontmatter, invocation choice, storage paths, and router skills.
+When the document you're writing is a skill, read [`SKILL-MECHANICS.md`](SKILL-MECHANICS.md) for frontmatter, invocation choice, storage paths, and router skills. That file covers skill-only mechanics. This file covers writing that applies to any agent document.
+
+## How to use this reference
+
+When creating or editing an agent document:
+
+1. Pick the **information hierarchy** rung for each piece (in-file step, in-file reference, or disclosed reference).
+2. Write **completion criteria** on every step.
+3. Sharpen **context pointers** (descriptions, `AGENTS.md` lines) before inlining material.
+4. **Prune** duplication, caches of environment lookups, and no-op instructions.
+5. Self-check: can the agent tell done from not-done on every step?
 
 ## Context pointers
 

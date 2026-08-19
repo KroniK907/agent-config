@@ -89,6 +89,6 @@ Do not push or open a PR unless the user asks.
 
 ## Guardrails
 
-- Do not commit secrets, `.env`, credentials, or large generated artifacts; if those appear in `git status`, stop and flag them.
-- **Unless the user explicitly widens scope:** never commit paths that are not attributable to **this chat** (or the user-named transcript/session for this run). Unrelated dirty files are **out of scope**, not “optional extras.”
-- Never force-push or rewrite history unless the user explicitly requests it.
+- Skip secrets, `.env`, credentials, and large generated artifacts. Flag them if they appear in `git status`.
+- Stage and commit only paths attributable to **this chat** (or a user-named transcript for this run). Leave unrelated dirty files unstaged unless the user explicitly widens scope.
+- Avoid force-push and history rewrites unless the user explicitly requests them.
