@@ -34,7 +34,7 @@ Optional: load map **Implementing** row for mode (HITL / AFK).
 
 ### 2. Task gates
 
-| Gate | Fail when |
+| Gate | Stop when |
 |------|-----------|
 | Label | Missing **`wf:approved`** |
 | Status | Not **`ready`** (re-runs: also accept **`awaiting-reconcile`** only when human explicitly restarted implementation in chat) |
@@ -51,7 +51,7 @@ Resolve Method skill path:
 
 | Mode | Rule |
 |------|------|
-| **AFK** | **## Method** required; skill file must exist - fail closed if missing or invalid |
+| **AFK** | **## Method** required; skill file must exist - stop if missing or invalid |
 | **HITL** | Use task **## Method** by default; operator may **session-only override** in chat; persist override to task body only on explicit human request |
 
 Record resolved Method name for resolution comment **Method** section.
@@ -85,12 +85,12 @@ HITL tasks **never** add or remove **`wf:afk-running`**.
 
 ## Invariants
 
-Throughout the run - violations are workflow bugs:
+Throughout the run:
 
-1. **Never close** the implementation task issue
-2. **Never remove** **`wf:approved`** from the task you are implementing
-3. **Never post** Reconcile approval phrases (**`Approved - reconcile and close`**, **`Approved - reconcile, keep open`**) on the task
-4. **Never open PRs** - push to bundle branch only
+1. **Keep the task open** - do not close the implementation task issue
+2. **Keep `wf:approved`** on the task you are implementing
+3. **Leave Reconcile approval to the human** - do not post **`Approved - reconcile and close`** or **`Approved - reconcile, keep open`** on the task
+4. **Push to the bundle branch only** - do not open PRs
 5. **Orchestration vs build** - git push, code-review invoke, resolution comment, status `awaiting-reconcile`, unblock scan, AFK handoff stay in implement-task; Method skill owns product/doc deliverables; [code-review](../../actions/code-review/SKILL.md) owns review + obvious auto-fix
 
 ---

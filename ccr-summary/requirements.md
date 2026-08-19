@@ -119,4 +119,6 @@ Electronic methods (2-4) require **paper copy on request**; directions must be *
 3. **Quote** § 141.156(f) sharing language exactly.
 4. **Ask** the user if delivery method or subpart Q dual-use is unclear from the PDF alone.
 5. When tables use `N` / `No` for violation columns, treat as **no violation** for that row unless narrative contradicts.
-6. **Headings:** All summary subsections use **`#####` (h5) only** - not `##`, `###`, or `####`. Opening paragraphs have no heading.
+6. **Headings** - all summary subsections use `#####` (h5) only. Opening paragraphs have no heading. Full rule in `SKILL.md`.
+
+**Done when:** summary passes the Step 7 compliance self-check in `SKILL.md`.

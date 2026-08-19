@@ -46,7 +46,7 @@ Skip wayfinder when the path is clear - use `grill-me` or implement directly.
 Run when user explicitly invokes wayfinder after a sibling skill session.
 
 1. **Load map + ticket + session output** - From user message, frontier context, or sibling skill thread (grilling Q&A, research findings, prototype outcome, etc.).
-2. **Infer holistic tracker delta** - Per [Reconcile inference](REFERENCE.md#reconcile-inference), derive:
+2. **Infer full-session tracker delta** - Per [Reconcile inference](REFERENCE.md#reconcile-inference), derive:
  - Decision-log rows (`{MAP-SLUG}-GM-NNN`) with `[global]` vs bundle-scoped tags
  - **Decision coverage** row additions/updates
  - Map diff: **Completed** gist, **Not yet specified**, **Out of scope**, **Notes**

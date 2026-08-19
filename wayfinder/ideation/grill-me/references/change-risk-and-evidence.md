@@ -2,7 +2,7 @@
 
 ## Quick triage (read every session)
 
-**Likely N/A when:** **personal/local** change with **no** production path, **no** collaborators, **no** rollback concern - e.g. a draft note. Anything merged for others to run almost always needs at least a lightweight pass.
+Skip this zone for **personal/local** change with **no** production path, **no** collaborators, **no** rollback concern - e.g. a draft note. Anything merged for others to run almost always needs at least a lightweight pass.
 
 **Common skip signals**
 

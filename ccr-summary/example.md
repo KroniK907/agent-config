@@ -37,7 +37,7 @@ This example shows how the skill maps a **compliant small system** report. Your 
 
 Layout assumptions: the report template supplies the section **title** and **“About this report”** heading; the summary body starts with plain paragraphs.
 
-**Headings (required):** Every subsection below the opening paragraphs uses **`#####` (markdown h5) - five hash marks, not two (`##`).** Wrong: `## Your water at a glance`. Right: `##### Your water at a glance`. See the **Heading rule** section in `SKILL.md`.
+**Headings.** Every subsection below the opening paragraphs uses `#####` (markdown h5). See **Heading rule** in `SKILL.md`.
 
 The **paper copy** subsection does not repeat online/URL content (covered elsewhere on the printed report). The **§ 141.156(f)** sharing paragraph has no heading when the layout provides one. **Deliver to the user in a copyable markdown code block** (see `SKILL.md` Deliverables).
 

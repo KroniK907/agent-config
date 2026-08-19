@@ -71,7 +71,7 @@ Create early with `gh issue create` or update drafts in place.
 
 Fill **What to build**, **## Method**, **Outcomes/stories covered**, **Done when**, **Blocked by**.
 
-**Method (required at draft):** Propose **## Method** for every task when splitting - pick from `wayfinder/` or `wayfinder/actions/` skills (frontmatter `name`). Repo-root one-offs only when the human explicitly sets them. **AFK tasks** must have a valid **## Method** before **`wf:approved`**; [implement-task](../../orchestrators/implement-task/SKILL.md) fail-closes without one. See [REFERENCE § Method field](REFERENCE.md#method-field) and [implement-task Method validation](../../orchestrators/implement-task/REFERENCE.md#method-validation).
+**Method (required at draft):** Propose **## Method** for every task when splitting - pick from `wayfinder/` or `wayfinder/actions/` skills (frontmatter `name`). Repo-root one-offs only when the human explicitly sets them. **AFK tasks** must have a valid **## Method** before **`wf:approved`**; [implement-task](../../orchestrators/implement-task/SKILL.md) stops without one. See [REFERENCE § Method field](REFERENCE.md#method-field) and [implement-task Method validation](../../orchestrators/implement-task/REFERENCE.md#method-validation).
 
 Post or narrate drafts; end with: *Review the tasks - reply **scope approved** when the split is accepted, or request edits.*
 
