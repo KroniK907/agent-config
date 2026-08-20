@@ -53,6 +53,22 @@ go run -C .\scripts\wizard\src .
 go build -C src -o ../agent-config-wizard.exe .
 ```
 
+## Tests
+
+From the repo root:
+
+```powershell
+go test -C scripts/wizard/src ./...
+```
+
+From `scripts/wizard/src`:
+
+```powershell
+go test ./...
+```
+
+Coverage spans manifest load/save, catalog tree and group cascade, project override detection, apply copy/remove/skip, and new-entry defaults.
+
 ## Keys
 
 | Key | Action |
