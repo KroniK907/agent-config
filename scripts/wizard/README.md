@@ -90,6 +90,7 @@ Coverage spans manifest load/save, catalog tree and group cascade, project overr
 - Re-run: `lastCatalogPaths` tracks seen entries; new catalog paths show **NEW** and default off
 - Project-native files (no sync marker, never applied) show **(project override)**
 - Copy delivery to `.cursor/rules/` and `.cursor/skills/`; framework copy to `.cursor/agent-config/`
+- Optional **Environment details rule** at top of tree - toggles `envDetails` in manifest; writes `.cursor/rules/environment.mdc` on apply (`alwaysApply: true`, `generated-by: agent-config-wizard`); silent refresh on every apply when enabled; removes only wizard-generated copies when disabled
 
 ## Collision demo
 

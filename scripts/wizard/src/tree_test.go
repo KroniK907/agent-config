@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestBuildTree_rulesBeforeSkills(t *testing.T) {
+func TestBuildTree_envDetailsThenRulesBeforeSkills(t *testing.T) {
 	cat := minimalCatalog()
 	project := t.TempDir()
 	items := buildTree(cat, nil, project)
@@ -14,8 +14,23 @@ func TestBuildTree_rulesBeforeSkills(t *testing.T) {
 	if len(items) == 0 {
 		t.Fatal("expected tree items")
 	}
-	if items[0].Kind != "rule" {
-		t.Errorf("first item kind = %q, want rule", items[0].Kind)
+	if items[0].Kind != "env" {
+		t.Errorf("first item kind = %q, want env", items[0].Kind)
+	}
+	var sawRule, sawSkill bool
+	for _, it := range items[1:] {
+		if it.Kind == "rule" {
+			sawRule = true
+		}
+		if it.Kind == "skill" && !it.IsGroup {
+			if !sawRule {
+				t.Error("expected rules before leaf skills")
+			}
+			sawSkill = true
+		}
+	}
+	if !sawRule || !sawSkill {
+		t.Fatalf("expected rules and skills in tree, got rule=%v skill=%v", sawRule, sawSkill)
 	}
 }
 

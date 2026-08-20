@@ -162,10 +162,25 @@ func loadCatalog(teamRoot string) (*catalogFile, error) {
 	return &c, nil
 }
 
+func envDetailsItem(enabled bool) treeItem {
+	return treeItem{
+		Key:     "env-details",
+		Path:    envRuleRelPath,
+		Label:   "Environment details rule",
+		Kind:    "env",
+		Enabled: enabled,
+	}
+}
+
 func buildTree(cat *catalogFile, prev *manifest, projectRoot string) []treeItem {
 	prevEnabled := enabledSet(prev)
 
 	var items []treeItem
+	envEnabled := false
+	if prev != nil {
+		envEnabled = prev.EnvDetails
+	}
+	items = append(items, envDetailsItem(envEnabled))
 
 	type ruleRow struct {
 		key string
@@ -549,6 +564,23 @@ func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest) a
 		res.Copied = append(res.Copied, ".cursor/agent-config/ (framework copy)")
 	}
 
+	if m.EnvDetails {
+		if err := refreshEnvironmentRule(projectRoot); err != nil {
+			res.Errors = append(res.Errors, envRuleRelPath+": "+err.Error())
+		} else {
+			res.Copied = append(res.Copied, envRuleRelPath)
+		}
+	} else {
+		path := environmentRulePath(projectRoot)
+		if isGeneratedEnvironmentRule(path) {
+			if err := removeEnvironmentRule(projectRoot); err != nil {
+				res.Errors = append(res.Errors, envRuleRelPath+": remove: "+err.Error())
+			} else {
+				res.Removed = append(res.Removed, envRuleRelPath)
+			}
+		}
+	}
+
 	return res
 }
 
@@ -824,7 +856,12 @@ func (m *model) renderList() string {
 	for i, it := range m.items {
 		if it.Kind != section {
 			section = it.Kind
-			b.WriteString("\n" + strings.ToUpper(section) + "S\n")
+			switch section {
+			case "env":
+				b.WriteString("\nENV DETAILS\n")
+			default:
+				b.WriteString("\n" + strings.ToUpper(section) + "S\n")
+			}
 		}
 		prefix := strings.Repeat("  ", it.Depth)
 		box := "[ ]"
@@ -901,8 +938,16 @@ func (m *model) syncManifestFromItems() {
 	m.manifest.Source.TeamPath = m.teamRoot
 	m.manifest.Source.Ref = m.catalog.Catalog.Version
 	var rules, skills []string
+	m.manifest.EnvDetails = false
 	for _, it := range m.items {
-		if it.IsGroup || !it.Enabled {
+		if it.IsGroup {
+			continue
+		}
+		if it.Kind == "env" {
+			m.manifest.EnvDetails = it.Enabled
+			continue
+		}
+		if !it.Enabled {
 			continue
 		}
 		if it.Kind == "rule" {
@@ -1014,9 +1059,9 @@ func (m model) View() string {
 	b.WriteString(fmt.Sprintf("Team: %s\n", m.teamRoot))
 	b.WriteString(fmt.Sprintf("Project: %s\n", m.projectRoot))
 	if m.firstRun {
-		b.WriteString("Mode: first-run wizard\n")
+		b.WriteString("Mode: first-run wizard (toggle env details if you want a generated environment rule)\n")
 	} else {
-		b.WriteString("Mode: re-run (new catalog entries default off)\n")
+		b.WriteString("Mode: re-run (new catalog entries default off; env details refresh silently on apply when enabled)\n")
 	}
 
 	if m.focus == paneList {
