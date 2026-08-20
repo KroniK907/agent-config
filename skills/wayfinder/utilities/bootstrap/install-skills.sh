@@ -3,7 +3,7 @@
 # Called from .cursor/environment.json install on Cloud Agent VMs.
 #
 # Env (optional):
-#   WAYFINDER_SKILLS_REPO  default KroniK907/agent-config (use KroniK907/skills until GitHub rename)
+#   WAYFINDER_SKILLS_REPO  default KroniK907/agent-config
 #   WAYFINDER_SKILLS_TAG   default v1.0.0
 #   GH_TOKEN               used for private clone; public repo works without it
 set -euo pipefail

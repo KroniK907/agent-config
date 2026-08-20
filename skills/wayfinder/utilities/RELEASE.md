@@ -1,6 +1,6 @@
 # Skills repo releases
 
-Semver tags on **`KroniK907/agent-config`** are the pin target for app-repo [AFK bootstrap](AFK-BOOTSTRAP.md) (`WAYFINDER_SKILLS_TAG` in `.cursor/environment.json`). Until the GitHub rename lands, set `WAYFINDER_SKILLS_REPO` to `KroniK907/skills`.
+Semver tags on **`KroniK907/agent-config`** are the pin target for app-repo [AFK bootstrap](AFK-BOOTSTRAP.md) (`WAYFINDER_SKILLS_TAG` in `.cursor/environment.json`).
 
 ---
 

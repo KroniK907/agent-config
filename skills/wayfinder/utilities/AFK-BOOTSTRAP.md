@@ -2,7 +2,7 @@
 
 Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Complete every step in an **app implementation repo** before adding `wf:afk` tasks or enabling comment-trigger automation.
 
-**Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/agent-config`](https://github.com/KroniK907/agent-config) pinned to a **semver tag** (use `KroniK907/skills` until GitHub rename); one automation per repo; agents **never open PRs** - bundle branch + resolution comment only.
+**Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/agent-config`](https://github.com/KroniK907/agent-config) pinned to a **semver tag**; one automation per repo; agents **never open PRs** - bundle branch + resolution comment only.
 
 ---
 

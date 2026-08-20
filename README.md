@@ -2,7 +2,7 @@
 
 Team skills, Cursor rules, and scripts for NUS agent tooling. v1 layout per **AgentConfigHub** map.
 
-**Repo:** `KroniK907/agent-config` (GitHub rename from `KroniK907/skills` pending). **Catalog:** [`catalog.json`](catalog.json) lists every installable skill, rule, and script with paths and labels.
+**Repo:** [`KroniK907/agent-config`](https://github.com/KroniK907/agent-config). **Catalog:** [`catalog.json`](catalog.json) lists every installable skill, rule, and script with paths and labels.
 
 ## Layout
 

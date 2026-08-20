@@ -514,7 +514,7 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 
 ## Tracker operations
 
-**Default:** GitHub issues on the **target repo** (or `KroniK907/skills` for meta/skills work). This is the **canonical tracker** when issues are enabled.
+**Default:** GitHub issues on the **target repo** (or `KroniK907/agent-config` for meta/skills work). This is the **canonical tracker** when issues are enabled.
 
 | Artifact | Label |
 |----------|--------|

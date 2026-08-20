@@ -32,6 +32,6 @@ Repo-root skills under `skills/<name>/` are map-free utilities (PRD tools, `comm
 
 **Sync frontmatter.** Team skill sources include `agent-config-sync: true` in YAML frontmatter so apply tooling knows they are managed copies.
 
-**Install paths.** Docs and examples reference `KroniK907/agent-config/skills/...` (post-rename). Until GitHub rename lands, the remote may still be `KroniK907/skills`.
+**Install paths.** Docs and examples use `KroniK907/agent-config/skills/...`.
 
 **Do not treat `.cursor/` as the rules source.** Rules ship from `rules/`. Project manifests and gitignore patterns are documented under `.cursor/examples/`.
