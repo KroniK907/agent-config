@@ -1,32 +1,37 @@
-# Team agent baseline
+# Agent config hub
 
-Northern Utility Services internal agent defaults. Project repos opt in via agent-config apply (see map **AgentConfigHub**).
+Northern Utility Services team source for agent skills, Cursor rules, and bootstrap scripts. Other repos opt in via agent-config apply; this repo is the canonical copy those tools pull from.
 
-## Environment
+## What lives here
 
-- **OS:** Windows 10/11
-- **Shell:** PowerShell for terminal commands
-- **Go:** Installed (`go` on PATH) - prefer Go for small scripts and utilities
-- **Node.js / Python:** Not assumed on staff machines unless a project documents them
+| Path | Role |
+|------|------|
+| `skills/` | Installable agent skills - flat folders plus `skills/wayfinder/` sub-tree |
+| `rules/` | Team `.mdc` rules copied into project `.cursor/rules/` |
+| `scripts/` | Validation, apply, and bootstrap tooling |
+| `catalog.json` | Sole catalog - every skill, rule, and script with `path` and `label` |
+| `.cursor/` | Example project templates only - not the live rules pack |
 
-## Coding
+## Wayfinder tree
 
-- Keep changes small and obvious. Match existing conventions in the repo you are in.
-- Comments explain non-obvious business logic, not every line.
-- Tests should cover real behavior, not ceremony.
-- Do not touch production, live databases, or deploy channels unless explicitly asked.
+`skills/wayfinder/` is the hierarchical opt-in example:
 
-## Writing
+- `SKILL.md` - hub (Chart, Materialize, Reconcile, Route)
+- `actions/` - build playbooks (`write-code`, `create-tasks`, `research`, …)
+- `ideation/` - planning interviews (`grill-me`, `feature-discovery`, …)
+- `orchestrators/` - `implement-task`, `one-off`
+- `utilities/` - bootstrap scripts, map validators - not installable skills
 
-- Apply **unslop** to all user-facing text.
-- Use ASCII hyphen `-`, not em dash or en dash.
-- Plain language; short sentences.
+Repo-root skills under `skills/<name>/` are map-free utilities (PRD tools, `commit`, `unslop`, etc.).
 
-## Tracker vs portable docs
+## Working in this repo
 
-- GitHub issues hold map, bundle, and task trackers with concrete links and GM IDs.
-- Committed skill markdown in this repo uses placeholders (`#N`, `{MAP-SLUG}-GM-001`) per **portable-skill-docs** rule.
+**Catalog is authoritative.** If you add or move a skill folder, update `catalog.json`. CI runs `go run scripts/validate-catalog/main.go` on PR - drift fails the build.
 
-## Install paths
+**Portable markdown.** Committed `.md` files use placeholders (`#N`, `{MAP-SLUG}-GM-001`, `{FeatureName}:Map`) - not live issue URLs or map-specific GM rows. Concrete tracker links belong in GitHub issue bodies and comments. See `rules/portable-skill-docs.mdc`.
 
-Skills and rules ship from **`KroniK907/agent-config`** (rename pending after v1 layout PR merges). Catalog authority is root `catalog.json`.
+**Sync frontmatter.** Team skill sources include `agent-config-sync: true` in YAML frontmatter so apply tooling knows they are managed copies.
+
+**Install paths.** Docs and examples reference `KroniK907/agent-config/skills/...` (post-rename). Until GitHub rename lands, the remote may still be `KroniK907/skills`.
+
+**Do not treat `.cursor/` as the rules source.** Rules ship from `rules/`. Project manifests and gitignore patterns are documented under `.cursor/examples/`.
