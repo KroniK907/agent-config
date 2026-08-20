@@ -1,0 +1,11 @@
+{
+  "source": {
+    "repo": "KroniK907/agent-config",
+    "ref": "v1.0.0",
+    "teamPath": "/absolute/path/to/agent-config-clone"
+  },
+  "projectPath": "/absolute/path/to/this/project",
+  "skills": [],
+  "rules": [],
+  "envDetails": false
+}
