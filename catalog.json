@@ -1,0 +1,128 @@
+{
+  "catalog": {
+    "version": "1.0.0"
+  },
+  "skills": {
+    "ccr-summary": {
+      "path": "skills/ccr-summary",
+      "label": "CCR summary"
+    },
+    "commit": {
+      "path": "skills/commit",
+      "label": "Commit"
+    },
+    "improve-codebase-architecture": {
+      "path": "skills/improve-codebase-architecture",
+      "label": "Improve codebase architecture"
+    },
+    "prd-to-issues": {
+      "path": "skills/prd-to-issues",
+      "label": "PRD to issues"
+    },
+    "prd-to-plan": {
+      "path": "skills/prd-to-plan",
+      "label": "PRD to plan"
+    },
+    "request-refactor-plan": {
+      "path": "skills/request-refactor-plan",
+      "label": "Request refactor plan"
+    },
+    "triage-issue": {
+      "path": "skills/triage-issue",
+      "label": "Triage issue"
+    },
+    "ubiquitous-language": {
+      "path": "skills/ubiquitous-language",
+      "label": "Ubiquitous language"
+    },
+    "unslop": {
+      "path": "skills/unslop",
+      "label": "Unslop"
+    },
+    "write-a-prd": {
+      "path": "skills/write-a-prd",
+      "label": "Write a PRD"
+    },
+    "write-a-skill": {
+      "path": "skills/write-a-skill",
+      "label": "Write a skill"
+    },
+    "writing-for-agents": {
+      "path": "skills/writing-for-agents",
+      "label": "Writing for agents"
+    },
+    "wayfinder": {
+      "path": "skills/wayfinder",
+      "label": "Wayfinder"
+    },
+    "wayfinder-code-review": {
+      "path": "skills/wayfinder/actions/code-review",
+      "label": "Code review"
+    },
+    "wayfinder-create-tasks": {
+      "path": "skills/wayfinder/actions/create-tasks",
+      "label": "Create tasks"
+    },
+    "wayfinder-define-bundle": {
+      "path": "skills/wayfinder/actions/define-bundle",
+      "label": "Define bundle"
+    },
+    "wayfinder-design-modules": {
+      "path": "skills/wayfinder/actions/design-modules",
+      "label": "Design modules"
+    },
+    "wayfinder-prototype": {
+      "path": "skills/wayfinder/actions/prototype",
+      "label": "Prototype"
+    },
+    "wayfinder-research": {
+      "path": "skills/wayfinder/actions/research",
+      "label": "Research"
+    },
+    "wayfinder-write-code": {
+      "path": "skills/wayfinder/actions/write-code",
+      "label": "Write code"
+    },
+    "wayfinder-constrain-fog": {
+      "path": "skills/wayfinder/ideation/constrain-fog",
+      "label": "Constrain fog"
+    },
+    "wayfinder-feature-discovery": {
+      "path": "skills/wayfinder/ideation/feature-discovery",
+      "label": "Feature discovery"
+    },
+    "wayfinder-grill-me": {
+      "path": "skills/wayfinder/ideation/grill-me",
+      "label": "Grill me"
+    },
+    "wayfinder-strategic-ideation": {
+      "path": "skills/wayfinder/ideation/strategic-ideation",
+      "label": "Strategic ideation"
+    },
+    "wayfinder-implement-task": {
+      "path": "skills/wayfinder/orchestrators/implement-task",
+      "label": "Implement task"
+    },
+    "wayfinder-one-off": {
+      "path": "skills/wayfinder/orchestrators/one-off",
+      "label": "One-off"
+    }
+  },
+  "rules": {
+    "unslop": {
+      "path": "rules/unslop.mdc",
+      "label": "Unslop (always on)"
+    },
+    "portable-skill-docs": {
+      "path": "rules/portable-skill-docs.mdc",
+      "label": "Portable skill docs"
+    }
+  },
+  "scripts": {
+    "validate-catalog": {
+      "path": "scripts/validate-catalog",
+      "label": "Validate catalog.json paths",
+      "role": "bootstrap"
+    }
+  }
+}

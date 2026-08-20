@@ -1,173 +1,184 @@
-# Agent Skills
+# Agent config hub
 
-A collection of agent skills that extend capabilities across planning, development, and delivery.
+Team skills, Cursor rules, and scripts for NUS agent tooling. v1 layout per **AgentConfigHub** map.
 
-Install paths below use this repository (`KroniK907/skills`). If you use a fork, substitute your GitHub `owner/repo` prefix.
+Install paths below use **`KroniK907/agent-config`** (GitHub rename from `KroniK907/skills` after the v1 layout PR merges). If you use a fork, substitute your `owner/repo` prefix. Catalog authority is root [`catalog.json`](catalog.json).
+
+## Layout
+
+| Path | Purpose |
+|------|---------|
+| `skills/` | Agent skills (flat + `skills/wayfinder/` tree) |
+| `rules/` | Team Cursor rules pack (`*.mdc`) |
+| `scripts/` | Apply, bootstrap, and validation scripts |
+| `AGENTS.md` | Team baseline for agents |
+| `.cursor/` | Example project templates only |
 
 ## Wayfinder ecosystem
 
-Skills for large-feature planning and incremental implementation via GitHub map trackers. The pack lives under `wayfinder/` with subfolders `actions/`, `ideation/`, `orchestrators/`, and `utilities/`. Hub skill: `wayfinder/SKILL.md`.
+Skills for large-feature planning and incremental implementation via GitHub map trackers. Hub skill: `skills/wayfinder/SKILL.md`.
 
-- **wayfinder** - Bootstrap and maintain `FeatureName:Map` GitHub trackers: map skeleton, materialize tickets from map-discovery comment, reconcile after approval, suggest next skill. Use when a feature is too big for one session.
-
-  ```
-  npx skills@latest add KroniK907/skills/wayfinder
-  ```
-
-- **define-bundle** (action) - Group decision-log clusters into draft `wf:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
+- **wayfinder** - Bootstrap and maintain `FeatureName:Map` GitHub trackers.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/actions/define-bundle
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder
   ```
 
-- **feature-discovery** (ideation) - Breadth-first five-zone interview; posts a map-discovery artifact as a comment on the map issue for wayfinder Materialize.
+- **define-bundle** (action) - Group decision-log clusters into draft `wf:bundle` issues.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/ideation/feature-discovery
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder/actions/define-bundle
   ```
 
-- **strategic-ideation** (ideation) - Expand/tension/prune at idea level for scope and strategy; hand off to grill-me or PRD (renamed from feature-ideation).
+- **feature-discovery** (ideation) - Breadth-first five-zone interview.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/ideation/strategic-ideation
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder/ideation/feature-discovery
   ```
 
-- **grill-me** (ideation) - Stress-test a plan or design through sequential Q&A until open branches are resolved.
+- **strategic-ideation** (ideation) - Expand/tension/prune at idea level.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/ideation/grill-me
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder/ideation/strategic-ideation
   ```
 
-- **design-modules** (action) - Shape one or more deep modules from bundle decisions or planning tickets; seam discovery and design-it-twice exploration; HITL only. Replaces design-an-interface.
+- **grill-me** (ideation) - Stress-test a plan through sequential Q&A.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/actions/design-modules
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder/ideation/grill-me
   ```
 
-- **write-code** (action) - Default bundle **`wf:task`** Method: TDD at pre-agreed seams via implement-task.
+- **design-modules** (action) - Shape deep modules from bundle decisions.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/actions/write-code
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder/actions/design-modules
   ```
 
-- **create-tasks** (action) - Split an approved bundle into implementation tasks on the map **Implementing** frontier.
+- **write-code** (action) - Default bundle **`wf:task`** Method.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/actions/create-tasks
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder/actions/write-code
   ```
 
-- **research** (action) - Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
+- **create-tasks** (action) - Split an approved bundle into implementation tasks.
 
   ```
-  npx skills@latest add KroniK907/skills/wayfinder/actions/research
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder/actions/create-tasks
+  ```
+
+- **research** (action) - Investigate `wf:research` tickets.
+
+  ```
+  npx skills@latest add KroniK907/agent-config/skills/wayfinder/actions/research
   ```
 
 ## Planning utilities (map-free)
 
-Skills for shaping work without a wayfinder map - small scope, PRDs, or standalone design.
-
-- **write-a-prd** - Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue (after decisions exist; use grill-me separately if you need depth-first Q&A first).
+- **write-a-prd** - Turn a design discussion into a PRD GitHub issue.
 
   ```
-  npx skills@latest add KroniK907/skills/write-a-prd
+  npx skills@latest add KroniK907/agent-config/skills/write-a-prd
   ```
 
-- **prd-to-plan** - Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices (saved under `./plans/`).
+- **prd-to-plan** - Turn a PRD into a multi-phase plan under `./plans/`.
 
   ```
-  npx skills@latest add KroniK907/skills/prd-to-plan
+  npx skills@latest add KroniK907/agent-config/skills/prd-to-plan
   ```
 
-- **prd-to-issues** - Break a PRD into independently-grabbable GitHub issues using vertical slices.
+- **prd-to-issues** - Break a PRD into vertical-slice GitHub issues.
 
   ```
-  npx skills@latest add KroniK907/skills/prd-to-issues
+  npx skills@latest add KroniK907/agent-config/skills/prd-to-issues
   ```
 
-- **request-refactor-plan** - Create a detailed refactor plan with tiny commits via user interview, then file it as a GitHub issue.
+- **request-refactor-plan** - Create a refactor plan and file as a GitHub issue.
 
   ```
-  npx skills@latest add KroniK907/skills/request-refactor-plan
+  npx skills@latest add KroniK907/agent-config/skills/request-refactor-plan
   ```
 
 ## Development
 
-Skills for building, fixing, and evolving code.
-
-- **triage-issue** - Investigate a bug by exploring the codebase, identify root cause, and file a GitHub issue with a TDD-based fix plan.
+- **triage-issue** - Investigate a bug and file a GitHub issue with a fix plan.
 
   ```
-  npx skills@latest add KroniK907/skills/triage-issue
+  npx skills@latest add KroniK907/agent-config/skills/triage-issue
   ```
 
-- **improve-codebase-architecture** - Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and testability.
+- **improve-codebase-architecture** - Find architectural improvement opportunities.
 
   ```
-  npx skills@latest add KroniK907/skills/improve-codebase-architecture
+  npx skills@latest add KroniK907/agent-config/skills/improve-codebase-architecture
   ```
 
-- **commit** - Stage and commit only changes attributable to the current agent chat (split into logical commits when appropriate; uses `git` and `gh`).
+- **commit** - Commit only changes from the current agent chat.
 
   ```
-  npx skills@latest add KroniK907/skills/commit
+  npx skills@latest add KroniK907/agent-config/skills/commit
   ```
 
-## Writing & knowledge
+## Writing and knowledge
 
-- **writing-for-agents** - Write documents agents consume (skills, AGENTS.md, Cursor rules): context pointers, information hierarchy, completion criteria, leading words. Adapted from [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents).
-
-  ```
-  npx skills@latest add KroniK907/skills/writing-for-agents
-  ```
-
-- **write-a-skill** - Router to `writing-for-agents` for backward-compatible installs when creating a new skill.
+- **writing-for-agents** - Write documents agents consume (skills, AGENTS.md, rules).
 
   ```
-  npx skills@latest add KroniK907/skills/write-a-skill
+  npx skills@latest add KroniK907/agent-config/skills/writing-for-agents
   ```
 
-- **ubiquitous-language** - Extract a DDD-style ubiquitous language glossary from the current conversation; saves to `UBIQUITOUS_LANGUAGE.md`.
+- **write-a-skill** - Router to `writing-for-agents`.
 
   ```
-  npx skills@latest add KroniK907/skills/ubiquitous-language
+  npx skills@latest add KroniK907/agent-config/skills/write-a-skill
   ```
 
-- **unslop** - Cut AI tells from any writing; rewrite for plain human voice. **Always on** via description + optional rule. Adapted from [cursor/plugins/pstack](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop).
+- **ubiquitous-language** - Build a DDD glossary from conversation.
 
   ```
-  npx skills@latest add KroniK907/skills/unslop
+  npx skills@latest add KroniK907/agent-config/skills/ubiquitous-language
   ```
 
-  For global always-on behavior in every project, copy `.cursor/rules/unslop.mdc` to `~/.cursor/rules/unslop.mdc`.
+- **unslop** - Cut AI tells from any writing. **Always on** via description + rule.
+
+  ```
+  npx skills@latest add KroniK907/agent-config/skills/unslop
+  ```
+
+  For global always-on behavior, copy `rules/unslop.mdc` to `~/.cursor/rules/unslop.mdc`.
+
+- **ccr-summary** - Summarize CCR contact records.
+
+  ```
+  npx skills@latest add KroniK907/agent-config/skills/ccr-summary
+  ```
 
 ## Skills in this repo
 
 | Skill | Folder |
 |-------|--------|
-| wayfinder (hub) | `wayfinder/` |
-| define-bundle | `wayfinder/actions/define-bundle/` |
-| feature-discovery | `wayfinder/ideation/feature-discovery/` |
-| strategic-ideation | `wayfinder/ideation/strategic-ideation/` |
-| grill-me | `wayfinder/ideation/grill-me/` |
-| design-modules | `wayfinder/actions/design-modules/` |
-| write-code (action) | `wayfinder/actions/write-code/` |
-| create-tasks | `wayfinder/actions/create-tasks/` |
-| implement-task | `wayfinder/orchestrators/implement-task/` |
-| one-off | `wayfinder/orchestrators/one-off/` |
-| prototype (action) | `wayfinder/actions/prototype/` |
-| research | `wayfinder/actions/research/` |
-| write-a-prd | `write-a-prd/` |
-| prd-to-plan | `prd-to-plan/` |
-| prd-to-issues | `prd-to-issues/` |
-| request-refactor-plan | `request-refactor-plan/` |
-| triage-issue | `triage-issue/` |
-| improve-codebase-architecture | `improve-codebase-architecture/` |
-| commit | `commit/` |
-| writing-for-agents | `writing-for-agents/` |
-| write-a-skill | `write-a-skill/` (router → writing-for-agents) |
-| ubiquitous-language | `ubiquitous-language/` |
-| unslop | `unslop/` |
+| wayfinder (hub) | `skills/wayfinder/` |
+| define-bundle | `skills/wayfinder/actions/define-bundle/` |
+| feature-discovery | `skills/wayfinder/ideation/feature-discovery/` |
+| strategic-ideation | `skills/wayfinder/ideation/strategic-ideation/` |
+| grill-me | `skills/wayfinder/ideation/grill-me/` |
+| design-modules | `skills/wayfinder/actions/design-modules/` |
+| write-code (action) | `skills/wayfinder/actions/write-code/` |
+| create-tasks | `skills/wayfinder/actions/create-tasks/` |
+| implement-task | `skills/wayfinder/orchestrators/implement-task/` |
+| one-off | `skills/wayfinder/orchestrators/one-off/` |
+| prototype (action) | `skills/wayfinder/actions/prototype/` |
+| research | `skills/wayfinder/actions/research/` |
+| write-a-prd | `skills/write-a-prd/` |
+| prd-to-plan | `skills/prd-to-plan/` |
+| prd-to-issues | `skills/prd-to-issues/` |
+| request-refactor-plan | `skills/request-refactor-plan/` |
+| triage-issue | `skills/triage-issue/` |
+| improve-codebase-architecture | `skills/improve-codebase-architecture/` |
+| commit | `skills/commit/` |
+| ccr-summary | `skills/ccr-summary/` |
+| writing-for-agents | `skills/writing-for-agents/` |
+| write-a-skill | `skills/write-a-skill/` |
+| ubiquitous-language | `skills/ubiquitous-language/` |
+| unslop | `skills/unslop/` |
 
-**Layout:** Ecosystem skills under `wayfinder/actions/`, `wayfinder/ideation/`, and `wayfinder/orchestrators/`; utilities under `wayfinder/utilities/`. One-off repo-root utilities stay at repo root.
-
-Related Cursor-focused skills (hooks, rules, canvas, SDK, CLI status line, and so on) may live in a separate `skills-cursor` tree alongside this repo on your machine; they are not bundled here.
+Related Cursor-focused skills (hooks, canvas, SDK, and so on) may live in a separate `skills-cursor` tree; they are not bundled here.
