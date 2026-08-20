@@ -1,6 +1,6 @@
 # Example project `.cursor/` files
 
-Templates for project repos using agent-config. Copy or generate via the apply TUI (bundle #51).
+Templates for project repos using agent-config. Copy or generate via **agent-config-wizard** ([scripts/wizard](../scripts/wizard/README.md)).
 
 | File | Purpose |
 |------|---------|

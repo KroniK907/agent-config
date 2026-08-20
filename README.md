@@ -10,7 +10,7 @@ Team skills, Cursor rules, and scripts for NUS agent tooling. v1 layout per **Ag
 |------|---------|
 | `skills/` | Agent skills - flat folders + `skills/wayfinder/` tree |
 | `rules/` | Team Cursor rules pack (`*.mdc`) |
-| `scripts/` | Apply, bootstrap, and validation scripts |
+| `scripts/` | Bootstrap, validation, and [agent-config-wizard](scripts/wizard/README.md) apply TUI |
 | `AGENTS.md` | What agents should know about this repo |
 | `.cursor/` | Example project templates only |
 
