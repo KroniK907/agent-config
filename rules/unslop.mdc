@@ -1,5 +1,6 @@
 ---
 description: Apply unslop to every text you send. Must always apply.
+agent-config-sync: true
 alwaysApply: true
 ---
 

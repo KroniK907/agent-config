@@ -8,7 +8,7 @@ Northern Utility Services team source for agent skills, Cursor rules, and bootst
 |------|------|
 | `skills/` | Installable agent skills - flat folders plus `skills/wayfinder/` sub-tree |
 | `rules/` | Team `.mdc` rules copied into project `.cursor/rules/` |
-| `scripts/` | Validation, apply, and bootstrap tooling |
+| `scripts/` | Validation, bootstrap, and **agent-config-wizard** ([scripts/wizard/](scripts/wizard/README.md)) |
 | `catalog.json` | Sole catalog - every skill, rule, and script with `path` and `label` |
 | `.cursor/` | Example project templates only - not the live rules pack |
 

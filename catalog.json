@@ -123,6 +123,11 @@
       "path": "scripts/validate-catalog",
       "label": "Validate catalog.json paths",
       "role": "bootstrap"
+    },
+    "agent-config-wizard": {
+      "path": "scripts/wizard",
+      "label": "Agent config wizard",
+      "role": "apply"
     }
   }
 }
