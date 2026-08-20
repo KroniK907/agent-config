@@ -15,3 +15,5 @@ jobs:
           go-version: "1.22"
       - name: Validate catalog.json
         run: go run scripts/validate-catalog/main.go
+      - name: Test agent-config-wizard
+        run: go test -C scripts/wizard/src ./...
