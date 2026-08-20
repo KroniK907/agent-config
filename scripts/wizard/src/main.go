@@ -21,6 +21,7 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"sort"
@@ -32,8 +33,10 @@ import (
 )
 
 const (
-	manifestName = "agent-config.local.json"
-	sourceRepo   = "KroniK907/agent-config"
+	manifestName       = "agent-config.local.json"
+	sourceRepo         = "KroniK907/agent-config"
+	envRuleRelPath     = ".cursor/rules/environment.mdc"
+	envRuleGeneratedBy = "agent-config-wizard"
 )
 
 // --- manifest (AGENT-CFG-GM-006) ---
@@ -625,6 +628,230 @@ func copyTree(src, dest string) error {
 		}
 		return copyFile(path, target)
 	})
+}
+
+// --- environment details rule ---
+
+type envProbe struct {
+	OSLine      string
+	ShellLine   string
+	ScratchDir  string
+	ToolLines   []string
+	AbsentLines []string
+}
+
+func probeEnvironment() envProbe {
+	p := envProbe{
+		ScratchDir: defaultScratchDir(),
+	}
+	p.OSLine = probeOSLine()
+	p.ShellLine = probeShellLine()
+	p.ToolLines, p.AbsentLines = probeTools()
+	return p
+}
+
+func defaultScratchDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	return filepath.Join(home, ".cursor", "scratch")
+}
+
+func probeOSLine() string {
+	switch runtime.GOOS {
+	case "windows":
+		if ver := windowsVersionString(); ver != "" {
+			return fmt.Sprintf("Windows (%s)", ver)
+		}
+		return "Windows 10/11"
+	case "darwin":
+		if ver := commandOutput("sw_vers", "-productVersion"); ver != "" {
+			return fmt.Sprintf("macOS %s", strings.TrimSpace(ver))
+		}
+		return "macOS"
+	case "linux":
+		if ver := readLinuxOSRelease(); ver != "" {
+			return ver
+		}
+		return "Linux"
+	default:
+		return fmt.Sprintf("%s (%s)", runtime.GOOS, runtime.GOARCH)
+	}
+}
+
+func windowsVersionString() string {
+	out := commandOutput("cmd", "/c", "ver")
+	if out == "" {
+		return ""
+	}
+	return strings.TrimSpace(out)
+}
+
+func readLinuxOSRelease() string {
+	data, err := os.ReadFile("/etc/os-release")
+	if err != nil {
+		return ""
+	}
+	var name, version string
+	for _, line := range strings.Split(string(data), "\n") {
+		if strings.HasPrefix(line, "PRETTY_NAME=") {
+			return strings.Trim(strings.TrimPrefix(line, "PRETTY_NAME="), `"`)
+		}
+		if strings.HasPrefix(line, "NAME=") {
+			name = strings.Trim(strings.TrimPrefix(line, "NAME="), `"`)
+		}
+		if strings.HasPrefix(line, "VERSION_ID=") {
+			version = strings.Trim(strings.TrimPrefix(line, "VERSION_ID="), `"`)
+		}
+	}
+	if name != "" && version != "" {
+		return name + " " + version
+	}
+	return name
+}
+
+func probeShellLine() string {
+	if runtime.GOOS == "windows" {
+		if os.Getenv("PSModulePath") != "" {
+			ver := commandOutput("powershell", "-NoProfile", "-Command", "$PSVersionTable.PSVersion.ToString()")
+			if ver != "" {
+				return fmt.Sprintf("PowerShell %s (default for terminal commands)", strings.TrimSpace(ver))
+			}
+			return "PowerShell (default for terminal commands)"
+		}
+		if comspec := os.Getenv("ComSpec"); comspec != "" {
+			return fmt.Sprintf("%s (default shell)", filepath.Base(comspec))
+		}
+		return "cmd.exe (default shell)"
+	}
+	if shell := os.Getenv("SHELL"); shell != "" {
+		return fmt.Sprintf("%s (default shell)", shell)
+	}
+	return "sh (default shell)"
+}
+
+type toolSpec struct {
+	name        string
+	versionArgs []string
+	absentNote  string
+}
+
+func probeTools() (present []string, absent []string) {
+	specs := []toolSpec{
+		{name: "go", versionArgs: []string{"version"}, absentNote: "Prefer Go for small one-off scripts and utilities."},
+		{name: "git", versionArgs: []string{"--version"}},
+		{name: "gh", versionArgs: []string{"--version"}},
+		{name: "node", versionArgs: []string{"--version"}, absentNote: "Do not assume `node`, `npm`, or `npx`."},
+		{name: "python", versionArgs: []string{"--version"}, absentNote: "Do not assume `python`, `python3`, or `pip`."},
+		{name: "python3", versionArgs: []string{"--version"}, absentNote: "Do not assume `python`, `python3`, or `pip`."},
+	}
+
+	seenAbsent := map[string]bool{}
+	for _, spec := range specs {
+		path, err := exec.LookPath(spec.name)
+		if err != nil {
+			if spec.absentNote != "" && !seenAbsent[spec.absentNote] {
+				absent = append(absent, spec.absentNote)
+				seenAbsent[spec.absentNote] = true
+			}
+			continue
+		}
+		line := fmt.Sprintf("`%s` on PATH (%s)", spec.name, path)
+		if len(spec.versionArgs) > 0 {
+			if ver := strings.TrimSpace(commandOutput(spec.name, spec.versionArgs...)); ver != "" {
+				line = fmt.Sprintf("`%s` installed (%s)", spec.name, firstLine(ver))
+			}
+		}
+		present = append(present, line)
+	}
+	return present, absent
+}
+
+func firstLine(s string) string {
+	if idx := strings.IndexByte(s, '\n'); idx >= 0 {
+		return s[:idx]
+	}
+	return s
+}
+
+func commandOutput(name string, args ...string) string {
+	cmd := exec.Command(name, args...)
+	out, err := cmd.Output()
+	if err != nil {
+		return ""
+	}
+	return string(out)
+}
+
+func renderEnvironmentRule(p envProbe) []byte {
+	var b strings.Builder
+	b.WriteString("---\n")
+	b.WriteString("description: Local machine environment - regenerated by agent-config-wizard on apply.\n")
+	b.WriteString("generated-by: " + envRuleGeneratedBy + "\n")
+	b.WriteString("alwaysApply: true\n")
+	b.WriteString("---\n\n")
+	b.WriteString("# Environment\n\n")
+	b.WriteString("This rule is generated from the local machine. Do not edit by hand - changes are overwritten on apply.\n\n")
+	b.WriteString("**Scope:** `alwaysApply: true` so agents see runtime constraints in every chat. Keep content factual and short to limit context bloat.\n\n")
+	b.WriteString("## Runtime\n\n")
+	b.WriteString(fmt.Sprintf("- **OS:** %s\n", p.OSLine))
+	b.WriteString(fmt.Sprintf("- **Shell:** %s\n", p.ShellLine))
+	if p.ScratchDir != "" {
+		b.WriteString(fmt.Sprintf("- **Agent scratch directory:** `%s`\n", filepath.ToSlash(p.ScratchDir)))
+	}
+	b.WriteString("\n## Tools on PATH\n\n")
+	if len(p.ToolLines) == 0 {
+		b.WriteString("- No probed tools found on PATH.\n")
+	} else {
+		for _, line := range p.ToolLines {
+			b.WriteString("- " + line + "\n")
+		}
+	}
+	if len(p.AbsentLines) > 0 {
+		b.WriteString("\n## Absent runtimes\n\n")
+		for _, line := range p.AbsentLines {
+			b.WriteString("- " + line + "\n")
+		}
+	}
+	b.WriteString("\n## Paths\n\n")
+	b.WriteString("- Use Windows path syntax and PowerShell idioms when OS is Windows.\n")
+	b.WriteString("- Put ephemeral agent artifacts in the scratch directory, not the project root.\n")
+	return []byte(b.String())
+}
+
+func environmentRulePath(projectRoot string) string {
+	return filepath.Join(projectRoot, filepath.FromSlash(envRuleRelPath))
+}
+
+func refreshEnvironmentRule(projectRoot string) error {
+	dir := filepath.Dir(environmentRulePath(projectRoot))
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return err
+	}
+	content := renderEnvironmentRule(probeEnvironment())
+	return os.WriteFile(environmentRulePath(projectRoot), content, 0o644)
+}
+
+func removeEnvironmentRule(projectRoot string) error {
+	path := environmentRulePath(projectRoot)
+	if !isGeneratedEnvironmentRule(path) {
+		return nil
+	}
+	err := os.Remove(path)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	return err
+}
+
+func isGeneratedEnvironmentRule(path string) bool {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return false
+	}
+	fm := parseFrontmatter(data)
+	return fm["generated-by"] == envRuleGeneratedBy
 }
 
 func teamRootFromScript() (string, error) {

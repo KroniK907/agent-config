@@ -8,9 +8,12 @@ Validated in prototype [#51](https://github.com/KroniK907/agent-config/issues/51
 
 | Path | Purpose |
 |------|---------|
-| [src/main.go](src/main.go) | Wizard source (single package) |
+| [src/main.go](src/main.go) | Wizard source - single file (TUI, apply, env-details probe) |
+| [src/main_test.go](src/main_test.go) | All wizard tests |
 | [src/go.mod](src/go.mod) | Go module for bubbletea deps |
 | [agent-config-wizard.exe](agent-config-wizard.exe) | Windows binary (rebuild after src changes) |
+
+Per **AGENT-CFG-GM-010**, wizard Go code stays in one source file plus one test file - no extra `.go` modules under `src/`.
 
 ## Two roots
 
