@@ -1,11 +1,11 @@
 ---
 name: define-bundle
-description: define-bundle, build bundles, bundle approved, GM cluster ready, coalesce decisions into bundle, wayfinder Route bundling, wayfinder Route define-bundle, wf:bundle draft
+description: define-bundle, build bundles, bundle approved, GM cluster ready, group decisions into bundle, wayfinder Route bundling, wayfinder Route define-bundle, wf:bundle draft
 ---
 
 # Define bundle
 
-Coalesce **`open`** decision-log rows into a **draft bundle issue** (`wf:bundle`), then on human **`bundle approved`** promote it and sync map **Decision coverage** + log suffixes. Maps implement incrementally - do **not** wait for empty To Do, a PRD, or cleared fog.
+Group **`open`** decision-log rows into a **draft bundle issue** (`wf:bundle`), then on human **`bundle approved`** promote it and sync map **Decision coverage** + log suffixes. Maps implement incrementally. Do **not** wait for empty To Do, a PRD, or cleared fog.
 
 Runs on a wayfinder map + its decision log. After approval, hand off to [create-tasks](../create-tasks/SKILL.md) or implement directly from the bundle when splitting is unnecessary.
 

@@ -135,7 +135,7 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 | **Constrain:** | Map-scoped fog grooming → **constrain-fog** (auto-creates session ticket; artifact on ticket body). |
 | **Ideate:** | Scope/strategy expand → tension → prune → **strategic-ideation** (default). Legacy **feature-ideation** invoke resolves to the same skill. |
 | **Prototype:** | Planning **To Do** exploration → **design-modules** or inline stub. **`wf:approved`** on **Implementing** → **implement-task** → Method **prototype**. |
-| **Task:** | Map **To Do** repo deliverable → **one-off**. **`wf:approved`** on **Implementing** → **implement-task**. User wants to coalesce GM cluster → **define-bundle**. |
+| **Task:** | Map **To Do** repo deliverable → **one-off**. **`wf:approved`** on **Implementing** → **implement-task**. User wants to group GM cluster → **define-bundle**. |
 | **Organize:** | Chart / Materialize / Reconcile / map table or **Not yet specified** edits → **wayfinder**. Trivial checklist only → **one-off**. |
 
 **Rules:**
@@ -155,7 +155,7 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 | Cursor cloud automations for AFK pickup | **Research:** Cursor cloud automations for AFK pickup | Names the investigation |
 | Subfeature map worked example in REFERENCE | **Prototype:** subfeature map worked example | Names exploration, not a shipped doc yet |
 | implement create-tasks skill | **Task:** implement create-tasks skill | Deliverable prefix |
-| Coalesce GM-012-015 into first bundle | **Task:** define-bundle for palette shell | Bundling work; Route → define-bundle |
+| Group GM-012-015 into first bundle | **Task:** define-bundle for palette shell | Bundling work; Route → define-bundle |
 | Decision coverage backfill | **Organize:** decision coverage backfill | Tracker errand; Route → wayfinder or one-off |
 | Clear routing-table fog lines | **Organize:** routing table fog | Tracker sort; Route → wayfinder |
 
@@ -312,7 +312,7 @@ Run after loading map, decision log, **Decision coverage**, **To Do**, and the s
 
 ### Grilling (`grill-me`, `strategic-ideation`)
 
-Primary source for holistic inference.
+Primary source for full-session inference.
 
 | Signal | Propose |
 |--------|---------|
@@ -400,7 +400,7 @@ Reconcile, Materialize, and [create-tasks](actions/create-tasks/SKILL.md) often 
 
 1. **Fetch (read-only)** - `gh issue view <num> --json body -q .body` for inventory only.
 2. **Draft full body** - Write the complete replacement markdown to a UTF-8 `.md` file with section newlines per [map skeleton](#map-skeleton). Apply only the approved delta (To Do row move, Completed gist, Decision coverage, fog/Notes).
-3. **Validate (fail closed)** - Run validator before upload:
+3. **Validate** - Run validator before upload. Stop if it fails:
 
    ```powershell
    .\wayfinder\utilities\scripts\validate-map-body.ps1 path\to\map-body.md
@@ -596,7 +596,7 @@ Skills that **write** wayfinder state:
 | `feature-discovery` | Map-discovery comment on map issue |
 | [constrain-fog](ideation/constrain-fog/SKILL.md) | Auto-created **`Constrain:`** ticket; **`## Fog resolution`** artifact; Reconcile materializes ticket candidates |
 | `strategic-ideation` | Scope handoff (chat); Reconcile records on map |
-| `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes holistic tracker delta (tickets, bundle clusters, route) |
+| `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes full-session tracker delta (tickets, bundle clusters, route) |
 | `define-bundle` | Draft/approved bundle issue; proposed **Branch:** in draft; git branch create + push on **`bundle approved`**; Decision coverage `scoped`; log `- bundled via [#N]` suffixes |
 | `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; deferred/serial **`wf:approved`** on **`tasks approved`**; `implemented` on Reconcile close |
 | [one-off](orchestrators/one-off/SKILL.md) | HITL To Do implementation without bundle pipeline; draft/materialize ticket; `one-off/*` branch; implement-task tail with gate waivers in one-off REFERENCE |

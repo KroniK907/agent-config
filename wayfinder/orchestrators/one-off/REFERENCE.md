@@ -16,7 +16,7 @@
 
 ## Wrong-entry redirect
 
-**implement-task** is **fail-closed** on To Do tickets without an approved bundle parent:
+**implement-task** stops on To Do tickets without an approved bundle parent:
 
 | Symptom | Fix |
 |---------|-----|
@@ -61,7 +61,7 @@ Parent: [{FeatureName}:Map](map-url)
 
 ## Blocked by
 
-<!-- Omit when none. Open blocker issues fail-closed at startup. -->
+<!-- Omit when none. Open blocker issues stop the run at startup. -->
 
 - [#N Blocker title](url)
 
@@ -109,7 +109,7 @@ Parent: [{FeatureName}:Map](map-url)
 
 ## Blocked by
 
-<!-- Optional - open issues fail-closed -->
+<!-- Optional - open issues stop the run at startup -->
 ```
 
 **No Parent bundle:** section. Ticket stays on map **To Do** for the entire run.
@@ -125,7 +125,7 @@ When entered via **one-off**, apply these overrides to [implement-task startup g
 | Bundle parent | Required; Status `approved` | **Waived** - no bundle |
 | Label **`wf:approved`** | Required at pickup | **Expected at materialize** - one-off adds it before build tail |
 | Bundle branch | Checkout `afk/bundle-*` from bundle **Branch:** | **Waived** - use ticket **Branch:** (`one-off/{issue-num}-{slug}`) |
-| **Blocked by** | Fail-closed on open blockers | **Kept** - no waiver |
+| **Blocked by** | Stops on open blockers | **Kept** - no waiver |
 | AFK serial | AFK only | **N/A** - HITL only |
 | Method validation | Per implement-task | **Kept** |
 | Code review | After Method | **Kept** |

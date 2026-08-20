@@ -2,7 +2,7 @@
 
 ## Quick triage (read every session)
 
-**Likely N/A when:** behavior is literally unchanged (pure rename/move with identical semantics), or the work is **only** documentation of existing behavior. Even “small” features usually belong here.
+Skip this zone when behavior is literally unchanged (pure rename/move with identical semantics), or the work is **only** documentation of existing behavior. Even “small” features usually belong here.
 
 **Common skip signals**
 

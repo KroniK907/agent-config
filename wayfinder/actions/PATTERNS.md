@@ -12,11 +12,11 @@ Every action skill **REFERENCE.md** (or equivalent detail doc referenced from a 
 
 ### 1. Output artifact
 
-What tangible deliverable this skill produces - file paths, issue comment shape, branch state, draft bundle issue, or other verifiable artifact. Be specific enough that resolution **Done when** (task, bundle, or one-off ticket) can cite it.
+What tangible deliverable this skill produces - file paths, issue comment shape, branch state, draft bundle issue, or other verifiable artifact. Resolution **Done when** (task, bundle, or one-off ticket) should cite it directly.
 
 ### 2. Prerequisites
 
-What must be true before the action runs: loaded ticket + map/bundle context, branch checked out, upstream dependencies merged, env/tools, or human inputs. List hard gates that should fail closed when unmet.
+What must be true before the action runs: loaded ticket + map/bundle context, branch checked out, upstream dependencies merged, env/tools, or human inputs. List hard gates that should stop the run when unmet.
 
 ### 3. Workflow
 
@@ -26,9 +26,9 @@ Step-by-step playbook the agent follows once entry gates pass. Numbered steps; n
 
 How each bullet in the ticket **Done when** (or skill-specific completion checklist) maps to workflow steps or output checks. Table or bullet mapping preferred - resolution comment **Done when** section copies this mapping at end-of-run when applicable.
 
-### 5. Division of labor
+### 5. Who does what
 
-Explicit split between the **entry orchestrator** (when any - e.g. [implement-task](../orchestrators/implement-task/SKILL.md), [one-off](../orchestrators/one-off/SKILL.md), or direct HITL invoke) and **this action skill** (domain work only). For skills invoked directly with no orchestrator tail, state that explicitly. Call out AFK vs HITL differences only when they affect the action itself.
+Split between the **entry orchestrator** (when any - e.g. [implement-task](../orchestrators/implement-task/SKILL.md), [one-off](../orchestrators/one-off/SKILL.md), or direct HITL invoke) and **this action skill** (domain work only). For skills invoked directly with no orchestrator tail, state that explicitly. Call out AFK vs HITL differences only when they affect the action itself.
 
 ## SKILL.md conventions
 

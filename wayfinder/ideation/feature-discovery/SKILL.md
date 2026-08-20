@@ -26,7 +26,7 @@ Wayfinder **Chart** must have created `{FeatureName}:Map` (with target outcome i
 
 ## Coverage zones
 
-Same five as [grill-me](../grill-me/SKILL.md) - read each zone file through **Quick triage** only:
+Same five as [grill-me](../grill-me/SKILL.md#coverage-zones-canonical-branches). Read each zone file through **Quick triage** only:
 
 | Zone | Reference |
 |------|-----------|
@@ -72,7 +72,7 @@ Do **not** create **To Do** tickets - that is wayfinder **Materialize**.
 1. **Breadth, not depth** - Do not drill into one unknown across zones; note it and move on.
 2. **One zone per reply** - Default; user may ask to batch two adjacent zones in one reply.
 3. **No stacked zones** - Finish the current zone’s turn before advancing the zone counter.
-4. **Blue-sky OK** - Surface possible scope edges; wayfinder sorts ticket vs fog vs out-of-scope at materialize.
+4. **Note scope edges** - Surface possible scope edges as fog candidates; wayfinder sorts ticket vs fog vs out-of-scope at materialize.
 5. **Comment on map** - The canonical artifact lives as a map-issue comment, not a separate issue.
 
 ## Quick start

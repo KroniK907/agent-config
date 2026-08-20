@@ -2,7 +2,7 @@
 
 ## Quick triage (read every session)
 
-**Likely N/A when:** there is no human-visible or operator-visible touchpoint (pure library internals, batch-only with no UI/CLI/reporting changes, invisible refactor). Still confirm nothing downstream renders errors or admin views.
+Skip this zone when there is no human-visible or operator-visible touchpoint (pure library internals, batch-only with no UI/CLI/reporting changes, invisible refactor). Still confirm nothing downstream renders errors or admin views.
 
 **Common skip signals**
 

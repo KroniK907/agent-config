@@ -5,7 +5,7 @@ description: implement-task, wf:approved, wf:approved task ready, pick up task, 
 
 # Implement task
 
-**Orchestration-only** entry for **`wf:approved`** implementation tasks. Fail-closed startup → bundle-branch git → **Method dispatch** → **[code-review](../../actions/code-review/SKILL.md)** (auto-fix obvious; defer rest) → push → [resolution comment](references/resolution-comment.md) → **`Status: awaiting-reconcile`**. Does **not** close the task, remove **`wf:approved`**, or post Reconcile approval phrases.
+**Orchestration-only** entry for **`wf:approved`** implementation tasks. Stop if any startup gate fails → bundle-branch git → **Method dispatch** → **[code-review](../../actions/code-review/SKILL.md)** (auto-fix obvious; defer rest) → push → [resolution comment](references/resolution-comment.md) → **`Status: awaiting-reconcile`**. Leaves the task open with **`wf:approved`** until wayfinder Reconcile closes it.
 
 Detail: [REFERENCE.md](REFERENCE.md) - resolution templates: [references/resolution-comment.md](references/resolution-comment.md) - AFK pickup comment: [references/afk-pickup-comment.md](references/afk-pickup-comment.md)
 
@@ -32,7 +32,7 @@ Run in order. **Stop at first gate failure** - post **Blocked** resolution per [
 9. **Unblock** - scan dependents; for each cleared AFK dependent: add **`wf:approved`** + post AFK pickup comment ([references/afk-pickup-comment.md](references/afk-pickup-comment.md)); HITL dependents: label only ([REFERENCE § Unblock and handoff](REFERENCE.md#unblock-and-handoff))
 10. **AFK only** - remove **`wf:afk-running`**; serial handoff to next eligible AFK task (**`wf:approved`** + pickup comment per [afk-pickup-comment.md](references/afk-pickup-comment.md))
 
-**Invariants:** Never close task - never remove own **`wf:approved`** - never post **`Approved - reconcile and close`**
+**Invariants:** Keep the task open. Keep **`wf:approved`**. Leave Reconcile approval to the human.
 
 ## Hand off
 

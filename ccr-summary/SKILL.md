@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # CCR Summary (40 CFR § 141.156)
 
-Generate the **prominent opening summary** for a CCR by reading the full report PDF and mapping findings to [40 CFR § 141.156](https://www.law.cornell.edu/cfr/text/40/141.156). The summary is **not** a rewrite of the whole report - it distills what consumers need first.
+Generate the **opening summary** for a CCR by reading the full report PDF and mapping findings to [40 CFR § 141.156](https://www.law.cornell.edu/cfr/text/40/141.156). The summary is **not** a rewrite of the whole report. It states what consumers need first.
 
 **Scope note:** This workflow **excludes § 141.156(c)(2)** (limited English proficiency / translated reports). Only include that block if the user explicitly asks and the system is subject to § 141.153(h)(3).
 
@@ -20,7 +20,7 @@ For the full regulatory checklist and PDF search patterns, read [requirements.md
 
 **All subsection headings in summary output MUST be h5 - five hash marks (`#####`) in markdown.**
 
-| ✓ Correct | ✗ Wrong |
+| Correct | Wrong |
 |-----------|---------|
 | `##### Your water at a glance` | `## Your water at a glance` |
 | `##### How to get more information` | `### How to get more information` |
@@ -134,7 +134,7 @@ Include **telephone** (required) for owner, operator, or designee. Also include 
 
 ### Step 6: Draft the summary
 
-Keep it **short and prominent** - consumers should understand the report’s purpose, compliance status, and who to call without reading all tables.
+Keep it **short and upfront** - consumers should understand the report’s purpose, compliance status, and who to call without reading all tables.
 
 **Detected vs. tested impurities (§ 141.156(a)) - REQUIRED:** Many CCR templates include a “Water Quality Testing” or “Detected Impurities” section explaining that only impurities with a measurable result appear in the tables below. The opening summary **must** state this plainly so readers do not think an unlisted impurity was never tested.
 

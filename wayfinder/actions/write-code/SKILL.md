@@ -30,5 +30,5 @@ Adapted from [mattpocock/skills - engineering/implement](https://github.com/matt
 1. **Seams first** - agree test seams with the human (or task spec) before writing tests; no tests at unconfirmed seams.
 2. **Vertical slices** - one failing test → minimal pass → repeat; no horizontal "all tests then all code."
 3. **Verify often** - typecheck regularly; run the focused test file after each slice; run the full suite once before returning to implement-task.
-4. **Honor Decisions** - task **Decisions** and bundle **Constraints** are binding; scope to **Done when**.
-5. **Stop at build** - do not code-review, commit, push, or post resolution; return artifacts to implement-task.
+4. **Follow Decisions** - task **Decisions** and bundle **Constraints** are binding; scope to **Done when**.
+5. **Stop at build** - return artifacts to implement-task. It handles code-review, commit, push, and resolution.

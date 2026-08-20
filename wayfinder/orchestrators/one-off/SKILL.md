@@ -16,7 +16,7 @@ Detail: [REFERENCE.md](REFERENCE.md)
 | [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
 | [define-bundle](../../actions/define-bundle/SKILL.md) | GM cluster → approved bundle + bundle branch |
 | [create-tasks](../../actions/create-tasks/SKILL.md) | Split approved bundle → **Implementing** tasks |
-| [implement-task](../implement-task/SKILL.md) | Direct pickup on **`wf:approved`** bundle tasks - **fail-closed** on To Do without entering via **one-off** |
+| [implement-task](../implement-task/SKILL.md) | Direct pickup on **`wf:approved`** bundle tasks - stops on To Do tickets unless entered via **one-off** |
 | Agent checklist or human | Trivial map errands with no repo deliverables (rename label, post comment, update tracker text) |
 
 ## Prerequisites
@@ -88,8 +88,8 @@ Tell the human:
 1. **HITL only** - no AFK path; never add **`wf:afk`** or **`wf:afk-running`**
 2. **To Do persistence** - ticket never moves to **Implementing**
 3. **implement-task unchanged** - all gate waivers live in **one-off** REFERENCE
-4. **Blocked by fail-closed** - open blockers stop the run like implement-task
-5. **Never auto-close** - human **`Approved - reconcile and close`** required
+4. **Blocked by stops the run** - open blockers halt like implement-task
+5. **Human closes the ticket** - requires **`Approved - reconcile and close`**
 
 ## Quick start
 

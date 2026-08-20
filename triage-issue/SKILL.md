@@ -5,7 +5,7 @@ description: triage, bug report, file issue with fix plan, investigate a problem
 
 # Triage Issue
 
-Investigate a reported problem, find its root cause, and create a GitHub issue with a TDD fix plan. This is a mostly hands-off workflow - minimize questions to the user.
+Investigate a reported problem, find its root cause, and create a GitHub issue with a TDD fix plan. Minimize questions to the user.
 
 ## Process
 
@@ -13,11 +13,13 @@ Investigate a reported problem, find its root cause, and create a GitHub issue w
 
 Get a brief description of the issue from the user. If they haven't provided one, ask ONE question: "What's the problem you're seeing?"
 
-Do NOT ask follow-up questions yet. Start investigating immediately.
+Start investigating immediately. Do not ask follow-up questions yet.
+
+**Done when:** You have a one-line problem statement to investigate.
 
 ### 2. Explore and diagnose
 
-Use the Agent tool with subagent_type=Explore to deeply investigate the codebase. Your goal is to find:
+Use the Agent tool with subagent_type=Explore to investigate the codebase. Find:
 
 - **Where** the bug manifests (entry points, UI, API responses)
 - **What** code path is involved (trace the flow)
@@ -31,6 +33,8 @@ Look at:
 - Error handling in the code path
 - Similar patterns elsewhere in the codebase that work correctly
 
+**Done when:** You can name the root cause and the code path that triggers it.
+
 ### 3. Identify the fix approach
 
 Based on your investigation, determine:
@@ -39,6 +43,8 @@ Based on your investigation, determine:
 - Which modules/interfaces are affected
 - What behaviors need to be verified via tests
 - Whether this is a regression, missing feature, or design flaw
+
+**Done when:** You have a minimal fix strategy in one paragraph.
 
 ### 4. Design TDD fix plan
 
@@ -52,11 +58,15 @@ Rules:
 - One test at a time, vertical slices (NOT all tests first, then all code)
 - Each test should survive internal refactors
 - Include a final refactor step if needed
-- **Durability**: Only suggest fixes that would survive radical codebase changes. Describe behaviors and contracts, not internal structure. Tests assert on observable outcomes (API responses, UI state, user-visible effects), not internal state. A good suggestion reads like a spec; a bad one reads like a diff.
+- Describe behaviors and contracts, not internal structure. Tests assert on observable outcomes (API responses, UI state, user-visible effects), not internal state. A good suggestion reads like a spec; a bad one reads like a diff.
+
+**Done when:** You have a numbered RED-GREEN list with acceptance criteria tied to observable behavior.
 
 ### 5. Create the GitHub issue
 
-Create a GitHub issue using `gh issue create` with the template below. Do NOT ask the user to review before creating - just create it and share the URL.
+Create a GitHub issue using `gh issue create` with the template below. Create it and share the URL.
+
+**Done when:** The issue URL and a one-line root-cause summary are posted.
 
 <issue-template>
 
@@ -74,7 +84,7 @@ Describe what you found during investigation:
 - Why the current code fails
 - Any contributing factors
 
-Do NOT include specific file paths, line numbers, or implementation details that couple to current code layout. Describe modules, behaviors, and contracts instead. The issue should remain useful even after major refactors.
+Do not include specific file paths, line numbers, or implementation details that couple to current code layout. Describe modules, behaviors, and contracts instead. The issue should remain useful even after major refactors.
 
 ## TDD Fix Plan
 
@@ -98,5 +108,3 @@ A numbered list of RED-GREEN cycles:
 - [ ] Existing tests still pass
 
 </issue-template>
-
-After creating the issue, print the issue URL and a one-line summary of the root cause.
