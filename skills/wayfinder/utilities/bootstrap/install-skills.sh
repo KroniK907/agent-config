@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Idempotent install of KroniK907/agent-config wayfinder pack into ~/.cursor/skills/
-# Called from .cursor/environment.json install on Cloud Agent VMs.
+# Legacy global install - copies wayfinder pack to ~/.cursor/skills/
+# Prefer agent-config-wizard for desktop project apply (see repo README).
+# Cloud AFK: called from .cursor/environment.json install on Cloud Agent VMs.
 #
 # Env (optional):
 #   WAYFINDER_SKILLS_REPO  default KroniK907/agent-config

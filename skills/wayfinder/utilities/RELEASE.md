@@ -1,6 +1,6 @@
 # Skills repo releases
 
-Semver tags on **`KroniK907/agent-config`** are the pin target for app-repo [AFK bootstrap](AFK-BOOTSTRAP.md) (`WAYFINDER_SKILLS_TAG` in `.cursor/environment.json`).
+Semver tags on **`KroniK907/agent-config`** are the pin target for app-repo manifests (`source.ref` in `.cursor/agent-manifest.json`) and Cloud AFK bootstrap.
 
 ---
 
@@ -40,8 +40,8 @@ Run on **`main`** after the AFK v1 bundle PR merges and all Implementing tasks a
 
    Summarize: implement-task orchestration, bootstrap pack, `wf:*` labels, four-folder layout (`actions/`, `ideation/`, `orchestrators/`, `utilities/`), write-code + design-modules, one-off entry path.
 
-4. **Announce** - note tag in bundle / map Completed gist; app repos bump `WAYFINDER_SKILLS_TAG`.
-5. **App repos** - follow [AFK-BOOTSTRAP.md § Pin skills pack](AFK-BOOTSTRAP.md#2-pin-skills-pack-environmentjson); trigger Cloud Agent environment rebuild.
+4. **Announce** - note tag in bundle / map Completed gist; app repos bump **`source.ref`** in `.cursor/agent-manifest.json`.
+5. **App repos** - follow [AFK-BOOTSTRAP.md § Pin skills pack](AFK-BOOTSTRAP.md#2-pin-skills-pack-manifest--environmentjson); trigger Cloud Agent environment rebuild.
 
 Subsequent releases repeat with the next semver (`v0.1.1`, `v0.2.0`, …).
 

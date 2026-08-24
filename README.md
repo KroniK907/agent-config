@@ -14,13 +14,44 @@ Team skills, Cursor rules, and scripts for NUS agent tooling. v1 layout per **Ag
 | `AGENTS.md` | What agents should know about this repo |
 | `.cursor/` | Example project templates only |
 
-## Install
+## Apply to a project (primary)
+
+1. Clone this repo to a stable path on your machine (team root).
+2. From your **project** repo root, run the wizard binary or `go run`.
+
+```powershell
+# Windows - built binary from project cwd
+C:\path\to\agent-config\scripts\wizard\bin\agent-config-wizard.exe
+```
+
+```bash
+# Linux
+/path/to/agent-config/scripts/wizard/bin/agent-config-wizard
+```
+
+Dev without a binary:
+
+```powershell
+go run -C C:\path\to\agent-config\scripts\wizard\src . -project C:\path\to\your-project
+```
+
+The team clone does **not** need to live inside the project repo. Full run/build/test docs: [scripts/wizard/README.md](scripts/wizard/README.md).
+
+**First run:** opt in to skills and rules in the TUI, press **a** to apply. Creates `.cursor/agent-config.local.json` (gitignore) and copies selected items into `.cursor/skills/` and `.cursor/rules/`. See [.cursor/README.md](.cursor/README.md) for manifest, gitignore, and re-run behavior.
+
+**Cloud agents:** commit `.cursor/agent-manifest.json` (subset of desktop opt-in). Template: [.cursor/examples/agent-manifest.json.example](.cursor/examples/agent-manifest.json.example).
+
+## One-off skill install (secondary)
 
 ```text
 npx skills@latest add KroniK907/agent-config/skills/<skill-path>
 ```
 
-Substitute your fork if needed. Paths are in [`catalog.json`](catalog.json). For global always-on **unslop**, copy `rules/unslop.mdc` to `~/.cursor/rules/unslop.mdc`.
+Use for a single skill without full project apply. Substitute your fork if needed. Paths are in [`catalog.json`](catalog.json).
+
+## Legacy global install
+
+[`skills/wayfinder/utilities/bootstrap/install-skills.ps1`](skills/wayfinder/utilities/bootstrap/install-skills.ps1) copies the full wayfinder pack into `~/.cursor/skills/` for **Cloud AFK bootstrap** and pre-apply smoke tests. Prefer **agent-config-wizard** for day-to-day desktop project setup. See [AFK-BOOTSTRAP.md](skills/wayfinder/utilities/AFK-BOOTSTRAP.md) for cloud agent setup.
 
 ## Wayfinder ecosystem
 
