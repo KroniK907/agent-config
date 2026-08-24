@@ -46,30 +46,40 @@ gh label list --limit 100 | Select-String wf:
 
 **Pin target:** `.cursor/agent-manifest.json` `source.ref` (semver tag). Do not use an `env` block in `environment.json` for repo/tag pin - that pattern is deprecated per AgentConfigHub map decisions.
 
-1. Copy [`.cursor/examples/agent-manifest.json.example`](../../../.cursor/examples/agent-manifest.json.example) to **`.cursor/agent-manifest.json`** in the app repo. Set **`source.ref`** to the exact semver tag you released (e.g. `v1.0.0`).
-2. Copy [bootstrap/environment.json.example](bootstrap/environment.json.example) to **`.cursor/environment.json`** in the app repo root.
-3. Copy [bootstrap/install-skills.sh](bootstrap/install-skills.sh) to **`.cursor/install-wayfinder-skills.sh`** in the app repo (same script; stable path for the install command).
-4. Commit all three files under `.cursor/`.
+1. Copy [`.cursor/examples/agent-manifest.json.example`](../../../.cursor/examples/agent-manifest.json.example) to **`.cursor/agent-manifest.json`** in the app repo. Set **`source.ref`** to the exact semver tag you released (e.g. `v1.0.0`). List enabled **`skills`** and **`rules`** paths from [`catalog.json`](../../../catalog.json) at that tag.
+2. Copy [`.cursor/examples/environment.json.example`](../../../.cursor/examples/environment.json.example) to **`.cursor/environment.json`** in the app repo root. Update the tag in the `install` curl URL to match **`source.ref`**.
+3. Commit both files under `.cursor/`.
 
-The **`install`** command runs on Cloud Agent Build creation. It must be **idempotent** - see [bootstrap/install-skills.sh](bootstrap/install-skills.sh). The install script reads **`WAYFINDER_SKILLS_TAG`** and **`WAYFINDER_SKILLS_REPO`** from the environment; export them in the install command to match **`source.ref`** until **`bootstrap-agent.sh`** reads the manifest directly:
+The **`install`** command runs on Cloud Agent Build creation. It invokes [`scripts/bootstrap-agent.sh`](../../../scripts/bootstrap-agent.sh), which reads the committed manifest, clones `source.repo` at `source.ref`, validates paths against `catalog.json`, copies skills to `~/.cursor/skills/`, and copies rules to `.cursor/rules/` in the workspace. The script must be **idempotent**.
 
 ```json
 {
-  "name": "wayfinder-afk",
-  "install": "WAYFINDER_SKILLS_TAG=v1.0.0 WAYFINDER_SKILLS_REPO=KroniK907/agent-config bash .cursor/install-wayfinder-skills.sh"
+  "build": {
+    "install": "curl -fsSL https://raw.githubusercontent.com/KroniK907/agent-config/v1.0.0/scripts/bootstrap-agent.sh | bash"
+  }
 }
 ```
 
-For the manifest-driven cloud hook (copy-only, project `.cursor/` paths), see [`.cursor/examples/environment.json.example`](../../../.cursor/examples/environment.json.example).
+**Legacy (deprecated):** copying [bootstrap/install-skills.sh](bootstrap/install-skills.sh) to `.cursor/install-wayfinder-skills.sh` with inline `WAYFINDER_SKILLS_TAG` env vars. Use only when bootstrap-agent.sh is unavailable at your pinned tag.
 
-**Local smoke (optional, legacy global install):**
+**Local smoke (manifest-driven):**
+
+```bash
+# From app repo root with .cursor/agent-manifest.json committed
+export AGENT_CONFIG_WORKSPACE="$PWD"
+bash /path/to/agent-config/scripts/bootstrap-agent.sh
+test -f ~/.cursor/skills/wayfinder/orchestrators/implement-task/SKILL.md
+test -f .cursor/rules/unslop.mdc   # when rules/unslop.mdc is in manifest
+```
+
+**Local smoke (legacy global install):**
 
 ```powershell
 $env:WAYFINDER_SKILLS_TAG = "v1.0.0"
 .\skills\wayfinder\utilities\bootstrap\install-skills.ps1
 ```
 
-This copies the wayfinder orchestration pack to `~/.cursor/skills/` globally. Prefer **agent-config-wizard** for per-project desktop setup.
+Legacy scripts copy a fixed wayfinder skill set globally. Prefer **agent-config-wizard** for per-project desktop setup and **bootstrap-agent.sh** for cloud agents.
 
 ---
 
@@ -124,7 +134,7 @@ Only after HITL smoke passes:
 
 | Event | Action |
 |-------|--------|
-| Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump **`source.ref`** in app `.cursor/agent-manifest.json`; update inline tag in `.cursor/environment.json` **install** command; rebuild Cloud Agent environment |
+| Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump **`source.ref`** in app `.cursor/agent-manifest.json`; update tag in `.cursor/environment.json` **install** curl URL; rebuild Cloud Agent environment |
 | New wayfinder label | Add to [labels-manifest.json](bootstrap/labels-manifest.json) in skills repo; re-run bootstrap script in app repos |
 | Bundle complete | Human opens **one PR** from `afk/bundle-{N}-{slug}` - agents do not |
 | Task shipped | Human Reconcile **`Approved - reconcile and close`** per task resolution comment |
@@ -139,9 +149,10 @@ Only after HITL smoke passes:
 | [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) | Canonical `wf:*` labels |
 | [bootstrap/bootstrap-labels.ps1](bootstrap/bootstrap-labels.ps1) | Label bootstrap (Windows) |
 | [bootstrap/bootstrap-labels.sh](bootstrap/bootstrap-labels.sh) | Label bootstrap (Unix) |
-| [bootstrap/environment.json.example](bootstrap/environment.json.example) | Cloud Agent env template |
-| [bootstrap/install-skills.ps1](bootstrap/install-skills.ps1) | Local / Windows skills install |
-| [bootstrap/install-skills.sh](bootstrap/install-skills.sh) | Cloud Agent skills install |
+| [bootstrap/environment.json.example](bootstrap/environment.json.example) | Legacy Cloud Agent env template (use `.cursor/examples/environment.json.example` instead) |
+| [bootstrap/install-skills.ps1](bootstrap/install-skills.ps1) | Legacy local / Windows skills install |
+| [bootstrap/install-skills.sh](bootstrap/install-skills.sh) | Legacy Cloud Agent skills install |
+| [scripts/bootstrap-agent.sh](../../../scripts/bootstrap-agent.sh) | Manifest-driven Cloud Agent bootstrap (primary) |
 | [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md) | Cursor automation prompt template |
 | [RELEASE.md](RELEASE.md) | Skills repo semver release process |
 | [implement-task/SKILL.md](../../orchestrators/implement-task/SKILL.md) | AFK/HITL orchestration contract |

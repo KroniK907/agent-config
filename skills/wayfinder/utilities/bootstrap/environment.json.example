@@ -1,4 +1,5 @@
 {
-  "name": "wayfinder-afk",
-  "install": "bash .cursor/install-wayfinder-skills.sh"
+  "build": {
+    "install": "curl -fsSL https://raw.githubusercontent.com/KroniK907/agent-config/v1.0.0/scripts/bootstrap-agent.sh | bash"
+  }
 }

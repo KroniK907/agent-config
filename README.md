@@ -39,7 +39,7 @@ The team clone does **not** need to live inside the project repo. Full run/build
 
 **First run:** opt in to skills and rules in the TUI, press **a** to apply. Creates `.cursor/agent-config.local.json` (gitignore) and copies selected items into `.cursor/skills/` and `.cursor/rules/`. See [.cursor/README.md](.cursor/README.md) for manifest, gitignore, and re-run behavior.
 
-**Cloud agents:** commit `.cursor/agent-manifest.json` (subset of desktop opt-in). Template: [.cursor/examples/agent-manifest.json.example](.cursor/examples/agent-manifest.json.example).
+**Cloud agents:** commit `.cursor/agent-manifest.json` (subset of desktop opt-in) and add a Build `install` hook. Templates: [`.cursor/examples/agent-manifest.json.example`](.cursor/examples/agent-manifest.json.example), [`.cursor/examples/environment.json.example`](.cursor/examples/environment.json.example). The hook runs [`scripts/bootstrap-agent.sh`](scripts/bootstrap-agent.sh), which reads the manifest, clones the pinned tag, validates paths against `catalog.json`, copies skills to `~/.cursor/skills/`, and copies rules into the project `.cursor/rules/`. See [.cursor/README.md](.cursor/README.md#cloud-agents) for smoke steps.
 
 ## One-off skill install (secondary)
 
@@ -49,9 +49,9 @@ npx skills@latest add KroniK907/agent-config/skills/<skill-path>
 
 Use for a single skill without full project apply. Substitute your fork if needed. Paths are in [`catalog.json`](catalog.json).
 
-## Legacy global install
+## Legacy global install (deprecated)
 
-[`skills/wayfinder/utilities/bootstrap/install-skills.ps1`](skills/wayfinder/utilities/bootstrap/install-skills.ps1) copies the full wayfinder pack into `~/.cursor/skills/` for **Cloud AFK bootstrap** and pre-apply smoke tests. Prefer **agent-config-wizard** for day-to-day desktop project setup. See [AFK-BOOTSTRAP.md](skills/wayfinder/utilities/AFK-BOOTSTRAP.md) for cloud agent setup.
+[`skills/wayfinder/utilities/bootstrap/install-skills.ps1`](skills/wayfinder/utilities/bootstrap/install-skills.ps1) and [`install-skills.sh`](skills/wayfinder/utilities/bootstrap/install-skills.sh) copy a fixed wayfinder skill set to `~/.cursor/skills/` via `WAYFINDER_SKILLS_TAG`. Prefer **manifest-driven** [`scripts/bootstrap-agent.sh`](scripts/bootstrap-agent.sh) for cloud agents. Use legacy scripts only for pre-apply smoke tests.
 
 ## Wayfinder ecosystem
 
