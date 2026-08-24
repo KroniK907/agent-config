@@ -93,7 +93,11 @@ Coverage spans manifest load/save, catalog tree and group cascade, project overr
 | Home/End | Jump to top/bottom of current pane |
 | Tab | Switch between opt-in tree and state JSON |
 | Space | Toggle opt-in (list pane); groups cascade to children |
-| a | Apply - copy enabled, remove deselected managed copies, save manifest |
+| a | Apply desktop config - copy enabled, remove deselected managed copies, save manifest |
+| c | Enter/exit **cloud bootstrap** mode |
+| l | (cloud mode) Sync cloud opt-in from desktop selections; shows diff in state pane |
+| [ / ] | (cloud mode) Cycle `source.ref` through GitHub release tags |
+| w | (cloud mode) Write `.cursor/agent-manifest.json` and `.cursor/environment.json` |
 | s | Jump to state pane |
 | q | Quit without saving TUI selections |
 
@@ -106,6 +110,7 @@ Coverage spans manifest load/save, catalog tree and group cascade, project overr
 - Project-native files (no sync marker, never applied) show **(project override)**
 - Copy delivery to `.cursor/rules/` and `.cursor/skills/`; framework copy to `.cursor/agent-config/`
 - Optional **Environment details rule** at top of tree - toggles `envDetails` in manifest; writes `.cursor/rules/environment.mdc` on apply (`alwaysApply: true`, `generated-by: agent-config-wizard`); silent refresh on every apply when enabled; removes only wizard-generated copies when disabled
+- **Cloud bootstrap** (`c`) - optional committed cloud config: separate skills/rules opt-in, GitHub release tag picker, path validation at pinned ref, writes `.cursor/agent-manifest.json` + `.cursor/environment.json` (`w`). Desktop apply (`a`) does not write cloud files.
 
 ## Collision demo
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"testing"
 )
@@ -962,5 +963,134 @@ func TestApplyEnabled_removesEnvRuleWhenDisabled(t *testing.T) {
 	}
 	if !contains(res.Removed, envRuleRelPath) {
 		t.Fatalf("expected env rule removed, got removed=%v", res.Removed)
+	}
+}
+
+func TestParseReleaseTagNames_extractsTags(t *testing.T) {
+	data := []byte(`[{"tag_name":"v1.0.1"},{"tag_name":"v0.1.0"}]`)
+	tags, err := parseReleaseTagNames(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tags) != 2 || tags[0] != "v1.0.1" {
+		t.Fatalf("tags = %v", tags)
+	}
+}
+
+func TestSemverTagForCatalogVersion_matchesVPrefix(t *testing.T) {
+	tags := []string{"v1.0.1", "v0.1.0"}
+	tag, ok := semverTagForCatalogVersion("1.0.1", tags)
+	if !ok || tag != "v1.0.1" {
+		t.Fatalf("tag = %q ok = %v", tag, ok)
+	}
+}
+
+func TestDefaultCloudRef_prefersExisting(t *testing.T) {
+	tags := []string{"v1.0.1", "v0.1.0"}
+	got := defaultCloudRef("1.0.1", tags, "v0.1.0")
+	if got != "v0.1.0" {
+		t.Fatalf("ref = %q, want v0.1.0", got)
+	}
+}
+
+func TestEnvironmentInstallURL_pinsRef(t *testing.T) {
+	url := environmentInstallURL("v1.0.1")
+	if !strings.Contains(url, "v1.0.1") || !strings.Contains(url, "bootstrap-agent.sh") {
+		t.Fatalf("url = %q", url)
+	}
+}
+
+func TestDiffCloudPaths_addedAndRemoved(t *testing.T) {
+	diff := diffCloudPaths(
+		[]string{"skills/a"},
+		[]string{"rules/old.mdc"},
+		[]string{"skills/b"},
+		[]string{"rules/new.mdc"},
+	)
+	if len(diff.Added) != 2 || len(diff.Removed) != 2 {
+		t.Fatalf("diff = %+v", diff)
+	}
+}
+
+func TestValidateCloudPaths_rejectsUnknown(t *testing.T) {
+	cat := minimalCatalog()
+	errs := validateCloudPaths(cat, []string{"skills/missing"}, nil)
+	if len(errs) != 1 {
+		t.Fatalf("errs = %v", errs)
+	}
+}
+
+func TestValidateCloudPaths_acceptsKnown(t *testing.T) {
+	cat := minimalCatalog()
+	errs := validateCloudPaths(cat, []string{"skills/commit"}, []string{"rules/unslop.mdc"})
+	if len(errs) != 0 {
+		t.Fatalf("errs = %v", errs)
+	}
+}
+
+func TestWriteCloudConfig_writesBothFiles(t *testing.T) {
+	project := t.TempDir()
+	cm := newCloudManifest("v1.0.1")
+	cm.Skills = []string{"skills/commit"}
+	cm.Rules = []string{"rules/unslop.mdc"}
+	if err := writeCloudConfig(project, cm); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(cloudManifestPath(project)); err != nil {
+		t.Fatalf("manifest missing: %v", err)
+	}
+	if _, err := os.Stat(environmentJSONPath(project)); err != nil {
+		t.Fatalf("environment.json missing: %v", err)
+	}
+	raw, err := os.ReadFile(environmentJSONPath(project))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(raw), "v1.0.1") {
+		t.Fatalf("environment.json = %s", raw)
+	}
+}
+
+func TestSyncCloudFromDesktop_copiesEnabledPaths(t *testing.T) {
+	cat := minimalCatalog()
+	desktop := &manifest{
+		Skills: []string{"skills/commit"},
+		Rules:  []string{"rules/unslop.mdc"},
+	}
+	items := buildCloudTree(cat, newCloudManifest("v1.0.1"))
+	syncCloudFromDesktop(items, desktop)
+	var enabled []string
+	for _, it := range items {
+		if !it.IsGroup && it.Enabled {
+			enabled = append(enabled, it.Path)
+		}
+	}
+	sort.Strings(enabled)
+	want := []string{"rules/unslop.mdc", "skills/commit"}
+	if strings.Join(enabled, ",") != strings.Join(want, ",") {
+		t.Fatalf("enabled = %v want %v", enabled, want)
+	}
+}
+
+func TestCatalogAtRef_usesLocalWhenRefMatches(t *testing.T) {
+	cat := minimalCatalog()
+	cat.Catalog.Version = "1.0.1"
+	got, err := catalogAtRef("/team", "v1.0.1", cat)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != cat {
+		t.Fatal("expected local catalog pointer")
+	}
+}
+
+func TestLoadCloudManifest_missingReturnsNil(t *testing.T) {
+	dir := t.TempDir()
+	cm, err := loadCloudManifest(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cm != nil {
+		t.Fatalf("expected nil, got %+v", cm)
 	}
 }

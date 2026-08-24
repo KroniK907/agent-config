@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -36,10 +37,14 @@ import (
 )
 
 const (
-	manifestName       = "agent-config.local.json"
-	sourceRepo         = "KroniK907/agent-config"
-	envRuleRelPath     = ".cursor/rules/environment.mdc"
-	envRuleGeneratedBy = "agent-config-wizard"
+	manifestName        = "agent-config.local.json"
+	cloudManifestName   = "agent-manifest.json"
+	environmentJSONName = "environment.json"
+	sourceRepo          = "KroniK907/agent-config"
+	envRuleRelPath      = ".cursor/rules/environment.mdc"
+	envRuleGeneratedBy  = "agent-config-wizard"
+	githubAPIReleases   = "https://api.github.com/repos/" + sourceRepo + "/releases"
+	githubRawCatalog  = "https://raw.githubusercontent.com/" + sourceRepo + "/%s/catalog.json"
 )
 
 // --- manifest (AGENT-CFG-GM-006) ---
@@ -118,6 +123,398 @@ func newManifest(teamRoot, projectRoot, ref string) *manifest {
 		Rules:       nil,
 		LastApplied: map[string]string{},
 	}
+}
+
+// --- cloud manifest (AGENT-CFG-GM-006) ---
+
+type cloudManifest struct {
+	Source cloudSourceMeta `json:"source"`
+	Skills []string        `json:"skills"`
+	Rules  []string        `json:"rules"`
+}
+
+type cloudSourceMeta struct {
+	Repo string `json:"repo"`
+	Ref  string `json:"ref"`
+}
+
+type environmentFile struct {
+	Build struct {
+		Install string `json:"install"`
+	} `json:"build"`
+}
+
+type cloudPathDiff struct {
+	Added   []string `json:"added"`
+	Removed []string `json:"removed"`
+}
+
+var (
+	fetchReleaseTagsFn  = fetchReleaseTagsHTTP
+	fetchCatalogAtRefFn = fetchCatalogAtRefHTTP
+)
+
+func cloudManifestPath(projectRoot string) string {
+	return filepath.Join(projectRoot, ".cursor", cloudManifestName)
+}
+
+func environmentJSONPath(projectRoot string) string {
+	return filepath.Join(projectRoot, ".cursor", environmentJSONName)
+}
+
+func loadCloudManifest(projectRoot string) (*cloudManifest, error) {
+	data, err := os.ReadFile(cloudManifestPath(projectRoot))
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	var cm cloudManifest
+	if err := json.Unmarshal(data, &cm); err != nil {
+		return nil, err
+	}
+	return &cm, nil
+}
+
+func saveCloudManifest(projectRoot string, cm *cloudManifest) error {
+	dir := filepath.Join(projectRoot, ".cursor")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return err
+	}
+	data, err := json.MarshalIndent(cm, "", "  ")
+	if err != nil {
+		return err
+	}
+	data = append(data, '\n')
+	return os.WriteFile(cloudManifestPath(projectRoot), data, 0o644)
+}
+
+func saveEnvironmentJSON(projectRoot, ref string) error {
+	dir := filepath.Join(projectRoot, ".cursor")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return err
+	}
+	env := environmentFile{}
+	env.Build.Install = environmentInstallURL(ref)
+	data, err := json.MarshalIndent(env, "", "  ")
+	if err != nil {
+		return err
+	}
+	data = append(data, '\n')
+	return os.WriteFile(environmentJSONPath(projectRoot), data, 0o644)
+}
+
+func environmentInstallURL(ref string) string {
+	return fmt.Sprintf(
+		"curl -fsSL https://raw.githubusercontent.com/%s/%s/scripts/bootstrap-agent.sh | bash",
+		sourceRepo, ref,
+	)
+}
+
+func writeCloudConfig(projectRoot string, cm *cloudManifest) error {
+	if err := saveCloudManifest(projectRoot, cm); err != nil {
+		return fmt.Errorf("agent-manifest.json: %w", err)
+	}
+	if err := saveEnvironmentJSON(projectRoot, cm.Source.Ref); err != nil {
+		return fmt.Errorf("environment.json: %w", err)
+	}
+	return nil
+}
+
+func enabledCloudSet(cm *cloudManifest) map[string]bool {
+	out := map[string]bool{}
+	if cm == nil {
+		return out
+	}
+	for _, p := range cm.Rules {
+		out[p] = true
+	}
+	for _, p := range cm.Skills {
+		out[p] = true
+	}
+	return out
+}
+
+func newCloudManifest(ref string) *cloudManifest {
+	return &cloudManifest{
+		Source: cloudSourceMeta{Repo: sourceRepo, Ref: ref},
+		Skills: nil,
+		Rules:  nil,
+	}
+}
+
+func buildCloudTree(cat *catalogFile, cm *cloudManifest) []treeItem {
+	prevEnabled := enabledCloudSet(cm)
+
+	var items []treeItem
+	type ruleRow struct {
+		key string
+		e   catalogEntry
+	}
+	var rules []ruleRow
+	for k, e := range cat.Rules {
+		rules = append(rules, ruleRow{k, e})
+	}
+	sort.Slice(rules, func(i, j int) bool { return rules[i].e.Path < rules[j].e.Path })
+	for _, r := range rules {
+		items = append(items, cloudLeafItem(r.key, r.e, "rule", 0, prevEnabled))
+	}
+	items = append(items, buildCloudSkillItems(cat, prevEnabled)...)
+	return items
+}
+
+func buildCloudSkillItems(cat *catalogFile, prevEnabled map[string]bool) []treeItem {
+	root := &skillNode{children: map[string]*skillNode{}}
+	for key, e := range cat.Skills {
+		insertSkillNode(root, key, e)
+	}
+	var items []treeItem
+	for _, name := range sortedSkillKeys(root.children) {
+		emitCloudSkillNode(root.children[name], 0, prevEnabled, &items)
+	}
+	return items
+}
+
+func emitCloudSkillNode(n *skillNode, depth int, prevEnabled map[string]bool, items *[]treeItem) {
+	if len(n.children) > 0 {
+		label := n.segment + "/"
+		if n.entry != nil {
+			label = n.entry.Label
+		}
+		*items = append(*items, treeItem{
+			Key:             n.key,
+			Path:            n.fullPath,
+			Label:           label,
+			Kind:            "skill",
+			Depth:           depth,
+			IsGroup:         true,
+			DescendantPaths: collectSkillCatalogPaths(n),
+		})
+		for _, name := range sortedSkillKeys(n.children) {
+			emitCloudSkillNode(n.children[name], depth+1, prevEnabled, items)
+		}
+		return
+	}
+	if n.entry != nil {
+		*items = append(*items, cloudLeafItem(n.key, *n.entry, "skill", depth, prevEnabled))
+	}
+}
+
+func cloudLeafItem(key string, e catalogEntry, kind string, depth int, prevEnabled map[string]bool) treeItem {
+	return treeItem{
+		Key:     key,
+		Path:    e.Path,
+		Label:   e.Label,
+		Kind:    kind,
+		Depth:   depth,
+		Enabled: prevEnabled[e.Path],
+	}
+}
+
+func syncCloudDraftFromItems(cm *cloudManifest, items []treeItem) {
+	var rules, skills []string
+	for _, it := range items {
+		if it.IsGroup || !it.Enabled {
+			continue
+		}
+		if it.Kind == "rule" {
+			rules = append(rules, it.Path)
+		} else if it.Kind == "skill" {
+			skills = append(skills, it.Path)
+		}
+	}
+	sort.Strings(rules)
+	sort.Strings(skills)
+	cm.Rules = rules
+	cm.Skills = skills
+}
+
+func syncCloudFromDesktop(items []treeItem, desktop *manifest) {
+	if desktop == nil {
+		return
+	}
+	desktopPaths := enabledSet(desktop)
+	for i := range items {
+		if items[i].IsGroup {
+			continue
+		}
+		items[i].Enabled = desktopPaths[items[i].Path]
+	}
+}
+
+func diffCloudPaths(oldSkills, oldRules, newSkills, newRules []string) cloudPathDiff {
+	oldSet := map[string]bool{}
+	for _, p := range append(append([]string{}, oldSkills...), oldRules...) {
+		oldSet[p] = true
+	}
+	newSet := map[string]bool{}
+	for _, p := range append(append([]string{}, newSkills...), newRules...) {
+		newSet[p] = true
+	}
+	var diff cloudPathDiff
+	for p := range newSet {
+		if !oldSet[p] {
+			diff.Added = append(diff.Added, p)
+		}
+	}
+	for p := range oldSet {
+		if !newSet[p] {
+			diff.Removed = append(diff.Removed, p)
+		}
+	}
+	sort.Strings(diff.Added)
+	sort.Strings(diff.Removed)
+	return diff
+}
+
+func validateCloudPaths(cat *catalogFile, skills, rules []string) []string {
+	if cat == nil {
+		return []string{"catalog unavailable"}
+	}
+	catalogPaths := map[string]bool{}
+	for _, e := range cat.Rules {
+		catalogPaths[e.Path] = true
+	}
+	for _, e := range cat.Skills {
+		catalogPaths[e.Path] = true
+	}
+	var errs []string
+	for _, p := range append(append([]string{}, skills...), rules...) {
+		if !catalogPaths[p] {
+			errs = append(errs, fmt.Sprintf("path not in catalog at ref: %s", p))
+		}
+	}
+	return errs
+}
+
+func parseReleaseTagNames(data []byte) ([]string, error) {
+	var releases []struct {
+		TagName string `json:"tag_name"`
+	}
+	if err := json.Unmarshal(data, &releases); err != nil {
+		return nil, err
+	}
+	var tags []string
+	for _, r := range releases {
+		if r.TagName != "" {
+			tags = append(tags, r.TagName)
+		}
+	}
+	return tags, nil
+}
+
+func semverTagForCatalogVersion(version string, tags []string) (string, bool) {
+	if version == "" {
+		return "", false
+	}
+	candidates := []string{"v" + version, version}
+	for _, c := range candidates {
+		for _, t := range tags {
+			if t == c {
+				return t, true
+			}
+		}
+	}
+	return "", false
+}
+
+func defaultCloudRef(catalogVersion string, tags []string, existing string) string {
+	if existing != "" && contains(tags, existing) {
+		return existing
+	}
+	if tag, ok := semverTagForCatalogVersion(catalogVersion, tags); ok {
+		return tag
+	}
+	if len(tags) > 0 {
+		return tags[0]
+	}
+	if catalogVersion != "" {
+		return "v" + catalogVersion
+	}
+	return ""
+}
+
+func fetchReleaseTagsHTTP(repo string) ([]string, error) {
+	url := githubAPIReleases
+	if repo != "" && repo != sourceRepo {
+		url = "https://api.github.com/repos/" + repo + "/releases"
+	}
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Accept", "application/vnd.github+json")
+	req.Header.Set("User-Agent", "agent-config-wizard")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("github releases API: %s", resp.Status)
+	}
+	return parseReleaseTagNames(body)
+}
+
+func fetchCatalogAtRefHTTP(repo, ref string) (*catalogFile, error) {
+	if repo == "" {
+		repo = sourceRepo
+	}
+	url := fmt.Sprintf(githubRawCatalog, ref)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("User-Agent", "agent-config-wizard")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("catalog fetch at %s: %s", ref, resp.Status)
+	}
+	var cat catalogFile
+	if err := json.Unmarshal(body, &cat); err != nil {
+		return nil, err
+	}
+	return &cat, nil
+}
+
+func catalogAtRef(teamRoot, ref string, localCat *catalogFile) (*catalogFile, error) {
+	if localCat != nil {
+		localRef := localCat.Catalog.Version
+		if ref == localRef || ref == "v"+localRef {
+			return localCat, nil
+		}
+	}
+	return fetchCatalogAtRefFn(sourceRepo, ref)
+}
+
+func formatCloudDiff(diff cloudPathDiff) string {
+	if len(diff.Added) == 0 && len(diff.Removed) == 0 {
+		return "sync diff: no path changes"
+	}
+	var b strings.Builder
+	b.WriteString("sync diff:")
+	for _, p := range diff.Added {
+		b.WriteString("\n  + ")
+		b.WriteString(p)
+	}
+	for _, p := range diff.Removed {
+		b.WriteString("\n  - ")
+		b.WriteString(p)
+	}
+	return b.String()
 }
 
 // --- catalog ---
@@ -1063,6 +1460,13 @@ const (
 	paneState
 )
 
+type uiMode int
+
+const (
+	modeDesktop uiMode = iota
+	modeCloud
+)
+
 const headerLines = 6
 const minFooterLines = 3 // separator, status, help
 const maxVisibleErrors = 5
@@ -1074,6 +1478,15 @@ type applyDoneMsg struct {
 	res     applyResult
 	saveErr error
 }
+type releasesFetchedMsg struct {
+	tags []string
+	err  error
+}
+type cloudWriteDoneMsg struct {
+	err   error
+	diff  cloudPathDiff
+	wrote bool
+}
 
 type model struct {
 	teamRoot      string
@@ -1081,6 +1494,12 @@ type model struct {
 	catalog       *catalogFile
 	manifest      *manifest
 	items         []treeItem
+	cloudItems    []treeItem
+	cloudDraft    *cloudManifest
+	savedCloud    *cloudManifest
+	releaseTags   []string
+	refIndex      int
+	cloudDiff     cloudPathDiff
 	cursor        int
 	status        string
 	errors        []string
@@ -1090,10 +1509,13 @@ type model struct {
 	quitting      bool
 	err           error
 	focus         focusPane
+	mode          uiMode
 	width, height int
 	listVP        viewport.Model
 	stateVP       viewport.Model
 	applying      bool
+	writingCloud  bool
+	fetchingTags  bool
 	spinnerFrame  int
 }
 
@@ -1103,15 +1525,28 @@ func initialModel(teamRoot, projectRoot string, cat *catalogFile, m *manifest) m
 		m = newManifest(teamRoot, projectRoot, cat.Catalog.Version)
 	}
 	items := buildTree(cat, m, projectRoot)
+
+	savedCloud, _ := loadCloudManifest(projectRoot)
+	cloudDraft := newCloudManifest("")
+	if savedCloud != nil {
+		copy := *savedCloud
+		cloudDraft = &copy
+	}
+	cloudItems := buildCloudTree(cat, cloudDraft)
+
 	mod := model{
 		teamRoot:    teamRoot,
 		projectRoot: projectRoot,
 		catalog:     cat,
 		manifest:    m,
 		items:       items,
+		cloudItems:  cloudItems,
+		cloudDraft:  cloudDraft,
+		savedCloud:  savedCloud,
 		firstRun:    firstRun,
 		focus:       paneList,
-		status:      "tab switch pane · up/down move or scroll · space toggle · a apply (saves manifest) · q quit",
+		mode:        modeDesktop,
+		status:      "tab state · space toggle · a apply · c cloud bootstrap · q quit",
 		listVP:      viewport.New(80, 20),
 		stateVP:     viewport.New(80, 20),
 	}
@@ -1143,6 +1578,133 @@ func (m model) runApplyCmd() tea.Cmd {
 	}
 }
 
+func (m model) fetchReleasesCmd() tea.Cmd {
+	return func() tea.Msg {
+		tags, err := fetchReleaseTagsFn(sourceRepo)
+		return releasesFetchedMsg{tags: tags, err: err}
+	}
+}
+
+func (m model) runCloudWriteCmd() tea.Cmd {
+	projectRoot := m.projectRoot
+	teamRoot := m.teamRoot
+	catalog := m.catalog
+	items := append([]treeItem(nil), m.cloudItems...)
+	draft := *m.cloudDraft
+	ref := draft.Source.Ref
+	savedSkills := []string{}
+	savedRules := []string{}
+	if m.savedCloud != nil {
+		savedSkills = append(savedSkills, m.savedCloud.Skills...)
+		savedRules = append(savedRules, m.savedCloud.Rules...)
+	}
+	return func() tea.Msg {
+		syncCloudDraftFromItems(&draft, items)
+		diff := diffCloudPaths(savedSkills, savedRules, draft.Skills, draft.Rules)
+		cat, err := catalogAtRef(teamRoot, ref, catalog)
+		if err != nil {
+			return cloudWriteDoneMsg{err: fmt.Errorf("catalog at %s: %w", ref, err)}
+		}
+		if pathErrs := validateCloudPaths(cat, draft.Skills, draft.Rules); len(pathErrs) > 0 {
+			return cloudWriteDoneMsg{err: fmt.Errorf("%s", strings.Join(pathErrs, "; "))}
+		}
+		if err := writeCloudConfig(projectRoot, &draft); err != nil {
+			return cloudWriteDoneMsg{err: err}
+		}
+		return cloudWriteDoneMsg{wrote: true, diff: diff}
+	}
+}
+
+func (m *model) activeItems() *[]treeItem {
+	if m.mode == modeCloud {
+		return &m.cloudItems
+	}
+	return &m.items
+}
+
+func (m *model) enterCloudMode() tea.Cmd {
+	m.mode = modeCloud
+	m.cursor = 0
+	m.focus = paneList
+	m.cloudDiff = cloudPathDiff{}
+	saved, _ := loadCloudManifest(m.projectRoot)
+	m.savedCloud = saved
+	if saved != nil {
+		copy := *saved
+		m.cloudDraft = &copy
+	} else {
+		m.cloudDraft = newCloudManifest("")
+	}
+	m.cloudItems = buildCloudTree(m.catalog, m.cloudDraft)
+	m.fetchingTags = true
+	m.status = "cloud bootstrap: fetching GitHub releases..."
+	m.syncListContent()
+	return m.fetchReleasesCmd()
+}
+
+func (m *model) applyReleaseTags(tags []string, fetchErr error) {
+	m.fetchingTags = false
+	m.releaseTags = tags
+	if fetchErr != nil {
+		m.errors = append(m.errors, "release fetch: "+fetchErr.Error())
+		m.status = "cloud bootstrap: release fetch failed (ref picker may be limited)"
+	}
+	ref := defaultCloudRef(m.catalog.Catalog.Version, tags, m.cloudDraft.Source.Ref)
+	if ref == "" {
+		ref = "v" + m.catalog.Catalog.Version
+	}
+	m.cloudDraft.Source.Ref = ref
+	m.refIndex = 0
+	for i, t := range tags {
+		if t == ref {
+			m.refIndex = i
+			break
+		}
+	}
+	if _, ok := semverTagForCatalogVersion(m.catalog.Catalog.Version, tags); !ok && len(tags) > 0 && fetchErr == nil {
+		m.status = fmt.Sprintf("cloud bootstrap: local catalog %s has no matching release tag; using %s", m.catalog.Catalog.Version, ref)
+	} else {
+		m.status = fmt.Sprintf("cloud bootstrap: ref %s · space toggle · [ ] ref · l sync desktop · w write · c back", ref)
+	}
+	m.cloudItems = buildCloudTree(m.catalog, m.cloudDraft)
+	m.refreshCloudStateDump(nil)
+	m.syncListContent()
+	m.syncStateContent()
+}
+
+func (m *model) cycleCloudRef(delta int) {
+	if len(m.releaseTags) == 0 {
+		m.status = "cloud bootstrap: no release tags loaded"
+		return
+	}
+	m.refIndex += delta
+	if m.refIndex < 0 {
+		m.refIndex = len(m.releaseTags) - 1
+	}
+	if m.refIndex >= len(m.releaseTags) {
+		m.refIndex = 0
+	}
+	m.cloudDraft.Source.Ref = m.releaseTags[m.refIndex]
+	m.status = fmt.Sprintf("cloud ref -> %s", m.cloudDraft.Source.Ref)
+	m.refreshCloudStateDump(nil)
+	m.syncStateContent()
+}
+
+func (m *model) syncCloudFromLocal() {
+	oldSkills := append([]string(nil), m.cloudDraft.Skills...)
+	oldRules := append([]string(nil), m.cloudDraft.Rules...)
+	m.syncManifestFromItems()
+	syncCloudFromDesktop(m.cloudItems, m.manifest)
+	syncCloudDraftFromItems(m.cloudDraft, m.cloudItems)
+	m.cloudDiff = diffCloudPaths(oldSkills, oldRules, m.cloudDraft.Skills, m.cloudDraft.Rules)
+	m.status = formatCloudDiff(m.cloudDiff)
+	m.refreshCloudStateDump(nil)
+	m.syncListContent()
+	m.syncStateContent()
+	m.focus = paneState
+	m.stateVP.GotoTop()
+}
+
 func cursorMarker(applying bool, frame int) string {
 	if applying {
 		return string(applySpinnerChars[frame%len(applySpinnerChars)]) + " "
@@ -1153,12 +1715,41 @@ func cursorMarker(applying bool, frame int) string {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case spinnerTickMsg:
-		if !m.applying {
+		if !m.applying && !m.writingCloud {
 			return m, nil
 		}
 		m.spinnerFrame++
 		m.syncListContent()
-		return m, tickSpinnerCmd()
+		if m.applying || m.writingCloud {
+			return m, tickSpinnerCmd()
+		}
+		return m, nil
+
+	case releasesFetchedMsg:
+		m.applyReleaseTags(msg.tags, msg.err)
+		return m, nil
+
+	case cloudWriteDoneMsg:
+		m.writingCloud = false
+		if msg.err != nil {
+			m.errors = append(m.errors, "cloud write: "+msg.err.Error())
+			m.status = "cloud write failed"
+			m.focus = paneState
+			m.refreshCloudStateDump(nil)
+			m.syncStateContent()
+			return m, nil
+		}
+		m.savedCloud = m.cloudDraft
+		written := *m.cloudDraft
+		m.savedCloud = &written
+		m.cloudDraft = &written
+		m.status = fmt.Sprintf("cloud config written (.cursor/%s, .cursor/%s)", cloudManifestName, environmentJSONName)
+		if len(msg.diff.Added) > 0 || len(msg.diff.Removed) > 0 {
+			m.status += " · " + formatCloudDiff(msg.diff)
+		}
+		m.refreshCloudStateDump(nil)
+		m.syncStateContent()
+		return m, nil
 
 	case applyDoneMsg:
 		m.applying = false
@@ -1190,20 +1781,31 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 
 	case tea.KeyMsg:
-		if m.applying {
+		if m.applying || m.writingCloud || m.fetchingTags {
 			return m, nil
 		}
 		switch msg.String() {
 		case "ctrl+c", "q":
 			m.quitting = true
 			return m, tea.Quit
+		case "c":
+			if m.mode == modeCloud {
+				m.mode = modeDesktop
+				m.cursor = 0
+				m.status = "desktop mode · a apply · c cloud bootstrap · q quit"
+				m.refreshStateDump(nil)
+				m.syncListContent()
+				m.syncStateContent()
+				return m, nil
+			}
+			return m, m.enterCloudMode()
 		case "tab":
 			if m.focus == paneList {
 				m.focus = paneState
-				m.status = "state pane · up/down/pgup/pgdn scroll · tab back to list"
+				m.status = "state pane · tab back to list"
 			} else {
 				m.focus = paneList
-				m.status = "list pane · up/down move · space toggle · tab for state"
+				m.status = "list pane · tab for state"
 			}
 		case "up", "k":
 			if m.focus == paneList {
@@ -1217,7 +1819,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "down", "j":
 			if m.focus == paneList {
-				if m.cursor < len(m.items)-1 {
+				items := m.activeItems()
+				if m.cursor < len(*items)-1 {
 					m.cursor++
 				}
 				m.syncListContent()
@@ -1240,9 +1843,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "pgdown":
 			if m.focus == paneList {
 				m.listVP.ViewDown()
+				items := m.activeItems()
 				m.cursor += m.listVP.Height
-				if m.cursor >= len(m.items) {
-					m.cursor = len(m.items) - 1
+				if m.cursor >= len(*items) {
+					m.cursor = len(*items) - 1
 				}
 				m.syncListContent()
 				m.ensureCursorVisible()
@@ -1259,7 +1863,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "end":
 			if m.focus == paneList {
-				m.cursor = len(m.items) - 1
+				items := m.activeItems()
+				m.cursor = len(*items) - 1
 				m.syncListContent()
 				m.ensureCursorVisible()
 			} else {
@@ -1270,19 +1875,55 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				break
 			}
 			m.toggleAtCursor()
-			m.syncManifestFromItems()
-			m.refreshStateDump(nil)
+			if m.mode == modeCloud {
+				syncCloudDraftFromItems(m.cloudDraft, m.cloudItems)
+				m.refreshCloudStateDump(nil)
+			} else {
+				m.syncManifestFromItems()
+				m.refreshStateDump(nil)
+			}
 			m.syncListContent()
 			m.syncStateContent()
 		case "a":
+			if m.mode != modeDesktop {
+				m.status = "desktop apply only in desktop mode (press c to exit cloud)"
+				break
+			}
 			m.syncManifestFromItems()
 			m.applying = true
 			m.spinnerFrame = 0
 			m.status = "applying..."
 			m.syncListContent()
 			return m, tea.Batch(m.runApplyCmd(), tickSpinnerCmd())
+		case "l":
+			if m.mode != modeCloud {
+				break
+			}
+			m.syncCloudFromLocal()
+		case "w":
+			if m.mode != modeCloud {
+				break
+			}
+			syncCloudDraftFromItems(m.cloudDraft, m.cloudItems)
+			m.writingCloud = true
+			m.spinnerFrame = 0
+			m.status = "writing cloud config..."
+			m.syncListContent()
+			return m, tea.Batch(m.runCloudWriteCmd(), tickSpinnerCmd())
+		case "[", "left":
+			if m.mode == modeCloud {
+				m.cycleCloudRef(-1)
+			}
+		case "]", "right":
+			if m.mode == modeCloud {
+				m.cycleCloudRef(1)
+			}
 		case "s":
-			m.refreshStateDump(&m.lastApply)
+			if m.mode == modeCloud {
+				m.refreshCloudStateDump(nil)
+			} else {
+				m.refreshStateDump(&m.lastApply)
+			}
 			m.syncStateContent()
 			m.focus = paneState
 			m.status = "state refreshed · tab back to list"
@@ -1410,13 +2051,25 @@ func (m *model) syncListContent() {
 }
 
 func (m *model) syncStateContent() {
-	m.stateVP.SetContent("STATE\n" + m.stateDump)
+	header := "STATE"
+	if m.mode == modeCloud {
+		header = "CLOUD STATE"
+	}
+	m.stateVP.SetContent(header + "\n" + m.stateDump)
 }
 
 func (m *model) renderList() string {
+	items := m.activeItems()
 	var b strings.Builder
+	if m.mode == modeCloud {
+		b.WriteString(fmt.Sprintf("source.ref: %s  ([ ] cycle ref", m.cloudDraft.Source.Ref))
+		if len(m.releaseTags) > 0 {
+			b.WriteString(fmt.Sprintf(" · %d releases", len(m.releaseTags)))
+		}
+		b.WriteString(")\n")
+	}
 	var section string
-	for i, it := range m.items {
+	for i, it := range *items {
 		if it.Kind != section {
 			section = it.Kind
 			switch section {
@@ -1437,14 +2090,16 @@ func (m *model) renderList() string {
 		if it.IsGroup {
 			line += "  (group)"
 		}
-		if it.IsNew {
-			line += "  NEW"
-		}
-		if it.ProjectOverride {
-			line += "  (project override)"
+		if m.mode == modeDesktop {
+			if it.IsNew {
+				line += "  NEW"
+			}
+			if it.ProjectOverride {
+				line += "  (project override)"
+			}
 		}
 		if i == m.cursor {
-			line = cursorMarker(m.applying, m.spinnerFrame) + line
+			line = cursorMarker(m.applying || m.writingCloud, m.spinnerFrame) + line
 		} else {
 			line = "  " + line
 		}
@@ -1455,12 +2110,16 @@ func (m *model) renderList() string {
 
 // cursorLine returns the content line index (0-based) of the list cursor.
 func (m *model) cursorLine() int {
+	items := m.activeItems()
 	line := 0
+	if m.mode == modeCloud {
+		line = 1 // ref header line
+	}
 	var section string
-	for i, it := range m.items {
+	for i, it := range *items {
 		if it.Kind != section {
 			section = it.Kind
-			if i > 0 {
+			if i > 0 || m.mode == modeCloud {
 				line++
 			}
 			line++
@@ -1474,7 +2133,8 @@ func (m *model) cursorLine() int {
 }
 
 func (m *model) ensureCursorVisible() {
-	if len(m.items) == 0 {
+	items := m.activeItems()
+	if len(*items) == 0 {
 		return
 	}
 	cl := m.cursorLine()
@@ -1524,26 +2184,29 @@ func (m *model) syncManifestFromItems() {
 }
 
 func (m *model) leafByPath(path string) *treeItem {
-	for i := range m.items {
-		if m.items[i].IsGroup {
+	items := m.activeItems()
+	for i := range *items {
+		it := &(*items)[i]
+		if it.IsGroup {
 			continue
 		}
-		if m.items[i].Path == path {
-			return &m.items[i]
+		if it.Path == path {
+			return it
 		}
 	}
 	return nil
 }
 
 func (m *model) groupCheck(idx int) string {
-	g := m.items[idx]
+	items := m.activeItems()
+	g := (*items)[idx]
 	enabled, total := 0, 0
 	for _, p := range g.DescendantPaths {
 		leaf := m.leafByPath(p)
 		if leaf == nil {
 			continue
 		}
-		if leaf.ProjectOverride {
+		if m.mode == modeDesktop && leaf.ProjectOverride {
 			continue
 		}
 		total++
@@ -1561,16 +2224,17 @@ func (m *model) groupCheck(idx int) string {
 }
 
 func (m *model) setGroupEnabled(group *treeItem, enable bool) {
+	items := m.activeItems()
 	pathSet := map[string]bool{}
 	for _, p := range group.DescendantPaths {
 		pathSet[p] = true
 	}
-	for i := range m.items {
-		it := &m.items[i]
+	for i := range *items {
+		it := &(*items)[i]
 		if it.IsGroup || !pathSet[it.Path] {
 			continue
 		}
-		if it.ProjectOverride && enable {
+		if m.mode == modeDesktop && it.ProjectOverride && enable {
 			continue
 		}
 		it.Enabled = enable
@@ -1578,19 +2242,49 @@ func (m *model) setGroupEnabled(group *treeItem, enable bool) {
 }
 
 func (m *model) toggleAtCursor() {
-	it := &m.items[m.cursor]
+	items := m.activeItems()
+	it := &(*items)[m.cursor]
 	if it.IsGroup {
 		enable := m.groupCheck(m.cursor) != "x"
 		m.setGroupEnabled(it, enable)
 		m.status = fmt.Sprintf("group %s -> all %s", it.Label, map[bool]string{true: "on", false: "off"}[enable])
 		return
 	}
-	if it.ProjectOverride {
+	if m.mode == modeDesktop && it.ProjectOverride {
 		m.status = fmt.Sprintf("locked: project override at %s", projectDest(m.projectRoot, it.Path, it.Kind))
 		return
 	}
 	it.Enabled = !it.Enabled
 	m.status = fmt.Sprintf("toggled %s -> enabled=%v", it.Path, it.Enabled)
+}
+
+func (m *model) refreshCloudStateDump(writeErr error) {
+	snapshot := struct {
+		CloudDraft  *cloudManifest `json:"cloudDraft"`
+		SavedCloud  *cloudManifest `json:"savedCloud,omitempty"`
+		ReleaseTags []string       `json:"releaseTags,omitempty"`
+		SyncDiff    cloudPathDiff  `json:"syncDiff,omitempty"`
+		Environment string         `json:"environmentInstall,omitempty"`
+		Timestamp   string         `json:"timestamp"`
+	}{
+		CloudDraft:  m.cloudDraft,
+		SavedCloud:  m.savedCloud,
+		ReleaseTags: m.releaseTags,
+		SyncDiff:    m.cloudDiff,
+		Timestamp:   time.Now().UTC().Format(time.RFC3339),
+	}
+	if m.cloudDraft != nil && m.cloudDraft.Source.Ref != "" {
+		snapshot.Environment = environmentInstallURL(m.cloudDraft.Source.Ref)
+	}
+	data, _ := json.MarshalIndent(snapshot, "", "  ")
+	dump := string(data)
+	if writeErr != nil {
+		dump = "Cloud write error: " + writeErr.Error() + "\n\n" + dump
+	}
+	if diffLine := formatCloudDiff(m.cloudDiff); diffLine != "sync diff: no path changes" {
+		dump = diffLine + "\n\n" + dump
+	}
+	m.stateDump = dump
 }
 
 func (m *model) refreshStateDump(apply *applyResult) {
@@ -1634,14 +2328,20 @@ func (m model) View() string {
 	b.WriteString("agent-config-wizard\n")
 	b.WriteString(fmt.Sprintf("Team: %s\n", m.teamRoot))
 	b.WriteString(fmt.Sprintf("Project: %s\n", m.projectRoot))
-	if m.firstRun {
-		b.WriteString("Mode: first-run wizard (toggle env details if you want a generated environment rule)\n")
+	if m.mode == modeCloud {
+		b.WriteString("Mode: cloud bootstrap (optional · press c to return to desktop)\n")
+	} else if m.firstRun {
+		b.WriteString("Mode: first-run wizard (c for optional cloud bootstrap)\n")
 	} else {
-		b.WriteString("Mode: re-run (new catalog entries default off; env details refresh silently on apply when enabled)\n")
+		b.WriteString("Mode: desktop re-run (c for cloud bootstrap)\n")
 	}
 
 	if m.focus == paneList {
-		b.WriteString("\n--- opt-in tree (tab for state) ---\n")
+		if m.mode == modeCloud {
+			b.WriteString("\n--- cloud opt-in (tab for state) ---\n")
+		} else {
+			b.WriteString("\n--- desktop opt-in tree (tab for state) ---\n")
+		}
 		b.WriteString(m.listVP.View())
 	} else {
 		b.WriteString("\n--- state JSON (tab for list) ---\n")
@@ -1654,7 +2354,11 @@ func (m model) View() string {
 	if errBlock := m.renderErrors(); errBlock != "" {
 		b.WriteString(errBlock)
 	}
-	b.WriteString("scroll: up/down pgup/pgdn home/end · toggle: space · apply: a (saves manifest) · quit: q\n")
+	if m.mode == modeCloud {
+		b.WriteString("cloud: space toggle · [ ] ref · l sync desktop · w write · c desktop · q quit\n")
+	} else {
+		b.WriteString("desktop: space toggle · a apply · c cloud · tab state · q quit\n")
+	}
 	return b.String()
 }
 
