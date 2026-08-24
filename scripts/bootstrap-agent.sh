@@ -2,8 +2,8 @@
 # Cloud Agent Build install hook - manifest-driven copy-only bootstrap.
 # Reads .cursor/agent-manifest.json from the workspace (CWD or AGENT_CONFIG_WORKSPACE).
 #
-# AGENT-CFG-GM-002: skills -> ~/.cursor/skills/<path-after-skills/>; rules -> .cursor/rules/
-# AGENT-CFG-GM-005: validate manifest paths against catalog.json at source.ref; no walk fallback.
+# Cloud bootstrap: skills -> ~/.cursor/skills/<path-after-skills/>; rules -> .cursor/rules/
+# Validates manifest paths against catalog.json at source.ref; no directory-walk fallback.
 #
 # Requires: git, jq
 # Optional env: GH_TOKEN (private clone), AGENT_CONFIG_WORKSPACE (default: pwd)
@@ -26,6 +26,17 @@ need_cmd() {
 
 need_cmd git
 need_cmd jq
+
+verify_cache_ref() {
+  local cache="$1"
+  local ref="$2"
+  git -C "$cache" rev-parse -q --verify "${ref}^{commit}" >/dev/null 2>&1 \
+    || die "ref not found in cache: ${ref}"
+  local head target
+  head="$(git -C "$cache" rev-parse HEAD)"
+  target="$(git -C "$cache" rev-parse "${ref}^{commit}")"
+  [[ "$head" == "$target" ]] || die "cache checkout mismatch: expected ${ref} (${target}), got ${head}"
+}
 
 [[ -f "$MANIFEST" ]] || die "manifest not found: $MANIFEST"
 
@@ -51,11 +62,15 @@ if [[ ! -d "${CACHE}/.git" ]]; then
   fi
 else
   echo "bootstrap-agent: refreshing cache ${CACHE} @ ${REF}"
-  git -C "$CACHE" fetch origin tag "$REF" --force 2>/dev/null \
-    || git -C "$CACHE" fetch origin "$REF" --force 2>/dev/null \
-    || git -C "$CACHE" fetch origin --tags --force
+  if ! git -C "$CACHE" fetch origin tag "$REF" --force 2>/dev/null \
+    && ! git -C "$CACHE" fetch origin "$REF" --force 2>/dev/null \
+    && ! git -C "$CACHE" fetch origin --tags --force 2>/dev/null; then
+    die "failed to fetch ${REF} from ${REPO}"
+  fi
   git -C "$CACHE" checkout "$REF"
 fi
+
+verify_cache_ref "$CACHE" "$REF"
 
 CATALOG="${CACHE}/catalog.json"
 [[ -f "$CATALOG" ]] || die "catalog.json missing at ${REF} in ${REPO}"

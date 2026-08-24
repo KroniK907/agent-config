@@ -38,7 +38,7 @@ When desktop opt-in is stable, copy the skill/rule list into `.cursor/agent-mani
 
 Commit `.cursor/agent-manifest.json` with the subset cloud agents need. Pin `source.ref` to a semver tag matching [`catalog.json`](../catalog.json) `catalog.version`.
 
-Build hook template: [examples/environment.json.example](examples/environment.json.example). It runs [`scripts/bootstrap-agent.sh`](../scripts/bootstrap-agent.sh) from the pinned tag. The script reads the committed manifest, validates listed paths against `catalog.json`, copies skills to `~/.cursor/skills/`, and copies rules to `.cursor/rules/` in the workspace (copy-only; AGENT-CFG-GM-002).
+Build hook template: [examples/environment.json.example](examples/environment.json.example). It runs [`scripts/bootstrap-agent.sh`](../scripts/bootstrap-agent.sh) from the pinned tag. The script reads the committed manifest, validates listed paths against `catalog.json`, copies skills to `~/.cursor/skills/`, and copies rules to `.cursor/rules/` in the workspace (copy-only per cloud bootstrap decisions in the map decision log).
 
 ### Local smoke
 
