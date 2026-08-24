@@ -380,6 +380,60 @@ func TestProjectOverride_managedCopyNotOverride(t *testing.T) {
 	}
 }
 
+func TestEnvRuleProjectOverride_generatedNotOverride(t *testing.T) {
+	project := t.TempDir()
+	if err := refreshEnvironmentRule(project); err != nil {
+		t.Fatal(err)
+	}
+	if envRuleProjectOverride(project) {
+		t.Fatal("generated env rule should not be project override")
+	}
+	if projectOverride(project, envRuleRelPath, "env", nil) {
+		t.Fatal("projectOverride should be false for generated env rule")
+	}
+}
+
+func TestEnvRuleProjectOverride_customIsOverride(t *testing.T) {
+	project := t.TempDir()
+	path := environmentRulePath(project)
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	custom := "---\nagent-config-sync: false\n---\n\n# custom\n"
+	if err := os.WriteFile(path, []byte(custom), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if !envRuleProjectOverride(project) {
+		t.Fatal("custom env rule should be project override")
+	}
+}
+
+func TestApplyEnabled_envRuleNotMarkedOverrideAfterApply(t *testing.T) {
+	cat := minimalCatalog()
+	team := writeTeamFixture(t, cat)
+	project := t.TempDir()
+	m := newManifest(team, project, cat.Catalog.Version)
+	m.EnvDetails = true
+	items := buildTree(cat, m, project)
+	for i := range items {
+		if items[i].Kind == "env" {
+			items[i].Enabled = true
+		}
+	}
+	res := applyEnabled(team, project, items, m)
+	if len(res.Errors) > 0 {
+		t.Fatalf("apply errors: %v", res.Errors)
+	}
+	for _, it := range items {
+		if it.Kind != "env" {
+			continue
+		}
+		if projectOverride(project, it.Path, it.Kind, m) {
+			t.Fatal("env item should not show project override after apply")
+		}
+	}
+}
+
 func TestSetGroupEnabled_cascadesToChildren(t *testing.T) {
 	cat := minimalCatalog()
 	project := t.TempDir()
@@ -598,6 +652,171 @@ func TestPreviouslyManaged_includesLastApplied(t *testing.T) {
 	}
 }
 
+func TestApplyStatusMessage(t *testing.T) {
+	ok := applyResult{Copied: []string{"a"}, Removed: []string{"b"}, Skipped: []string{"c"}}
+	if msg := applyStatusMessage(ok, nil); msg != "applied: 1 copied, 1 removed, 1 skipped" {
+		t.Errorf("success message = %q", msg)
+	}
+
+	withErr := applyResult{
+		Copied: []string{"a"},
+		Errors: []string{"rules/x: copy failed"},
+	}
+	if msg := applyStatusMessage(withErr, nil); !strings.Contains(msg, "1 error") {
+		t.Errorf("error message = %q", msg)
+	}
+	if msg := applyStatusMessage(withErr, os.ErrPermission); !strings.Contains(msg, "NOT saved") {
+		t.Errorf("save failed message = %q", msg)
+	}
+}
+
+func TestRenderErrors_showsVisibleLines(t *testing.T) {
+	m := model{errors: []string{"first", "second", "third"}}
+	out := m.renderErrors()
+	for _, want := range []string{"ERRORS:", "! first", "! second", "! third"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("renderErrors missing %q:\n%s", want, out)
+		}
+	}
+}
+
+func TestRenderErrors_truncatesLongList(t *testing.T) {
+	var errs []string
+	for i := 0; i < 8; i++ {
+		errs = append(errs, "err")
+	}
+	m := model{errors: errs}
+	out := m.renderErrors()
+	if !strings.Contains(out, "... and 3 more") {
+		t.Errorf("expected truncation notice, got:\n%s", out)
+	}
+}
+
+func TestFooterLineCount_growsWithErrors(t *testing.T) {
+	m := model{}
+	if m.footerLineCount() != minFooterLines {
+		t.Fatalf("empty footer = %d, want %d", m.footerLineCount(), minFooterLines)
+	}
+	m.errors = []string{"one", "two"}
+	if m.footerLineCount() <= minFooterLines {
+		t.Fatalf("footer with errors should grow, got %d", m.footerLineCount())
+	}
+}
+
+func TestRefreshStateDump_listsApplyErrorsFirst(t *testing.T) {
+	m := model{manifest: newManifest("/team", "/proj", "1")}
+	res := applyResult{Errors: []string{"rules/x: boom"}}
+	m.refreshStateDump(&res)
+	if !strings.HasPrefix(m.stateDump, "Apply errors:") {
+		t.Fatalf("expected errors header first, got:\n%s", m.stateDump)
+	}
+	if !strings.Contains(m.stateDump, "rules/x: boom") {
+		t.Fatalf("expected error line in dump, got:\n%s", m.stateDump)
+	}
+}
+
+func TestCursorMarker_spinnerWhileApplying(t *testing.T) {
+	if got := cursorMarker(true, 0); got != "| " {
+		t.Fatalf("frame 0 = %q, want %q", got, "| ")
+	}
+	if got := cursorMarker(true, 1); got != "/ " {
+		t.Fatalf("frame 1 = %q, want %q", got, "/ ")
+	}
+	if got := cursorMarker(true, 4); got != "| " {
+		t.Fatalf("frame 4 = %q, want %q", got, "| ")
+	}
+	if got := cursorMarker(false, 0); got != "> " {
+		t.Fatalf("idle = %q, want %q", got, "> ")
+	}
+}
+
+func TestFormatVersionLabel_firstLineAndSingleLine(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		want string
+	}{
+		{
+			name: "wsl utf16 decoded",
+			in:   "WSL version: 2.7.12.0\r\nKernel version: 6.18.33.2-2\r\n",
+			want: "WSL version: 2.7.12.0",
+		},
+		{
+			name: "gcloud multiline",
+			in:   "Google Cloud SDK 564.0.0\nbeta 2026.04.03\nbq 2.1.31\n",
+			want: "Google Cloud SDK 564.0.0",
+		},
+		{
+			name: "carriage return before closing paren scenario",
+			in:   "Google Cloud SDK 564.0.0\r",
+			want: "Google Cloud SDK 564.0.0",
+		},
+		{
+			name: "collapses internal whitespace",
+			in:   "git version  2.43.0.windows.1",
+			want: "git version 2.43.0.windows.1",
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := formatVersionLabel(tc.in); got != tc.want {
+				t.Fatalf("formatVersionLabel() = %q, want %q", got, tc.want)
+			}
+		})
+	}
+}
+
+func TestNormalizeCommandOutput_decodesWSLUTF16(t *testing.T) {
+	raw := []byte{
+		'W', 0, 'S', 0, 'L', 0, ' ', 0, 'v', 0, 'e', 0, 'r', 0, 's', 0, 'i', 0, 'o', 0, 'n', 0, ':', 0, ' ', 0,
+		'2', 0, '.', 0, '7', 0, '.', 0, '1', 0, '2', 0, '.', 0, '0', 0, '\r', 0, '\n', 0,
+		'K', 0, 'e', 0, 'r', 0, 'n', 0, 'e', 0, 'l', 0,
+	}
+	got := formatVersionLabel(normalizeCommandOutput(raw))
+	want := "WSL version: 2.7.12.0"
+	if got != want {
+		t.Fatalf("formatVersionLabel(normalizeCommandOutput()) = %q, want %q", got, want)
+	}
+}
+
+func TestNormalizeCommandOutput_keepsUTF8(t *testing.T) {
+	raw := []byte("git version 2.43.0.windows.1\n")
+	got := normalizeCommandOutput(raw)
+	if got != "git version 2.43.0.windows.1" {
+		t.Fatalf("normalizeCommandOutput() = %q", got)
+	}
+}
+
+func TestWrapText_breaksLongErrorLines(t *testing.T) {
+	long := strings.Repeat("segment ", 20)
+	wrapped := wrapText("  ! "+long, 40)
+	for _, line := range strings.Split(wrapped, "\n") {
+		if len(line) > 40 {
+			t.Fatalf("line exceeds width %d: %q", len(line), line)
+		}
+	}
+	if !strings.Contains(wrapped, "\n") {
+		t.Fatal("expected wrapped output to span multiple lines")
+	}
+}
+
+func TestToolProbeSpecs_uniqueNamesAndCoverage(t *testing.T) {
+	specs := toolProbeSpecs()
+	if len(specs) < 20 {
+		t.Fatalf("expected expanded probe list, got %d specs", len(specs))
+	}
+	seen := map[string]bool{}
+	for _, spec := range specs {
+		if spec.name == "" {
+			t.Fatal("tool spec with empty name")
+		}
+		if seen[spec.name] {
+			t.Fatalf("duplicate probe name %q", spec.name)
+		}
+		seen[spec.name] = true
+	}
+}
+
 func TestRenderEnvironmentRule_includesScopeAndRuntime(t *testing.T) {
 	content := string(renderEnvironmentRule(envProbe{
 		OSLine:     "Windows (Microsoft Windows [Version 10.0.26200])",
@@ -616,8 +835,8 @@ func TestRenderEnvironmentRule_includesScopeAndRuntime(t *testing.T) {
 	for _, want := range []string{
 		"alwaysApply: true",
 		"generated-by: agent-config-wizard",
-		"**Scope:**",
-		"context bloat",
+		"Generated by agent-config-wizard",
+		"Manual edits are overwritten",
 		"**OS:** Windows",
 		"**Shell:** PowerShell",
 		"Agent scratch directory",
@@ -674,6 +893,33 @@ func TestRemoveEnvironmentRule_onlyGenerated(t *testing.T) {
 	}
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		t.Fatal("generated rule should be removed")
+	}
+}
+
+func TestApplyEnabled_envDetailsTreeItem_skipsTeamCopy(t *testing.T) {
+	cat := minimalCatalog()
+	team := writeTeamFixture(t, cat)
+	project := t.TempDir()
+
+	m := newManifest(team, project, cat.Catalog.Version)
+	m.LastCatalogPaths = catalogPaths(cat)
+	items := buildTree(cat, m, project)
+	for i := range items {
+		if items[i].Kind == "env" {
+			items[i].Enabled = true
+		}
+	}
+	m.EnvDetails = true
+
+	res := applyEnabled(team, project, items, m)
+	if len(res.Errors) > 0 {
+		t.Fatalf("apply errors: %v", res.Errors)
+	}
+	if !contains(res.Copied, envRuleRelPath) {
+		t.Fatalf("expected env rule in copied, got %v", res.Copied)
+	}
+	if !isGeneratedEnvironmentRule(environmentRulePath(project)) {
+		t.Fatal("environment rule not written")
 	}
 }
 

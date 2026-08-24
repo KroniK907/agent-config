@@ -1,1 +1,3 @@
-agent-config-wizard.exe
+# Local dev builds only (see README Build section). CI-built copies in bin/ are tracked.
+/agent-config-wizard
+/agent-config-wizard.exe
