@@ -1,5 +1,6 @@
-# Idempotent install of KroniK907/agent-config wayfinder pack into ~/.cursor/skills/
-# Usage: .\install-skills.ps1 [-Tag v1.0.0] [-Repo KroniK907/agent-config]
+# Legacy global install - copies wayfinder pack to ~/.cursor/skills/
+# Prefer agent-config-wizard for desktop project apply (see repo README).
+# Cloud AFK: wrapper around install-skills.sh for local smoke tests.
 param(
     [string]$Tag = "v1.0.0",
     [string]$Repo = "KroniK907/agent-config"

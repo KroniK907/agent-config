@@ -2,6 +2,8 @@
 
 Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Complete every step in an **app implementation repo** before adding `wf:afk` tasks or enabling comment-trigger automation.
 
+**Desktop project skills:** use **agent-config-wizard** ([scripts/wizard/README.md](../../../scripts/wizard/README.md)) - not this checklist. This doc is for Cloud AFK orchestration only.
+
 **Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/agent-config`](https://github.com/KroniK907/agent-config) pinned to a **semver tag**; one automation per repo; agents **never open PRs** - bundle branch + resolution comment only.
 
 ---
@@ -40,23 +42,34 @@ gh label list --limit 100 | Select-String wf:
 
 ---
 
-## 2. Pin skills pack (environment.json)
+## 2. Pin skills pack (manifest + environment.json)
 
-1. Copy [bootstrap/environment.json.example](bootstrap/environment.json.example) to **`.cursor/environment.json`** in the app repo root.
-2. Copy [bootstrap/install-skills.sh](bootstrap/install-skills.sh) to **`.cursor/install-wayfinder-skills.sh`** in the app repo (same script; stable path for the install command).
-3. Set **`WAYFINDER_SKILLS_TAG`** in `environment.json` to the exact semver tag you released (e.g. `v0.1.0`).
-4. Commit both files under `.cursor/`.
+**Pin target:** `.cursor/agent-manifest.json` `source.ref` (semver tag). Do not use an `env` block in `environment.json` for repo/tag pin - that pattern is deprecated per AgentConfigHub map decisions.
 
-The **`install`** command runs on Cloud Agent Build creation. It must be **idempotent** - see [bootstrap/install-skills.sh](bootstrap/install-skills.sh).
+1. Copy [`.cursor/examples/agent-manifest.json.example`](../../../.cursor/examples/agent-manifest.json.example) to **`.cursor/agent-manifest.json`** in the app repo. Set **`source.ref`** to the exact semver tag you released (e.g. `v1.0.0`).
+2. Copy [bootstrap/environment.json.example](bootstrap/environment.json.example) to **`.cursor/environment.json`** in the app repo root.
+3. Copy [bootstrap/install-skills.sh](bootstrap/install-skills.sh) to **`.cursor/install-wayfinder-skills.sh`** in the app repo (same script; stable path for the install command).
+4. Commit all three files under `.cursor/`.
 
-**Local smoke (optional):**
+The **`install`** command runs on Cloud Agent Build creation. It must be **idempotent** - see [bootstrap/install-skills.sh](bootstrap/install-skills.sh). The install script reads **`WAYFINDER_SKILLS_TAG`** and **`WAYFINDER_SKILLS_REPO`** from the environment; export them in the install command to match **`source.ref`** until **`bootstrap-agent.sh`** reads the manifest directly:
 
-```powershell
-$env:WAYFINDER_SKILLS_TAG = "v0.1.0"
-.\wayfinder\utilities\bootstrap\install-skills.ps1
+```json
+{
+  "name": "wayfinder-afk",
+  "install": "WAYFINDER_SKILLS_TAG=v1.0.0 WAYFINDER_SKILLS_REPO=KroniK907/agent-config bash .cursor/install-wayfinder-skills.sh"
+}
 ```
 
-Skills land in `~/.cursor/skills/` (wayfinder hub + actions + repo-root utilities synced by the script).
+For the manifest-driven cloud hook (copy-only, project `.cursor/` paths), see [`.cursor/examples/environment.json.example`](../../../.cursor/examples/environment.json.example).
+
+**Local smoke (optional, legacy global install):**
+
+```powershell
+$env:WAYFINDER_SKILLS_TAG = "v1.0.0"
+.\skills\wayfinder\utilities\bootstrap\install-skills.ps1
+```
+
+This copies the wayfinder orchestration pack to `~/.cursor/skills/` globally. Prefer **agent-config-wizard** for per-project desktop setup.
 
 ---
 
@@ -111,7 +124,7 @@ Only after HITL smoke passes:
 
 | Event | Action |
 |-------|--------|
-| Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump `WAYFINDER_SKILLS_TAG` in app `.cursor/environment.json`; rebuild Cloud Agent environment |
+| Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump **`source.ref`** in app `.cursor/agent-manifest.json`; update inline tag in `.cursor/environment.json` **install** command; rebuild Cloud Agent environment |
 | New wayfinder label | Add to [labels-manifest.json](bootstrap/labels-manifest.json) in skills repo; re-run bootstrap script in app repos |
 | Bundle complete | Human opens **one PR** from `afk/bundle-{N}-{slug}` - agents do not |
 | Task shipped | Human Reconcile **`Approved - reconcile and close`** per task resolution comment |

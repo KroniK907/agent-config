@@ -2,7 +2,7 @@
 
 Desktop TUI for applying team agent-config to a project repo: hierarchical skill/rule opt-in, manifest persistence, managed copy lifecycle.
 
-Validated in prototype [#51](https://github.com/KroniK907/agent-config/issues/51). Promotion to production apply is a follow-on write-code task.
+Primary desktop apply path - see repo [README](../../README.md#apply-to-a-project-primary).
 
 ## Layout
 
