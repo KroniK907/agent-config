@@ -5,7 +5,7 @@
 //
 // Run from a project repo:
 //
-//	C:\path\to\agent-config\scripts\wizard\agent-config-wizard.exe
+//	C:\path\to\agent-config\scripts\wizard\bin\agent-config-wizard.exe
 //
 // Dev (go run resolves modules from -C directory):
 //
@@ -21,19 +21,25 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"sort"
 	"strings"
 	"time"
+	"unicode/utf16"
+
+	"golang.org/x/text/unicode/norm"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/viewport"
 )
 
 const (
-	manifestName = "agent-config.local.json"
-	sourceRepo   = "KroniK907/agent-config"
+	manifestName       = "agent-config.local.json"
+	sourceRepo         = "KroniK907/agent-config"
+	envRuleRelPath     = ".cursor/rules/environment.mdc"
+	envRuleGeneratedBy = "agent-config-wizard"
 )
 
 // --- manifest (AGENT-CFG-GM-006) ---
@@ -162,10 +168,26 @@ func loadCatalog(teamRoot string) (*catalogFile, error) {
 	return &c, nil
 }
 
+func envDetailsItem(enabled bool, projectRoot string) treeItem {
+	return treeItem{
+		Key:             "env-details",
+		Path:            envRuleRelPath,
+		Label:           "Environment details rule",
+		Kind:            "env",
+		Enabled:         enabled,
+		ProjectOverride: envRuleProjectOverride(projectRoot),
+	}
+}
+
 func buildTree(cat *catalogFile, prev *manifest, projectRoot string) []treeItem {
 	prevEnabled := enabledSet(prev)
 
 	var items []treeItem
+	envEnabled := false
+	if prev != nil {
+		envEnabled = prev.EnvDetails
+	}
+	items = append(items, envDetailsItem(envEnabled, projectRoot))
 
 	type ruleRow struct {
 		key string
@@ -323,6 +345,9 @@ func contains(list []string, s string) bool {
 }
 
 func projectOverride(projectRoot, catalogPath, kind string, prev *manifest) bool {
+	if kind == "env" || catalogPath == envRuleRelPath {
+		return envRuleProjectOverride(projectRoot)
+	}
 	dest := projectDest(projectRoot, catalogPath, kind)
 	if _, err := os.Stat(dest); err != nil {
 		return false
@@ -339,6 +364,17 @@ func projectOverride(projectRoot, catalogPath, kind string, prev *manifest) bool
 				return false
 			}
 		}
+	}
+	return true
+}
+
+func envRuleProjectOverride(projectRoot string) bool {
+	path := environmentRulePath(projectRoot)
+	if _, err := os.Stat(path); err != nil {
+		return false
+	}
+	if isGeneratedEnvironmentRule(path) {
+		return false
 	}
 	return true
 }
@@ -464,16 +500,29 @@ func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest) a
 		m.LastApplied = map[string]string{}
 	}
 
+	for _, it := range items {
+		if it.Kind == "env" || it.Path == envRuleRelPath {
+			m.EnvDetails = it.Enabled
+			break
+		}
+	}
+
 	prevManaged := previouslyManaged(m)
 	newEnabled := map[string]bool{}
 	for _, it := range items {
-		if it.IsGroup || !it.Enabled {
+		if it.IsGroup || isEnvTreeItem(it) || !it.Enabled {
 			continue
 		}
 		newEnabled[it.Path] = true
 	}
+	if m.EnvDetails {
+		newEnabled[envRuleRelPath] = true
+	}
 
 	for path := range prevManaged {
+		if path == envRuleRelPath {
+			continue
+		}
 		if newEnabled[path] {
 			continue
 		}
@@ -498,7 +547,7 @@ func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest) a
 	m.Skills = nil
 
 	for _, it := range items {
-		if it.IsGroup {
+		if it.IsGroup || isEnvTreeItem(it) {
 			continue
 		}
 		if !it.Enabled {
@@ -549,6 +598,23 @@ func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest) a
 		res.Copied = append(res.Copied, ".cursor/agent-config/ (framework copy)")
 	}
 
+	if m.EnvDetails {
+		if err := refreshEnvironmentRule(projectRoot); err != nil {
+			res.Errors = append(res.Errors, envRuleRelPath+": "+err.Error())
+		} else {
+			res.Copied = append(res.Copied, envRuleRelPath)
+		}
+	} else {
+		path := environmentRulePath(projectRoot)
+		if isGeneratedEnvironmentRule(path) {
+			if err := removeEnvironmentRule(projectRoot); err != nil {
+				res.Errors = append(res.Errors, envRuleRelPath+": remove: "+err.Error())
+			} else {
+				res.Removed = append(res.Removed, envRuleRelPath)
+			}
+		}
+	}
+
 	return res
 }
 
@@ -595,6 +661,370 @@ func copyTree(src, dest string) error {
 	})
 }
 
+// --- environment details rule ---
+
+type envProbe struct {
+	OSLine      string
+	ShellLine   string
+	ScratchDir  string
+	ToolLines   []string
+	AbsentLines []string
+}
+
+func probeEnvironment() envProbe {
+	p := envProbe{
+		ScratchDir: defaultScratchDir(),
+	}
+	p.OSLine = probeOSLine()
+	p.ShellLine = probeShellLine()
+	p.ToolLines, p.AbsentLines = probeTools()
+	return p
+}
+
+func defaultScratchDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	return filepath.Join(home, ".cursor", "scratch")
+}
+
+func probeOSLine() string {
+	switch runtime.GOOS {
+	case "windows":
+		if ver := windowsVersionString(); ver != "" {
+			return fmt.Sprintf("Windows (%s)", ver)
+		}
+		return "Windows 10/11"
+	case "darwin":
+		if ver := commandOutput("sw_vers", "-productVersion"); ver != "" {
+			return fmt.Sprintf("macOS %s", encodeText(ver))
+		}
+		return "macOS"
+	case "linux":
+		if ver := readLinuxOSRelease(); ver != "" {
+			return ver
+		}
+		return "Linux"
+	default:
+		return fmt.Sprintf("%s (%s)", runtime.GOOS, runtime.GOARCH)
+	}
+}
+
+func windowsVersionString() string {
+	out := commandOutput("cmd", "/c", "ver")
+	if out == "" {
+		return ""
+	}
+	return encodeText(out)
+}
+
+func readLinuxOSRelease() string {
+	data, err := os.ReadFile("/etc/os-release")
+	if err != nil {
+		return ""
+	}
+	var name, version string
+	for _, line := range strings.Split(string(data), "\n") {
+		if strings.HasPrefix(line, "PRETTY_NAME=") {
+			return strings.Trim(strings.TrimPrefix(line, "PRETTY_NAME="), `"`)
+		}
+		if strings.HasPrefix(line, "NAME=") {
+			name = strings.Trim(strings.TrimPrefix(line, "NAME="), `"`)
+		}
+		if strings.HasPrefix(line, "VERSION_ID=") {
+			version = strings.Trim(strings.TrimPrefix(line, "VERSION_ID="), `"`)
+		}
+	}
+	if name != "" && version != "" {
+		return name + " " + version
+	}
+	return name
+}
+
+func probeShellLine() string {
+	if runtime.GOOS == "windows" {
+		if os.Getenv("PSModulePath") != "" {
+			ver := commandOutput("powershell", "-NoProfile", "-Command", "$PSVersionTable.PSVersion.ToString()")
+			if ver != "" {
+				return fmt.Sprintf("PowerShell %s (default for terminal commands)", encodeText(ver))
+			}
+			return "PowerShell (default for terminal commands)"
+		}
+		if comspec := os.Getenv("ComSpec"); comspec != "" {
+			return fmt.Sprintf("%s (default shell)", filepath.Base(comspec))
+		}
+		return "cmd.exe (default shell)"
+	}
+	if shell := os.Getenv("SHELL"); shell != "" {
+		return fmt.Sprintf("%s (default shell)", shell)
+	}
+	return "sh (default shell)"
+}
+
+type toolSpec struct {
+	name        string
+	versionArgs []string
+	absentNote  string
+	osFilter    string // "", "windows", or "!windows"
+}
+
+// toolProbeSpecs lists optional dev tools that are not OS defaults but often appear on PATH.
+// absentNote belongs on the primary name in each ecosystem so partial installs do not warn twice.
+func toolProbeSpecs() []toolSpec {
+	return []toolSpec{
+		// Runtimes and languages
+		{name: "go", versionArgs: []string{"version"}, absentNote: "Prefer Go for small one-off scripts and utilities."},
+		{name: "node", versionArgs: []string{"--version"}, absentNote: "Do not assume `node`, `npm`, or `npx`."},
+		{name: "npm", versionArgs: []string{"--version"}},
+		{name: "npx", versionArgs: []string{"--version"}},
+		{name: "pnpm", versionArgs: []string{"--version"}, absentNote: "Do not assume alternate JS package managers (`pnpm`, `yarn`, `bun`)."},
+		{name: "yarn", versionArgs: []string{"--version"}},
+		{name: "bun", versionArgs: []string{"--version"}},
+		{name: "python", versionArgs: []string{"--version"}, absentNote: "Do not assume `python`, `python3`, or `pip`."},
+		{name: "python3", versionArgs: []string{"--version"}},
+		{name: "pip", versionArgs: []string{"--version"}},
+		{name: "pip3", versionArgs: []string{"--version"}},
+		{name: "uv", versionArgs: []string{"--version"}, absentNote: "Do not assume Python package tooling (`uv`)."},
+		{name: "rustc", versionArgs: []string{"--version"}},
+		{name: "cargo", versionArgs: []string{"--version"}, absentNote: "Do not assume Rust (`rustc`, `cargo`)."},
+		{name: "dotnet", versionArgs: []string{"--version"}, absentNote: "Do not assume `.NET` (`dotnet`)."},
+		{name: "java", versionArgs: []string{"-version"}},
+		// Version control and GitHub
+		{name: "git", versionArgs: []string{"--version"}},
+		{name: "gh", versionArgs: []string{"--version"}},
+		// Containers and orchestration
+		{name: "docker", versionArgs: []string{"--version"}, absentNote: "Do not assume `docker` or compose subcommands."},
+		{name: "kubectl", versionArgs: []string{"version", "--client"}},
+		{name: "helm", versionArgs: []string{"version", "--short"}},
+		// Cloud and IaC CLIs
+		{name: "aws", versionArgs: []string{"--version"}, absentNote: "Do not assume cloud CLIs (`aws`, `az`, `gcloud`)."},
+		{name: "az", versionArgs: []string{"--version"}},
+		{name: "gcloud", versionArgs: []string{"--version"}},
+		{name: "terraform", versionArgs: []string{"version"}, absentNote: "Do not assume IaC CLIs (`terraform`)."},
+		// Native build tooling
+		{name: "make", versionArgs: []string{"--version"}, absentNote: "Do not assume native build tools (`make`, `gcc`, `clang`)."},
+		{name: "gcc", versionArgs: []string{"--version"}},
+		{name: "clang", versionArgs: []string{"--version"}},
+		// Shell utilities often installed separately
+		{name: "jq", versionArgs: []string{"--version"}},
+		{name: "sqlite3", versionArgs: []string{"--version"}},
+		{name: "pwsh", versionArgs: []string{"--version"}},
+		// Windows-only optional installs (Git Bash, WSL, package managers)
+		{name: "bash", versionArgs: []string{"--version"}, osFilter: "windows"},
+		{name: "wsl", versionArgs: []string{"--version"}, osFilter: "windows"},
+		{name: "winget", versionArgs: []string{"--version"}, osFilter: "windows"},
+		{name: "choco", versionArgs: []string{"--version"}, osFilter: "windows"},
+		{name: "scoop", versionArgs: []string{"--version"}, osFilter: "windows"},
+	}
+}
+
+func toolSpecApplies(spec toolSpec) bool {
+	switch spec.osFilter {
+	case "windows":
+		return runtime.GOOS == "windows"
+	case "!windows":
+		return runtime.GOOS != "windows"
+	default:
+		return true
+	}
+}
+
+func probeTools() (present []string, absent []string) {
+	seenAbsent := map[string]bool{}
+	for _, spec := range toolProbeSpecs() {
+		if !toolSpecApplies(spec) {
+			continue
+		}
+		path, err := exec.LookPath(spec.name)
+		if err != nil {
+			if spec.absentNote != "" && !seenAbsent[spec.absentNote] {
+				absent = append(absent, spec.absentNote)
+				seenAbsent[spec.absentNote] = true
+			}
+			continue
+		}
+		line := fmt.Sprintf("`%s` on PATH (%s)", spec.name, path)
+		if len(spec.versionArgs) > 0 {
+			if ver := commandOutput(spec.name, spec.versionArgs...); ver != "" {
+				if label := formatVersionLabel(ver); label != "" {
+					line = fmt.Sprintf("`%s` installed (%s)", spec.name, label)
+				}
+			}
+		}
+		present = append(present, line)
+	}
+	return present, absent
+}
+
+func commandOutput(name string, args ...string) string {
+	cmd := exec.Command(name, args...)
+	out, err := cmd.Output()
+	if err != nil {
+		return ""
+	}
+	return normalizeCommandOutput(out)
+}
+
+// formatVersionLabel picks the first non-empty output line and encodes it as a single-line label.
+func formatVersionLabel(s string) string {
+	line := firstNonEmptyLine(s)
+	if line == "" {
+		return ""
+	}
+	return encodeText(line)
+}
+
+func firstNonEmptyLine(s string) string {
+	s = strings.ToValidUTF8(s, "")
+	for _, line := range strings.FieldsFunc(s, func(r rune) bool {
+		return r == '\n' || r == '\r'
+	}) {
+		line = strings.TrimSpace(line)
+		if line != "" {
+			return line
+		}
+	}
+	return ""
+}
+
+// encodeText normalizes arbitrary command text to plain UTF-8 on one line.
+func encodeText(s string) string {
+	s = strings.ToValidUTF8(s, "")
+	s = norm.NFC.String(s)
+	s = strings.Map(func(r rune) rune {
+		switch r {
+		case '\t', '\n', '\r':
+			return ' '
+		default:
+			if r < 32 {
+				return -1
+			}
+			return r
+		}
+	}, s)
+	return strings.Join(strings.Fields(s), " ")
+}
+
+// normalizeCommandOutput converts raw command bytes to normalized UTF-8 text.
+// Some Windows tools (notably wsl.exe) write UTF-16LE to stdout without a BOM.
+func normalizeCommandOutput(raw []byte) string {
+	if len(raw) == 0 {
+		return ""
+	}
+	text := string(raw)
+	if decoded, ok := decodeUTF16LEOutput(raw); ok {
+		text = decoded
+	}
+	text = strings.ToValidUTF8(text, "")
+	text = norm.NFC.String(text)
+	text = strings.Map(func(r rune) rune {
+		if r == '\n' || r == '\r' || r == '\t' || r >= 32 {
+			return r
+		}
+		return -1
+	}, text)
+	return strings.TrimSpace(text)
+}
+
+func decodeUTF16LEOutput(raw []byte) (string, bool) {
+	if len(raw) >= 2 && raw[0] == 0xFF && raw[1] == 0xFE {
+		raw = raw[2:]
+	}
+	if len(raw) < 4 || len(raw)%2 != 0 {
+		return "", false
+	}
+	// UTF-16LE ASCII text puts a zero byte after each character.
+	if raw[1] != 0 || raw[3] != 0 {
+		return "", false
+	}
+	u16 := make([]uint16, len(raw)/2)
+	for i := range u16 {
+		u16[i] = uint16(raw[2*i]) | uint16(raw[2*i+1])<<8
+	}
+	return string(utf16.Decode(u16)), true
+}
+
+func renderEnvironmentRule(p envProbe) []byte {
+	var b strings.Builder
+	b.WriteString("---\n")
+	b.WriteString("description: Local machine environment - regenerated by agent-config-wizard on apply.\n")
+	b.WriteString("generated-by: " + envRuleGeneratedBy + "\n")
+	b.WriteString("alwaysApply: true\n")
+	b.WriteString("---\n\n")
+	b.WriteString("# Environment\n\n")
+	b.WriteString("Generated by agent-config-wizard from the local machine. Manual edits are overwritten on apply.\n\n")
+	b.WriteString("## Runtime\n\n")
+	b.WriteString(fmt.Sprintf("- **OS:** %s\n", p.OSLine))
+	b.WriteString(fmt.Sprintf("- **Shell:** %s\n", p.ShellLine))
+	if p.ScratchDir != "" {
+		b.WriteString(fmt.Sprintf("- **Agent scratch directory:** `%s`\n", filepath.ToSlash(p.ScratchDir)))
+	}
+	b.WriteString("\n## Tools on PATH\n\n")
+	if len(p.ToolLines) == 0 {
+		b.WriteString("- No probed tools found on PATH.\n")
+	} else {
+		for _, line := range p.ToolLines {
+			b.WriteString("- " + line + "\n")
+		}
+	}
+	if len(p.AbsentLines) > 0 {
+		b.WriteString("\n## Absent runtimes\n\n")
+		for _, line := range p.AbsentLines {
+			b.WriteString("- " + line + "\n")
+		}
+	}
+	b.WriteString("\n## Paths\n\n")
+	b.WriteString("- Use Windows path syntax and PowerShell idioms when OS is Windows.\n")
+	b.WriteString("- Put ephemeral agent artifacts in the scratch directory, not the project root.\n")
+	return []byte(b.String())
+}
+
+func environmentRulePath(projectRoot string) string {
+	return filepath.Join(projectRoot, filepath.FromSlash(envRuleRelPath))
+}
+
+func isEnvTreeItem(it treeItem) bool {
+	return it.Kind == "env" || it.Path == envRuleRelPath
+}
+
+func refreshEnvironmentRule(projectRoot string) error {
+	path, err := filepath.Abs(environmentRulePath(projectRoot))
+	if err != nil {
+		return err
+	}
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return fmt.Errorf("mkdir %s: %w", dir, err)
+	}
+	content := renderEnvironmentRule(probeEnvironment())
+	if err := os.WriteFile(path, content, 0o644); err != nil {
+		return fmt.Errorf("write %s: %w", path, err)
+	}
+	return nil
+}
+
+func removeEnvironmentRule(projectRoot string) error {
+	path := environmentRulePath(projectRoot)
+	if !isGeneratedEnvironmentRule(path) {
+		return nil
+	}
+	err := os.Remove(path)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	return err
+}
+
+func isGeneratedEnvironmentRule(path string) bool {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return false
+	}
+	fm := parseFrontmatter(data)
+	return fm["generated-by"] == envRuleGeneratedBy
+}
+
 func teamRootFromScript() (string, error) {
 	start, err := scriptDir()
 	if err != nil {
@@ -634,7 +1064,16 @@ const (
 )
 
 const headerLines = 6
-const footerLines = 4
+const minFooterLines = 3 // separator, status, help
+const maxVisibleErrors = 5
+
+var applySpinnerChars = []rune{'|', '/', '-', '\\'}
+
+type spinnerTickMsg struct{}
+type applyDoneMsg struct {
+	res     applyResult
+	saveErr error
+}
 
 type model struct {
 	teamRoot      string
@@ -644,6 +1083,7 @@ type model struct {
 	items         []treeItem
 	cursor        int
 	status        string
+	errors        []string
 	lastApply     applyResult
 	stateDump     string
 	firstRun      bool
@@ -653,6 +1093,8 @@ type model struct {
 	width, height int
 	listVP        viewport.Model
 	stateVP       viewport.Model
+	applying      bool
+	spinnerFrame  int
 }
 
 func initialModel(teamRoot, projectRoot string, cat *catalogFile, m *manifest) model {
@@ -669,7 +1111,7 @@ func initialModel(teamRoot, projectRoot string, cat *catalogFile, m *manifest) m
 		items:       items,
 		firstRun:    firstRun,
 		focus:       paneList,
-		status:      "tab switch pane · up/down move or scroll · space toggle · a apply · q quit",
+		status:      "tab switch pane · up/down move or scroll · space toggle · a apply (saves manifest) · q quit",
 		listVP:      viewport.New(80, 20),
 		stateVP:     viewport.New(80, 20),
 	}
@@ -683,31 +1125,76 @@ func (m model) Init() tea.Cmd {
 	return tea.WindowSize()
 }
 
+func tickSpinnerCmd() tea.Cmd {
+	return tea.Tick(120*time.Millisecond, func(time.Time) tea.Msg {
+		return spinnerTickMsg{}
+	})
+}
+
+func (m model) runApplyCmd() tea.Cmd {
+	teamRoot := m.teamRoot
+	projectRoot := m.projectRoot
+	items := m.items
+	manifest := m.manifest
+	return func() tea.Msg {
+		res := applyEnabled(teamRoot, projectRoot, items, manifest)
+		saveErr := saveManifest(projectRoot, manifest)
+		return applyDoneMsg{res: res, saveErr: saveErr}
+	}
+}
+
+func cursorMarker(applying bool, frame int) string {
+	if applying {
+		return string(applySpinnerChars[frame%len(applySpinnerChars)]) + " "
+	}
+	return "> "
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case spinnerTickMsg:
+		if !m.applying {
+			return m, nil
+		}
+		m.spinnerFrame++
+		m.syncListContent()
+		return m, tickSpinnerCmd()
+
+	case applyDoneMsg:
+		m.applying = false
+		m.lastApply = msg.res
+		m.manifest.LastCatalogPaths = catalogPaths(m.catalog)
+		m.errors = append([]string(nil), m.lastApply.Errors...)
+		if msg.saveErr != nil {
+			m.errors = append(m.errors, "manifest save: "+msg.saveErr.Error())
+		}
+		m.status = applyStatusMessage(m.lastApply, msg.saveErr)
+		m.refreshOverrideFlags()
+		m.refreshStateDump(&m.lastApply)
+		m.syncListContent()
+		m.syncStateContent()
+		m.adjustViewportHeights()
+		if len(m.errors) > 0 {
+			m.focus = paneState
+			m.stateVP.GotoTop()
+		}
+		return m, nil
+
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
-		bodyH := msg.Height - headerLines - footerLines
-		if bodyH < 1 {
-			bodyH = 1
-		}
-		m.listVP.Width = msg.Width
-		m.listVP.Height = bodyH
-		m.stateVP.Width = msg.Width
-		m.stateVP.Height = bodyH
+		m.adjustViewportHeights()
 		m.syncListContent()
 		m.syncStateContent()
 		m.ensureCursorVisible()
 		return m, nil
 
 	case tea.KeyMsg:
+		if m.applying {
+			return m, nil
+		}
 		switch msg.String() {
 		case "ctrl+c", "q":
-			m.manifest.LastCatalogPaths = catalogPaths(m.catalog)
-			if err := saveManifest(m.projectRoot, m.manifest); err != nil {
-				m.err = err
-			}
 			m.quitting = true
 			return m, tea.Quit
 		case "tab":
@@ -788,18 +1275,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.syncListContent()
 			m.syncStateContent()
 		case "a":
-			m.lastApply = applyEnabled(m.teamRoot, m.projectRoot, m.items, m.manifest)
 			m.syncManifestFromItems()
-			m.manifest.LastCatalogPaths = catalogPaths(m.catalog)
-			if err := saveManifest(m.projectRoot, m.manifest); err != nil {
-				m.status = "apply done but save failed: " + err.Error()
-			} else {
-				m.status = fmt.Sprintf("applied: %d copied, %d removed, %d skipped, %d errors",
-					len(m.lastApply.Copied), len(m.lastApply.Removed), len(m.lastApply.Skipped), len(m.lastApply.Errors))
-			}
-			m.refreshOverrideFlags()
-			m.refreshStateDump(&m.lastApply)
-			m.syncStateContent()
+			m.applying = true
+			m.spinnerFrame = 0
+			m.status = "applying..."
+			m.syncListContent()
+			return m, tea.Batch(m.runApplyCmd(), tickSpinnerCmd())
 		case "s":
 			m.refreshStateDump(&m.lastApply)
 			m.syncStateContent()
@@ -808,6 +1289,120 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 	return m, nil
+}
+
+func applyStatusMessage(res applyResult, saveErr error) string {
+	if saveErr != nil {
+		return fmt.Sprintf("apply finished with errors and manifest was NOT saved (%d copied, %d removed, %d skipped)",
+			len(res.Copied), len(res.Removed), len(res.Skipped))
+	}
+	if len(res.Errors) > 0 {
+		return fmt.Sprintf("apply finished with %d error(s) (%d copied, %d removed, %d skipped)",
+			len(res.Errors), len(res.Copied), len(res.Removed), len(res.Skipped))
+	}
+	return fmt.Sprintf("applied: %d copied, %d removed, %d skipped",
+		len(res.Copied), len(res.Removed), len(res.Skipped))
+}
+
+func (m *model) footerLineCount() int {
+	n := minFooterLines
+	if len(m.errors) == 0 {
+		return n
+	}
+	n++ // ERRORS header
+	shown := len(m.errors)
+	if shown > maxVisibleErrors {
+		shown = maxVisibleErrors
+		n++ // "... and N more"
+	}
+	return n + shown
+}
+
+func (m *model) adjustViewportHeights() {
+	bodyH := m.height - headerLines - m.footerLineCount()
+	if bodyH < 1 {
+		bodyH = 1
+	}
+	m.listVP.Width = m.width
+	m.listVP.Height = bodyH
+	m.stateVP.Width = m.width
+	m.stateVP.Height = bodyH
+}
+
+func (m model) wrapWidth() int {
+	w := m.width - 2
+	if w < 24 {
+		return 24
+	}
+	return w
+}
+
+func wrapText(text string, width int) string {
+	if width <= 0 || text == "" {
+		return text
+	}
+	var out strings.Builder
+	for i, line := range strings.Split(text, "\n") {
+		if i > 0 {
+			out.WriteByte('\n')
+		}
+		out.WriteString(wrapLine(line, width))
+	}
+	return out.String()
+}
+
+func wrapLine(line string, width int) string {
+	if len(line) <= width {
+		return line
+	}
+	indent := leadingWhitespace(line)
+	content := strings.TrimLeft(line, " \t")
+	prefix := indent
+	var parts []string
+	for len(content) > 0 {
+		room := width - len(prefix)
+		if room < 1 {
+			room = 1
+		}
+		if len(content) <= room {
+			parts = append(parts, prefix+content)
+			break
+		}
+		cut := room
+		if idx := strings.LastIndex(content[:cut], " "); idx > 0 {
+			cut = idx
+		}
+		parts = append(parts, prefix+strings.TrimRight(content[:cut], " "))
+		content = strings.TrimLeft(content[cut:], " ")
+		prefix = indent + "  "
+	}
+	return strings.Join(parts, "\n")
+}
+
+func leadingWhitespace(s string) string {
+	i := 0
+	for i < len(s) && (s[i] == ' ' || s[i] == '\t') {
+		i++
+	}
+	return s[:i]
+}
+
+func (m model) renderErrors() string {
+	if len(m.errors) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	b.WriteString("ERRORS:\n")
+	width := m.wrapWidth()
+	for i, e := range m.errors {
+		if i >= maxVisibleErrors {
+			b.WriteString(fmt.Sprintf("  ... and %d more (tab -> state JSON for full dump)\n", len(m.errors)-maxVisibleErrors))
+			break
+		}
+		b.WriteString(wrapText("  ! "+e, width))
+		b.WriteByte('\n')
+	}
+	return b.String()
 }
 
 func (m *model) syncListContent() {
@@ -824,7 +1419,12 @@ func (m *model) renderList() string {
 	for i, it := range m.items {
 		if it.Kind != section {
 			section = it.Kind
-			b.WriteString("\n" + strings.ToUpper(section) + "S\n")
+			switch section {
+			case "env":
+				b.WriteString("\nENV DETAILS\n")
+			default:
+				b.WriteString("\n" + strings.ToUpper(section) + "S\n")
+			}
 		}
 		prefix := strings.Repeat("  ", it.Depth)
 		box := "[ ]"
@@ -844,7 +1444,7 @@ func (m *model) renderList() string {
 			line += "  (project override)"
 		}
 		if i == m.cursor {
-			line = "> " + line
+			line = cursorMarker(m.applying, m.spinnerFrame) + line
 		} else {
 			line = "  " + line
 		}
@@ -901,8 +1501,16 @@ func (m *model) syncManifestFromItems() {
 	m.manifest.Source.TeamPath = m.teamRoot
 	m.manifest.Source.Ref = m.catalog.Catalog.Version
 	var rules, skills []string
+	m.manifest.EnvDetails = false
 	for _, it := range m.items {
-		if it.IsGroup || !it.Enabled {
+		if it.IsGroup {
+			continue
+		}
+		if it.Kind == "env" {
+			m.manifest.EnvDetails = it.Enabled
+			continue
+		}
+		if !it.Enabled {
 			continue
 		}
 		if it.Kind == "rule" {
@@ -998,7 +1606,20 @@ func (m *model) refreshStateDump(apply *applyResult) {
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
 	}
 	data, _ := json.MarshalIndent(snapshot, "", "  ")
-	m.stateDump = string(data)
+	dump := string(data)
+	if apply != nil && len(apply.Errors) > 0 {
+		var b strings.Builder
+		width := m.wrapWidth()
+		b.WriteString("Apply errors:\n")
+		for _, e := range apply.Errors {
+			b.WriteString(wrapText("  - "+e, width))
+			b.WriteByte('\n')
+		}
+		b.WriteByte('\n')
+		b.WriteString(dump)
+		dump = b.String()
+	}
+	m.stateDump = dump
 }
 
 func (m model) View() string {
@@ -1006,7 +1627,7 @@ func (m model) View() string {
 		return fmt.Sprintf("error: %v\n", m.err)
 	}
 	if m.quitting {
-		return "manifest saved to .cursor/agent-config.local.json\n"
+		return "quit\n"
 	}
 
 	var b strings.Builder
@@ -1014,9 +1635,9 @@ func (m model) View() string {
 	b.WriteString(fmt.Sprintf("Team: %s\n", m.teamRoot))
 	b.WriteString(fmt.Sprintf("Project: %s\n", m.projectRoot))
 	if m.firstRun {
-		b.WriteString("Mode: first-run wizard\n")
+		b.WriteString("Mode: first-run wizard (toggle env details if you want a generated environment rule)\n")
 	} else {
-		b.WriteString("Mode: re-run (new catalog entries default off)\n")
+		b.WriteString("Mode: re-run (new catalog entries default off; env details refresh silently on apply when enabled)\n")
 	}
 
 	if m.focus == paneList {
@@ -1030,7 +1651,10 @@ func (m model) View() string {
 	b.WriteString("\n")
 	b.WriteString(strings.Repeat("-", min(m.width, 72)) + "\n")
 	b.WriteString(m.status + "\n")
-	b.WriteString("scroll: up/down pgup/pgdn home/end · toggle: space · apply: a · quit: q\n")
+	if errBlock := m.renderErrors(); errBlock != "" {
+		b.WriteString(errBlock)
+	}
+	b.WriteString("scroll: up/down pgup/pgdn home/end · toggle: space · apply: a (saves manifest) · quit: q\n")
 	return b.String()
 }
 

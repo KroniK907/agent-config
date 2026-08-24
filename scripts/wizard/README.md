@@ -8,9 +8,13 @@ Validated in prototype [#51](https://github.com/KroniK907/agent-config/issues/51
 
 | Path | Purpose |
 |------|---------|
-| [src/main.go](src/main.go) | Wizard source (single package) |
+| [src/main.go](src/main.go) | Wizard source - single file (TUI, apply, env-details probe) |
+| [src/main_test.go](src/main_test.go) | All wizard tests |
 | [src/go.mod](src/go.mod) | Go module for bubbletea deps |
-| [agent-config-wizard.exe](agent-config-wizard.exe) | Windows binary (rebuild after src changes) |
+| [bin/agent-config-wizard](bin/agent-config-wizard) | Linux binary (built by CI on `main`) |
+| [bin/agent-config-wizard.exe](bin/agent-config-wizard.exe) | Windows binary (built by CI on `main`) |
+
+Per **AGENT-CFG-GM-010**, wizard Go code stays in one source file plus one test file - no extra `.go` modules under `src/`.
 
 ## Two roots
 
@@ -31,7 +35,14 @@ Built binary from project cwd:
 
 ```powershell
 cd C:\Users\DanielKranich\Documents\Projects\jrdev
-C:\Users\DanielKranich\.cursor\skills\scripts\wizard\agent-config-wizard.exe
+C:\Users\DanielKranich\.cursor\skills\scripts\wizard\bin\agent-config-wizard.exe
+```
+
+On Linux:
+
+```bash
+cd ~/projects/jrdev
+/path/to/agent-config/scripts/wizard/bin/agent-config-wizard
 ```
 
 Or dev with explicit project:
@@ -48,6 +59,10 @@ go run -C .\scripts\wizard\src .
 ```
 
 ## Build
+
+CI builds tracked copies under `bin/` on every push to `main`. Download the latest run artifact from the [Validate catalog workflow](https://github.com/KroniK907/agent-config/actions/workflows/validate-catalog.yml) if you need binaries before the bot commit lands.
+
+For local testing only (gitignored):
 
 ```powershell
 go build -C src -o ../agent-config-wizard.exe .
@@ -78,9 +93,9 @@ Coverage spans manifest load/save, catalog tree and group cascade, project overr
 | Home/End | Jump to top/bottom of current pane |
 | Tab | Switch between opt-in tree and state JSON |
 | Space | Toggle opt-in (list pane); groups cascade to children |
-| a | Apply - copy enabled, remove deselected managed copies |
+| a | Apply - copy enabled, remove deselected managed copies, save manifest |
 | s | Jump to state pane |
-| q | Save manifest and quit |
+| q | Quit without saving TUI selections |
 
 ## Behavior
 
@@ -90,6 +105,7 @@ Coverage spans manifest load/save, catalog tree and group cascade, project overr
 - Re-run: `lastCatalogPaths` tracks seen entries; new catalog paths show **NEW** and default off
 - Project-native files (no sync marker, never applied) show **(project override)**
 - Copy delivery to `.cursor/rules/` and `.cursor/skills/`; framework copy to `.cursor/agent-config/`
+- Optional **Environment details rule** at top of tree - toggles `envDetails` in manifest; writes `.cursor/rules/environment.mdc` on apply (`alwaysApply: true`, `generated-by: agent-config-wizard`); silent refresh on every apply when enabled; removes only wizard-generated copies when disabled
 
 ## Collision demo
 
