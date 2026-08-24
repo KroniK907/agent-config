@@ -36,4 +36,35 @@ When desktop opt-in is stable, copy the skill/rule list into `.cursor/agent-mani
 
 ## Cloud agents
 
-Commit `.cursor/agent-manifest.json` with the subset cloud agents need. Build hook template: [examples/environment.json.example](examples/environment.json.example). Cloud copy-only bootstrap is separate from the desktop wizard - see map decision log for the two-script model.
+Commit `.cursor/agent-manifest.json` with the subset cloud agents need. Pin `source.ref` to a semver tag matching [`catalog.json`](../catalog.json) `catalog.version`.
+
+Build hook template: [examples/environment.json.example](examples/environment.json.example). It runs [`scripts/bootstrap-agent.sh`](../scripts/bootstrap-agent.sh) from the pinned tag. The script reads the committed manifest, validates listed paths against `catalog.json`, copies skills to `~/.cursor/skills/`, and copies rules to `.cursor/rules/` in the workspace (copy-only per cloud bootstrap decisions in the map decision log).
+
+### Local smoke
+
+From a project repo with `.cursor/agent-manifest.json` populated (example paths below):
+
+```bash
+# Unix / Git Bash / Cloud Agent shell - run from project root
+export AGENT_CONFIG_WORKSPACE="$PWD"
+bash /path/to/agent-config/scripts/bootstrap-agent.sh
+```
+
+Example manifest subset:
+
+```json
+{
+  "source": { "repo": "KroniK907/agent-config", "ref": "v1.0.0" },
+  "skills": ["skills/unslop", "skills/wayfinder/orchestrators/implement-task"],
+  "rules": ["rules/unslop.mdc"]
+}
+```
+
+Verify:
+
+```bash
+test -f ~/.cursor/skills/unslop/SKILL.md
+test -f .cursor/rules/unslop.mdc
+```
+
+Cloud copy-only bootstrap is separate from the desktop wizard - see map decision log for the two-script model.

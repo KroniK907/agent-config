@@ -124,6 +124,11 @@
       "label": "Validate catalog.json paths",
       "role": "bootstrap"
     },
+    "bootstrap-agent": {
+      "path": "scripts/bootstrap-agent.sh",
+      "label": "Cloud agent bootstrap",
+      "role": "bootstrap"
+    },
     "agent-config-wizard": {
       "path": "scripts/wizard",
       "label": "Agent config wizard",
