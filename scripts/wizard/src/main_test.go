@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"testing"
 )
@@ -962,5 +963,200 @@ func TestApplyEnabled_removesEnvRuleWhenDisabled(t *testing.T) {
 	}
 	if !contains(res.Removed, envRuleRelPath) {
 		t.Fatalf("expected env rule removed, got removed=%v", res.Removed)
+	}
+}
+
+func TestParseReleaseTagNames_extractsTags(t *testing.T) {
+	data := []byte(`[{"tag_name":"v1.0.1"},{"tag_name":"v0.1.0"}]`)
+	tags, err := parseReleaseTagNames(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(tags) != 2 || tags[0] != "v1.0.1" {
+		t.Fatalf("tags = %v", tags)
+	}
+}
+
+func TestSemverTagForCatalogVersion_matchesVPrefix(t *testing.T) {
+	tags := []string{"v1.0.1", "v0.1.0"}
+	tag, ok := semverTagForCatalogVersion("1.0.1", tags)
+	if !ok || tag != "v1.0.1" {
+		t.Fatalf("tag = %q ok = %v", tag, ok)
+	}
+}
+
+func TestDefaultCloudRef_prefersExisting(t *testing.T) {
+	tags := []string{"v1.0.1", "v0.1.0"}
+	got := defaultCloudRef("1.0.1", tags, "v0.1.0")
+	if got != "v0.1.0" {
+		t.Fatalf("ref = %q, want v0.1.0", got)
+	}
+}
+
+func TestEnvironmentInstallURL_pinsRef(t *testing.T) {
+	url := environmentInstallURL("v1.0.1")
+	if !strings.Contains(url, "v1.0.1") || !strings.Contains(url, "bootstrap-agent.sh") {
+		t.Fatalf("url = %q", url)
+	}
+}
+
+func TestDiffCloudPaths_addedAndRemoved(t *testing.T) {
+	diff := diffCloudPaths(
+		[]string{"skills/a"},
+		[]string{"rules/old.mdc"},
+		[]string{"skills/b"},
+		[]string{"rules/new.mdc"},
+	)
+	if len(diff.Added) != 2 || len(diff.Removed) != 2 {
+		t.Fatalf("diff = %+v", diff)
+	}
+}
+
+func TestValidateCloudPaths_rejectsUnknown(t *testing.T) {
+	cat := minimalCatalog()
+	errs := validateCloudPaths(cat, []string{"skills/missing"}, nil)
+	if len(errs) != 1 {
+		t.Fatalf("errs = %v", errs)
+	}
+}
+
+func TestValidateCloudPaths_acceptsKnown(t *testing.T) {
+	cat := minimalCatalog()
+	errs := validateCloudPaths(cat, []string{"skills/commit"}, []string{"rules/unslop.mdc"})
+	if len(errs) != 0 {
+		t.Fatalf("errs = %v", errs)
+	}
+}
+
+func TestWriteCloudConfig_writesBothFiles(t *testing.T) {
+	project := t.TempDir()
+	cm := newCloudManifest("v1.0.1")
+	cm.Skills = []string{"skills/commit"}
+	cm.Rules = []string{"rules/unslop.mdc"}
+	if err := writeCloudConfig(project, cm); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(cloudManifestPath(project)); err != nil {
+		t.Fatalf("manifest missing: %v", err)
+	}
+	if _, err := os.Stat(environmentJSONPath(project)); err != nil {
+		t.Fatalf("environment.json missing: %v", err)
+	}
+	if _, err := os.Stat(cloudDockerfilePath(project)); err != nil {
+		t.Fatalf("Dockerfile missing: %v", err)
+	}
+	raw, err := os.ReadFile(environmentJSONPath(project))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var env environmentFile
+	if err := json.Unmarshal(raw, &env); err != nil {
+		t.Fatal(err)
+	}
+	if env.Build.Dockerfile != "Dockerfile" {
+		t.Fatalf("dockerfile = %q", env.Build.Dockerfile)
+	}
+	if !strings.Contains(env.Install, "v1.0.1") || !strings.Contains(env.Install, "bootstrap-agent.sh") {
+		t.Fatalf("install = %q", env.Install)
+	}
+	gi, err := os.ReadFile(filepath.Join(project, ".gitignore"))
+	if err != nil {
+		t.Fatalf(".gitignore missing: %v", err)
+	}
+	body := string(gi)
+	for _, want := range []string{
+		gitignoreBegin,
+		".cursor/agent-config.local.json",
+		"!.cursor/agent-manifest.json",
+		"!.cursor/environment.json",
+		"!.cursor/Dockerfile",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf(".gitignore missing %q:\n%s", want, body)
+		}
+	}
+}
+
+func TestMergeGitignoreBlock_createsAndUpdates(t *testing.T) {
+	created := mergeGitignoreBlock("")
+	if !strings.Contains(created, gitignoreBegin) || !strings.Contains(created, "!.cursor/agent-manifest.json") {
+		t.Fatalf("create block:\n%s", created)
+	}
+	withExtra := "# custom\n*.log\n"
+	merged := mergeGitignoreBlock(withExtra)
+	if !strings.Contains(merged, "*.log") || !strings.Contains(merged, gitignoreBegin) {
+		t.Fatalf("merge append:\n%s", merged)
+	}
+	updated := mergeGitignoreBlock(merged)
+	if updated != merged {
+		t.Fatal("expected idempotent merge")
+	}
+	replaced := mergeGitignoreBlock(strings.Replace(merged, "!.cursor/environment.json", "# old", 1))
+	if strings.Contains(replaced, "# old") {
+		t.Fatalf("expected block replaced, got:\n%s", replaced)
+	}
+	if !strings.Contains(replaced, "!.cursor/environment.json") {
+		t.Fatal("expected fresh environment negation")
+	}
+}
+
+func TestEnsureProjectGitignore_writesFile(t *testing.T) {
+	project := t.TempDir()
+	if err := ensureProjectGitignore(project); err != nil {
+		t.Fatal(err)
+	}
+	if err := ensureProjectGitignore(project); err != nil {
+		t.Fatal(err)
+	}
+	raw, err := os.ReadFile(filepath.Join(project, ".gitignore"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(raw), gitignoreBegin) {
+		t.Fatalf("gitignore = %s", raw)
+	}
+}
+
+func TestSyncCloudFromDesktop_copiesEnabledPaths(t *testing.T) {
+	cat := minimalCatalog()
+	desktop := &manifest{
+		Skills: []string{"skills/commit"},
+		Rules:  []string{"rules/unslop.mdc"},
+	}
+	items := buildCloudTree(cat, newCloudManifest("v1.0.1"))
+	syncCloudFromDesktop(items, desktop)
+	var enabled []string
+	for _, it := range items {
+		if !it.IsGroup && it.Enabled {
+			enabled = append(enabled, it.Path)
+		}
+	}
+	sort.Strings(enabled)
+	want := []string{"rules/unslop.mdc", "skills/commit"}
+	if strings.Join(enabled, ",") != strings.Join(want, ",") {
+		t.Fatalf("enabled = %v want %v", enabled, want)
+	}
+}
+
+func TestCatalogAtRef_usesLocalWhenRefMatches(t *testing.T) {
+	cat := minimalCatalog()
+	cat.Catalog.Version = "1.0.1"
+	got, err := catalogAtRef("/team", "v1.0.1", cat)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != cat {
+		t.Fatal("expected local catalog pointer")
+	}
+}
+
+func TestLoadCloudManifest_missingReturnsNil(t *testing.T) {
+	dir := t.TempDir()
+	cm, err := loadCloudManifest(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cm != nil {
+		t.Fatalf("expected nil, got %+v", cm)
 	}
 }

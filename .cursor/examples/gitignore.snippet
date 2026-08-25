@@ -1,3 +1,10 @@
-# Agent config (paste into project .gitignore)
+# Agent config (managed by agent-config-wizard; also written on cloud bootstrap)
+# >>> agent-config-wizard >>>
+# Desktop local state stays untracked; cloud bootstrap JSON is committed.
+!.cursor/
 .cursor/agent-config.local.json
 .cursor/agent-config/
+!.cursor/agent-manifest.json
+!.cursor/environment.json
+!.cursor/Dockerfile
+# <<< agent-config-wizard <<<

@@ -55,10 +55,14 @@ The **`install`** command runs on Cloud Agent Build creation. It invokes [`scrip
 ```json
 {
   "build": {
-    "install": "curl -fsSL https://raw.githubusercontent.com/KroniK907/agent-config/v1.0.0/scripts/bootstrap-agent.sh | bash"
-  }
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "install": "curl -fsSL https://raw.githubusercontent.com/KroniK907/agent-config/v1.0.0/scripts/bootstrap-agent.sh | bash"
 }
 ```
+
+Also commit `.cursor/Dockerfile` (see [`.cursor/examples/Dockerfile.example`](../../../.cursor/examples/Dockerfile.example)). Extend it for project toolchain needs.
 
 **Legacy (deprecated):** copying [bootstrap/install-skills.sh](bootstrap/install-skills.sh) to `.cursor/install-wayfinder-skills.sh` with inline `WAYFINDER_SKILLS_TAG` env vars. Use only when bootstrap-agent.sh is unavailable at your pinned tag.
 
