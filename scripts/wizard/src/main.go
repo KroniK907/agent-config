@@ -44,7 +44,9 @@ const (
 	envRuleRelPath      = ".cursor/rules/environment.mdc"
 	envRuleGeneratedBy  = "agent-config-wizard"
 	githubAPIReleases   = "https://api.github.com/repos/" + sourceRepo + "/releases"
-	githubRawCatalog  = "https://raw.githubusercontent.com/" + sourceRepo + "/%s/catalog.json"
+	githubRawCatalog    = "https://raw.githubusercontent.com/" + sourceRepo + "/%s/catalog.json"
+	gitignoreBegin      = "# >>> agent-config-wizard >>>"
+	gitignoreEnd        = "# <<< agent-config-wizard <<<"
 )
 
 // --- manifest (AGENT-CFG-GM-006) ---
@@ -139,9 +141,13 @@ type cloudSourceMeta struct {
 }
 
 type environmentFile struct {
-	Build struct {
-		Install string `json:"install"`
-	} `json:"build"`
+	Build   environmentBuild `json:"build"`
+	Install string           `json:"install"`
+}
+
+type environmentBuild struct {
+	Dockerfile string `json:"dockerfile"`
+	Context    string `json:"context,omitempty"`
 }
 
 type cloudPathDiff struct {
@@ -161,6 +167,19 @@ func cloudManifestPath(projectRoot string) string {
 func environmentJSONPath(projectRoot string) string {
 	return filepath.Join(projectRoot, ".cursor", environmentJSONName)
 }
+
+func cloudDockerfilePath(projectRoot string) string {
+	return filepath.Join(projectRoot, ".cursor", "Dockerfile")
+}
+
+const cloudDockerfileBody = `# Minimal base for agent-config cloud bootstrap.
+# Extend for project toolchain (Go version, Node, etc.).
+FROM ubuntu:24.04
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git curl jq ca-certificates sudo \
+    && rm -rf /var/lib/apt/lists/*
+`
 
 func loadCloudManifest(projectRoot string) (*cloudManifest, error) {
 	data, err := os.ReadFile(cloudManifestPath(projectRoot))
@@ -195,8 +214,13 @@ func saveEnvironmentJSON(projectRoot, ref string) error {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
-	env := environmentFile{}
-	env.Build.Install = environmentInstallURL(ref)
+	env := environmentFile{
+		Build: environmentBuild{
+			Dockerfile: "Dockerfile",
+			Context:    ".",
+		},
+		Install: environmentInstallCommand(ref),
+	}
 	data, err := json.MarshalIndent(env, "", "  ")
 	if err != nil {
 		return err
@@ -205,11 +229,27 @@ func saveEnvironmentJSON(projectRoot, ref string) error {
 	return os.WriteFile(environmentJSONPath(projectRoot), data, 0o644)
 }
 
-func environmentInstallURL(ref string) string {
+func saveCloudDockerfile(projectRoot string) error {
+	dir := filepath.Join(projectRoot, ".cursor")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return err
+	}
+	path := cloudDockerfilePath(projectRoot)
+	if _, err := os.Stat(path); err == nil {
+		return nil // keep project customizations
+	}
+	return os.WriteFile(path, []byte(cloudDockerfileBody), 0o644)
+}
+
+func environmentInstallCommand(ref string) string {
 	return fmt.Sprintf(
 		"curl -fsSL https://raw.githubusercontent.com/%s/%s/scripts/bootstrap-agent.sh | bash",
 		sourceRepo, ref,
 	)
+}
+
+func environmentInstallURL(ref string) string {
+	return environmentInstallCommand(ref)
 }
 
 func writeCloudConfig(projectRoot string, cm *cloudManifest) error {
@@ -219,7 +259,62 @@ func writeCloudConfig(projectRoot string, cm *cloudManifest) error {
 	if err := saveEnvironmentJSON(projectRoot, cm.Source.Ref); err != nil {
 		return fmt.Errorf("environment.json: %w", err)
 	}
+	if err := saveCloudDockerfile(projectRoot); err != nil {
+		return fmt.Errorf("Dockerfile: %w", err)
+	}
+	if err := ensureProjectGitignore(projectRoot); err != nil {
+		return fmt.Errorf(".gitignore: %w", err)
+	}
 	return nil
+}
+
+func agentConfigGitignoreLines() []string {
+	return []string{
+		gitignoreBegin,
+		"# Desktop local state stays untracked; cloud bootstrap JSON is committed.",
+		"!.cursor/",
+		".cursor/agent-config.local.json",
+		".cursor/agent-config/",
+		"!.cursor/agent-manifest.json",
+		"!.cursor/environment.json",
+		"!.cursor/Dockerfile",
+		gitignoreEnd,
+	}
+}
+
+func mergeGitignoreBlock(existing string) string {
+	block := strings.Join(agentConfigGitignoreLines(), "\n") + "\n"
+	begin := strings.Index(existing, gitignoreBegin)
+	end := strings.Index(existing, gitignoreEnd)
+	if begin >= 0 && end > begin {
+		end += len(gitignoreEnd)
+		for end < len(existing) && (existing[end] == '\n' || existing[end] == '\r') {
+			end++
+		}
+		return existing[:begin] + block + existing[end:]
+	}
+	if existing == "" {
+		return block
+	}
+	if !strings.HasSuffix(existing, "\n") {
+		existing += "\n"
+	}
+	return existing + "\n" + block
+}
+
+func ensureProjectGitignore(projectRoot string) error {
+	path := filepath.Join(projectRoot, ".gitignore")
+	existing := ""
+	if data, err := os.ReadFile(path); err == nil {
+		existing = string(data)
+	} else if !os.IsNotExist(err) {
+		return err
+	}
+	merged := mergeGitignoreBlock(existing)
+	if merged == existing {
+		return nil
+	}
+	return os.WriteFile(path, []byte(merged), 0o644)
 }
 
 func enabledCloudSet(cm *cloudManifest) map[string]bool {

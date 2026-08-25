@@ -1042,12 +1042,78 @@ func TestWriteCloudConfig_writesBothFiles(t *testing.T) {
 	if _, err := os.Stat(environmentJSONPath(project)); err != nil {
 		t.Fatalf("environment.json missing: %v", err)
 	}
+	if _, err := os.Stat(cloudDockerfilePath(project)); err != nil {
+		t.Fatalf("Dockerfile missing: %v", err)
+	}
 	raw, err := os.ReadFile(environmentJSONPath(project))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(raw), "v1.0.1") {
-		t.Fatalf("environment.json = %s", raw)
+	var env environmentFile
+	if err := json.Unmarshal(raw, &env); err != nil {
+		t.Fatal(err)
+	}
+	if env.Build.Dockerfile != "Dockerfile" {
+		t.Fatalf("dockerfile = %q", env.Build.Dockerfile)
+	}
+	if !strings.Contains(env.Install, "v1.0.1") || !strings.Contains(env.Install, "bootstrap-agent.sh") {
+		t.Fatalf("install = %q", env.Install)
+	}
+	gi, err := os.ReadFile(filepath.Join(project, ".gitignore"))
+	if err != nil {
+		t.Fatalf(".gitignore missing: %v", err)
+	}
+	body := string(gi)
+	for _, want := range []string{
+		gitignoreBegin,
+		".cursor/agent-config.local.json",
+		"!.cursor/agent-manifest.json",
+		"!.cursor/environment.json",
+		"!.cursor/Dockerfile",
+	} {
+		if !strings.Contains(body, want) {
+			t.Fatalf(".gitignore missing %q:\n%s", want, body)
+		}
+	}
+}
+
+func TestMergeGitignoreBlock_createsAndUpdates(t *testing.T) {
+	created := mergeGitignoreBlock("")
+	if !strings.Contains(created, gitignoreBegin) || !strings.Contains(created, "!.cursor/agent-manifest.json") {
+		t.Fatalf("create block:\n%s", created)
+	}
+	withExtra := "# custom\n*.log\n"
+	merged := mergeGitignoreBlock(withExtra)
+	if !strings.Contains(merged, "*.log") || !strings.Contains(merged, gitignoreBegin) {
+		t.Fatalf("merge append:\n%s", merged)
+	}
+	updated := mergeGitignoreBlock(merged)
+	if updated != merged {
+		t.Fatal("expected idempotent merge")
+	}
+	replaced := mergeGitignoreBlock(strings.Replace(merged, "!.cursor/environment.json", "# old", 1))
+	if strings.Contains(replaced, "# old") {
+		t.Fatalf("expected block replaced, got:\n%s", replaced)
+	}
+	if !strings.Contains(replaced, "!.cursor/environment.json") {
+		t.Fatal("expected fresh environment negation")
+	}
+}
+
+func TestEnsureProjectGitignore_writesFile(t *testing.T) {
+	project := t.TempDir()
+	if err := ensureProjectGitignore(project); err != nil {
+		t.Fatal(err)
+	}
+	if err := ensureProjectGitignore(project); err != nil {
+		t.Fatal(err)
+	}
+	raw, err := os.ReadFile(filepath.Join(project, ".gitignore"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(raw), gitignoreBegin) {
+		t.Fatalf("gitignore = %s", raw)
 	}
 }
 
