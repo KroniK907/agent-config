@@ -106,11 +106,11 @@ Coverage spans manifest load/save, catalog tree and group cascade, project overr
 - Rules above skills; nested groups (`Wayfinder`, `actions/`, etc.) with cascade select
 - Manifest at `.cursor/agent-config.local.json` (see `.cursor/examples/agent-config.local.json.example`)
 - `agent-config-sync: true` frontmatter on managed copies; `false` = detached override
-- Re-run: `lastCatalogPaths` tracks seen entries; new catalog paths show **NEW** and default off
+- Re-run: `lastCatalogPaths` tracks seen entries; new catalog paths show **NEW** and default off. A legacy manifest with an empty `lastCatalogPaths` restores checkboxes from `skills`/`rules` instead of treating every path as NEW.
 - Project-native files (no sync marker, never applied) show **(project override)**
 - Copy delivery to `.cursor/rules/` and `.cursor/skills/`; framework copy to `.cursor/agent-config/`
 - Optional **Environment details rule** at top of tree - toggles `envDetails` in manifest; writes `.cursor/rules/environment.mdc` on apply (`alwaysApply: true`, `generated-by: agent-config-wizard`); silent refresh on every apply when enabled; removes only wizard-generated copies when disabled
-- **Cloud bootstrap** (`c`) - optional committed cloud config: separate skills/rules opt-in, GitHub release tag picker, path validation at pinned ref, writes `.cursor/agent-manifest.json` + `.cursor/environment.json` and merges `.gitignore` rules so cloud JSON stays committable (`w`). Desktop apply (`a`) does not write cloud files.
+- **Cloud bootstrap** (`c`) - optional committed cloud config: separate skills/rules opt-in, GitHub release tag picker, path validation at pinned ref, writes `.cursor/agent-manifest.json` + `.cursor/environment.json` (`w`). Desktop apply (`a`) copies skills/rules, writes `.cursor/agent-config.local.json`, and merges the gitignore block so local state stays untracked. Cloud write (`w`) runs the same gitignore merge so cloud JSON stays committable. Desktop apply does not write cloud files.
 
 ## Collision demo
 

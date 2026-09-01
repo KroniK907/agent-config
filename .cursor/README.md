@@ -18,10 +18,10 @@ Team rules and skills live in repo-root `rules/` and `skills/`, not here.
 2. From the **project** root, run the wizard (see [scripts/wizard/README.md](../scripts/wizard/README.md)).
 3. Toggle skills and rules in the opt-in tree. Groups cascade to children. Rules appear above skills.
 4. Optional: enable **Environment details rule** at the top of the tree - writes `.cursor/rules/environment.mdc` on apply.
-5. Press **a** to apply. Wizard writes `.cursor/agent-config.local.json`, copies enabled items, and refreshes env-details when enabled.
-6. Optional cloud bootstrap: **c** -> configure -> **w**. Writes committed cloud JSON and merges `.gitignore` so `agent-manifest.json` and `environment.json` stay committable while desktop-local paths stay ignored.
+5. Press **a** to apply. Wizard writes `.cursor/agent-config.local.json`, copies enabled items, refreshes env-details when enabled, and merges the gitignore block so local state stays untracked.
+6. Optional cloud bootstrap: **c** -> configure -> **w**. Writes committed cloud JSON. The same gitignore merge keeps `agent-manifest.json` and `environment.json` committable.
 
-Or paste [examples/gitignore.snippet](examples/gitignore.snippet) into `.gitignore` manually instead of using cloud write.
+Or paste [examples/gitignore.snippet](examples/gitignore.snippet) into `.gitignore` manually if you skip the wizard.
 
 ## Re-run
 

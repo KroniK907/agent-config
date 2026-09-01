@@ -300,6 +300,28 @@ func TestBuildTree_groupHasDescendants(t *testing.T) {
 	}
 }
 
+func TestBuildTree_emptyLastCatalogPathsRestoresEnabled(t *testing.T) {
+	cat := minimalCatalog()
+	project := t.TempDir()
+	prev := &manifest{
+		Skills: []string{"skills/commit"},
+	}
+	items := buildTree(cat, prev, project)
+
+	for _, it := range items {
+		if it.Path == "skills/commit" {
+			if !it.Enabled {
+				t.Error("enabled skill must stay checked when LastCatalogPaths is empty")
+			}
+			if it.IsNew {
+				t.Error("empty LastCatalogPaths must not mark installed paths NEW")
+			}
+			return
+		}
+	}
+	t.Fatal("skills/commit not found")
+}
+
 func TestBuildTree_newEntryDefaultsOff(t *testing.T) {
 	cat := minimalCatalog()
 	project := t.TempDir()
@@ -421,7 +443,7 @@ func TestApplyEnabled_envRuleNotMarkedOverrideAfterApply(t *testing.T) {
 			items[i].Enabled = true
 		}
 	}
-	res := applyEnabled(team, project, items, m)
+	res := applyEnabled(team, project, items, m, cat)
 	if len(res.Errors) > 0 {
 		t.Fatalf("apply errors: %v", res.Errors)
 	}
@@ -502,7 +524,7 @@ func TestApplyEnabled_copiesEnabledEntries(t *testing.T) {
 	m.LastCatalogPaths = catalogPaths(cat)
 	items := enabledItems("rules/unslop.mdc", "skills/commit")
 
-	res := applyEnabled(team, project, items, m)
+	res := applyEnabled(team, project, items, m, cat)
 
 	if len(res.Errors) > 0 {
 		t.Fatalf("apply errors: %v", res.Errors)
@@ -524,6 +546,59 @@ func TestApplyEnabled_copiesEnabledEntries(t *testing.T) {
 	}
 	if !contains(m.Skills, "skills/commit") {
 		t.Errorf("manifest Skills = %v", m.Skills)
+	}
+}
+
+func TestApplyEnabled_writesGitignoreBlock(t *testing.T) {
+	cat := minimalCatalog()
+	team := writeTeamFixture(t, cat)
+	project := t.TempDir()
+
+	m := newManifest(team, project, cat.Catalog.Version)
+	items := enabledItems("skills/commit")
+	res := applyEnabled(team, project, items, m, cat)
+	if len(res.Errors) > 0 {
+		t.Fatalf("apply errors: %v", res.Errors)
+	}
+	raw, err := os.ReadFile(filepath.Join(project, ".gitignore"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := string(raw)
+	if !strings.Contains(body, gitignoreBegin) {
+		t.Fatalf("missing gitignore begin:\n%s", body)
+	}
+	if !strings.Contains(body, ".cursor/agent-config.local.json") {
+		t.Fatalf("missing local json ignore:\n%s", body)
+	}
+}
+
+func TestApplyEnabled_persistsLastCatalogPaths(t *testing.T) {
+	cat := minimalCatalog()
+	team := writeTeamFixture(t, cat)
+	project := t.TempDir()
+
+	m := newManifest(team, project, cat.Catalog.Version)
+	items := enabledItems("skills/commit")
+	res := applyEnabled(team, project, items, m, cat)
+	if len(res.Errors) > 0 {
+		t.Fatalf("apply errors: %v", res.Errors)
+	}
+	if err := saveManifest(project, m); err != nil {
+		t.Fatal(err)
+	}
+	loaded, err := loadManifest(project)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := catalogPaths(cat)
+	if len(loaded.LastCatalogPaths) != len(want) {
+		t.Fatalf("LastCatalogPaths = %v, want %v", loaded.LastCatalogPaths, want)
+	}
+	for i := range want {
+		if loaded.LastCatalogPaths[i] != want[i] {
+			t.Fatalf("LastCatalogPaths = %v, want %v", loaded.LastCatalogPaths, want)
+		}
 	}
 }
 
@@ -553,7 +628,7 @@ func TestApplyEnabled_removesDeselectedManaged(t *testing.T) {
 		}
 	}
 
-	res := applyEnabled(team, project, items, m)
+	res := applyEnabled(team, project, items, m, cat)
 	if len(res.Removed) != 1 || res.Removed[0] != "rules/unslop.mdc" {
 		t.Errorf("Removed = %v, want [rules/unslop.mdc]", res.Removed)
 	}
@@ -588,7 +663,7 @@ func TestApplyEnabled_skipsDetachedOnDeselect(t *testing.T) {
 		}
 	}
 
-	res := applyEnabled(team, project, items, m)
+	res := applyEnabled(team, project, items, m, cat)
 	if len(res.Removed) != 0 {
 		t.Errorf("detached file should not be removed, Removed = %v", res.Removed)
 	}
@@ -623,7 +698,7 @@ func TestApplyEnabled_skipsProjectOverride(t *testing.T) {
 		}
 	}
 
-	res := applyEnabled(team, project, items, m)
+	res := applyEnabled(team, project, items, m, cat)
 	foundSkip := false
 	for _, s := range res.Skipped {
 		if strings.Contains(s, "skills/commit") && strings.Contains(s, "project override") {
@@ -912,7 +987,7 @@ func TestApplyEnabled_envDetailsTreeItem_skipsTeamCopy(t *testing.T) {
 	}
 	m.EnvDetails = true
 
-	res := applyEnabled(team, project, items, m)
+	res := applyEnabled(team, project, items, m, cat)
 	if len(res.Errors) > 0 {
 		t.Fatalf("apply errors: %v", res.Errors)
 	}
@@ -933,7 +1008,7 @@ func TestApplyEnabled_refreshesEnvRuleWhenEnabled(t *testing.T) {
 	m.EnvDetails = true
 	m.LastCatalogPaths = catalogPaths(cat)
 
-	res := applyEnabled(team, project, nil, m)
+	res := applyEnabled(team, project, nil, m, cat)
 	if len(res.Errors) > 0 {
 		t.Fatalf("apply errors: %v", res.Errors)
 	}
@@ -957,7 +1032,7 @@ func TestApplyEnabled_removesEnvRuleWhenDisabled(t *testing.T) {
 	}
 	m.EnvDetails = false
 
-	res := applyEnabled(team, project, nil, m)
+	res := applyEnabled(team, project, nil, m, cat)
 	if len(res.Errors) > 0 {
 		t.Fatalf("apply errors: %v", res.Errors)
 	}

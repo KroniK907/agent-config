@@ -783,7 +783,9 @@ func collectSkillCatalogPaths(n *skillNode) []string {
 func makeLeafItem(key string, e catalogEntry, kind string, depth int, prev *manifest, prevEnabled map[string]bool, projectRoot string) treeItem {
 	override := projectOverride(projectRoot, e.Path, kind, prev)
 	wasEnabled := prevEnabled[e.Path]
-	isNew := prev != nil && !contains(prev.LastCatalogPaths, e.Path)
+	// GM-007: new catalog paths default off only after a prior apply persisted
+	// lastCatalogPaths. Empty/nil is a legacy manifest; restore from skills/rules.
+	isNew := prev != nil && len(prev.LastCatalogPaths) > 0 && !contains(prev.LastCatalogPaths, e.Path)
 
 	enabled := wasEnabled
 	if isNew {
@@ -985,7 +987,7 @@ type applyResult struct {
 	Errors  []string
 }
 
-func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest) applyResult {
+func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest, cat *catalogFile) applyResult {
 	var res applyResult
 	now := time.Now().UTC().Format(time.RFC3339)
 	if m.LastApplied == nil {
@@ -1088,6 +1090,14 @@ func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest) a
 		res.Errors = append(res.Errors, "agent-config framework: "+err.Error())
 	} else {
 		res.Copied = append(res.Copied, ".cursor/agent-config/ (framework copy)")
+	}
+
+	if err := ensureProjectGitignore(projectRoot); err != nil {
+		res.Errors = append(res.Errors, ".gitignore: "+err.Error())
+	}
+
+	if cat != nil {
+		m.LastCatalogPaths = catalogPaths(cat)
 	}
 
 	if m.EnvDetails {
@@ -1666,8 +1676,9 @@ func (m model) runApplyCmd() tea.Cmd {
 	projectRoot := m.projectRoot
 	items := m.items
 	manifest := m.manifest
+	cat := m.catalog
 	return func() tea.Msg {
-		res := applyEnabled(teamRoot, projectRoot, items, manifest)
+		res := applyEnabled(teamRoot, projectRoot, items, manifest, cat)
 		saveErr := saveManifest(projectRoot, manifest)
 		return applyDoneMsg{res: res, saveErr: saveErr}
 	}
@@ -1849,7 +1860,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case applyDoneMsg:
 		m.applying = false
 		m.lastApply = msg.res
-		m.manifest.LastCatalogPaths = catalogPaths(m.catalog)
 		m.errors = append([]string(nil), m.lastApply.Errors...)
 		if msg.saveErr != nil {
 			m.errors = append(m.errors, "manifest save: "+msg.saveErr.Error())
