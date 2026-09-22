@@ -32,8 +32,8 @@ import (
 
 	"golang.org/x/text/unicode/norm"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/viewport"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 const (
@@ -177,7 +177,7 @@ const cloudDockerfileBody = `# Minimal base for agent-config cloud bootstrap.
 FROM ubuntu:24.04
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git curl jq ca-certificates sudo \
+    && apt-get install -y --no-install-recommends git curl jq ca-certificates sudo golang-go \
     && rm -rf /var/lib/apt/lists/*
 `
 
@@ -618,8 +618,16 @@ type catalogFile struct {
 	Catalog struct {
 		Version string `json:"version"`
 	} `json:"catalog"`
-	Skills map[string]catalogEntry `json:"skills"`
-	Rules  map[string]catalogEntry `json:"rules"`
+	Skills  map[string]catalogEntry `json:"skills"`
+	Rules   map[string]catalogEntry `json:"rules"`
+	Scripts map[string]scriptEntry  `json:"scripts"`
+}
+
+type scriptEntry struct {
+	Path  string `json:"path"`
+	Label string `json:"label"`
+	Role  string `json:"role"`
+	Skill string `json:"skill,omitempty"`
 }
 
 type catalogEntry struct {
@@ -981,10 +989,11 @@ func removeManaged(projectRoot, catalogPath, kind string) error {
 // --- apply ---
 
 type applyResult struct {
-	Copied  []string
-	Removed []string
-	Skipped []string
-	Errors  []string
+	Copied   []string
+	Removed  []string
+	Skipped  []string
+	Warnings []string
+	Errors   []string
 }
 
 func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest, cat *catalogFile) applyResult {
@@ -1098,6 +1107,7 @@ func applyEnabled(teamRoot, projectRoot string, items []treeItem, m *manifest, c
 
 	if cat != nil {
 		m.LastCatalogPaths = catalogPaths(cat)
+		res.Warnings = missingSkillTools(projectRoot, cat, newEnabled)
 	}
 
 	if m.EnvDetails {
@@ -1861,6 +1871,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.applying = false
 		m.lastApply = msg.res
 		m.errors = append([]string(nil), m.lastApply.Errors...)
+		for _, w := range m.lastApply.Warnings {
+			m.errors = append(m.errors, "warning: "+w)
+		}
 		if msg.saveErr != nil {
 			m.errors = append(m.errors, "manifest save: "+msg.saveErr.Error())
 		}
@@ -2038,16 +2051,41 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func applyStatusMessage(res applyResult, saveErr error) string {
+	warn := ""
+	if len(res.Warnings) > 0 {
+		warn = fmt.Sprintf(", %d warning(s)", len(res.Warnings))
+	}
 	if saveErr != nil {
-		return fmt.Sprintf("apply finished with errors and manifest was NOT saved (%d copied, %d removed, %d skipped)",
-			len(res.Copied), len(res.Removed), len(res.Skipped))
+		return fmt.Sprintf("apply finished with errors and manifest was NOT saved (%d copied, %d removed, %d skipped%s)",
+			len(res.Copied), len(res.Removed), len(res.Skipped), warn)
 	}
 	if len(res.Errors) > 0 {
-		return fmt.Sprintf("apply finished with %d error(s) (%d copied, %d removed, %d skipped)",
-			len(res.Errors), len(res.Copied), len(res.Removed), len(res.Skipped))
+		return fmt.Sprintf("apply finished with %d error(s) (%d copied, %d removed, %d skipped%s)",
+			len(res.Errors), len(res.Copied), len(res.Removed), len(res.Skipped), warn)
 	}
-	return fmt.Sprintf("applied: %d copied, %d removed, %d skipped",
-		len(res.Copied), len(res.Removed), len(res.Skipped))
+	return fmt.Sprintf("applied: %d copied, %d removed, %d skipped%s",
+		len(res.Copied), len(res.Removed), len(res.Skipped), warn)
+}
+
+// missingSkillTools reports catalog scripts tied to an enabled skill whose
+// files are not at the project destination. A project override skips the
+// skill copy, so an old folder can omit a tool the pack now ships.
+func missingSkillTools(projectRoot string, cat *catalogFile, enabled map[string]bool) []string {
+	if cat == nil || len(cat.Scripts) == 0 {
+		return nil
+	}
+	var warns []string
+	for name, s := range cat.Scripts {
+		if s.Skill == "" || !enabled[s.Skill] {
+			continue
+		}
+		dest := projectDest(projectRoot, s.Path, "skill")
+		if _, err := os.Stat(dest); err != nil {
+			warns = append(warns, fmt.Sprintf("missing tool %s (%s) for enabled skill %s", name, s.Path, s.Skill))
+		}
+	}
+	sort.Strings(warns)
+	return warns
 }
 
 func (m *model) footerLineCount() int {
@@ -2406,13 +2444,22 @@ func (m *model) refreshStateDump(apply *applyResult) {
 	}
 	data, _ := json.MarshalIndent(snapshot, "", "  ")
 	dump := string(data)
-	if apply != nil && len(apply.Errors) > 0 {
+	if apply != nil && (len(apply.Errors) > 0 || len(apply.Warnings) > 0) {
 		var b strings.Builder
 		width := m.wrapWidth()
-		b.WriteString("Apply errors:\n")
-		for _, e := range apply.Errors {
-			b.WriteString(wrapText("  - "+e, width))
-			b.WriteByte('\n')
+		if len(apply.Errors) > 0 {
+			b.WriteString("Apply errors:\n")
+			for _, e := range apply.Errors {
+				b.WriteString(wrapText("  - "+e, width))
+				b.WriteByte('\n')
+			}
+		}
+		if len(apply.Warnings) > 0 {
+			b.WriteString("Apply warnings:\n")
+			for _, w := range apply.Warnings {
+				b.WriteString(wrapText("  - "+w, width))
+				b.WriteByte('\n')
+			}
 		}
 		b.WriteByte('\n')
 		b.WriteString(dump)

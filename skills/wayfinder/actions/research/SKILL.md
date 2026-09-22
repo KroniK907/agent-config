@@ -6,7 +6,7 @@ agent-config-sync: true
 
 # Research
 
-Load a **`wf:research`** ticket, investigate per [behavior rules](REFERENCE.md#behavior-rules), post a **structured findings comment** on the ticket, and hand off **non-binding Proposed tracker updates**. Does **not** append decision-log rows, post Reconcile approval phrases, or edit the map without human review.
+Load a **`wf:research`** ticket, investigate per [behavior rules](REFERENCE.md#behavior-rules), post a **structured findings comment** on the ticket, and hand off **non-binding Proposed tracker updates**. Does **not** post decision-log comments, post Reconcile approval phrases, or edit the map without human review.
 
 **v1 is human-initiated HITL only** - cloud AFK pickup deferred.
 

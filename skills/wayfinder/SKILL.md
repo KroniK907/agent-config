@@ -47,7 +47,7 @@ Skip wayfinder when the path is clear - use `grill-me` or implement directly.
 Run when user explicitly invokes wayfinder after a sibling skill session.
 
 1. **Load map + ticket + session output** - From user message, frontier context, or sibling skill thread (grilling Q&A, research findings, prototype outcome, etc.).
-2. **Infer full-session tracker delta** - Per [Reconcile inference](REFERENCE.md#reconcile-inference), derive:
+2. **Infer full-session tracker delta** - Per [Reconcile inference](references/reconcile.md#reconcile-inference), derive:
  - Decision-log rows (`{MAP-SLUG}-GM-NNN`) with `[global]` vs bundle-scoped tags
  - **Decision coverage** row additions/updates
  - Map diff: **Completed** gist, **Not yet specified**, **Out of scope**, **Notes**
@@ -55,9 +55,9 @@ Run when user explicitly invokes wayfinder after a sibling skill session.
  - **Bundle cluster suggestions** for define-bundle (name, GM IDs, rationale - draft bundle issues are **not** created here)
  - **Ticket invalidations** - close, retitle, or move superseded To Do items
  - **Route hint** - recommended next skill(s)
-3. **Post resolution** - Comment on ticket using the [resolution template](REFERENCE.md#reconcile-resolution-template). Add label **`wf:needs-review`** to the ticket. End with: *Ready for review - reply **Approved - reconcile and close** (or **Approved - reconcile, keep open**) when accepted. Edit any section in this comment before approving.*
-4. **On approval** - When user says an [approval phrase](REFERENCE.md#approval-phrases), agent executes approved sections: close issue (if full approval), move row To Do â†’ **Completed**, append decision log **body**, update **Decision coverage**, update fog/Notes/Out of scope, **materialize approved ticket candidates** (create child issues + **To Do** rows), apply ticket invalidations. Remove label **`wf:needs-review`**. Requires `gh` auth on target repo. For **map or decision-log body** replacements, follow [REFERENCE Â§ Map body edits](REFERENCE.md#map-and-issue-body-edits-reconcile) (draft file â†’ validate â†’ `--body-file`; never string round-trip).
-5. **Partial approval** - **Approved - reconcile, keep open** â†’ apply comments/log/map notes and optional ticket creates without closing the source ticket.
+3. **Post resolution** - Comment on the ticket using the [resolution template](references/reconcile.md#reconcile-resolution-template). Add label **`wf:needs-review`** to the ticket. End with: *Ready for review - reply **Approved - reconcile and close** (or **Approved - reconcile, keep open**) when accepted. Edit any section in this comment before approving.*
+4. **On approval** - When the user says an [approval phrase](references/reconcile.md#approval-phrases), run [approved reconcile steps](references/reconcile.md#approved-reconcile-steps): `wf log-append` (comment on the log, not a body rewrite), `wf map-edit` (complete the row, coverage, fog), `gh issue close` and remove **`wf:needs-review`** on full approval, `gh issue create` for new tickets. Full body replacement, when `map-edit` cannot express the change, follows [map and issue body edits](references/reconcile.md#map-and-issue-body-edits-reconcile) (`wf body` and `wf validate`). Requires `gh` auth and Go.
+5. **Partial approval** - **Approved - reconcile, keep open** runs `wf log-append` and `wf map-edit` plus optional ticket creates, and does not close the source ticket.
 
 **Default:** Reconcile only when the user invokes wayfinder after a sibling skill session. Related skills may remind: *Invoke wayfinder Reconcile when ready.*
 
@@ -76,7 +76,7 @@ Approved bundles â†’ suggest [create-tasks](actions/create-tasks/SKILL.md).
 
 ## Decision log
 
-Each map owns a **scoped decision log** (`{MAP-SLUG}-GM-NNN`). Sibling skills and **Reconcile** append rows; map links to log issue. Full rules: [REFERENCE.md](REFERENCE.md#decision-log).
+Each map owns a **scoped decision log** (`{MAP-SLUG}-GM-NNN`). Sibling skills and **Reconcile** append rows as comments on the log issue. The map links to that issue. Full rules: [REFERENCE.md](REFERENCE.md#map-slug-and-decision-log-prefix).
 
 ## Subfeatures
 

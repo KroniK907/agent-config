@@ -22,7 +22,7 @@ Detail: [REFERENCE.md](REFERENCE.md) - resolution templates: [references/resolut
 
 Run in order. **Stop at first gate failure** - post **Blocked** resolution per [references/resolution-comment.md](references/resolution-comment.md); do not edit the repo.
 
-1. **Load** - task issue + parent bundle (map link, decision log, **Branch:**, **Decisions**)
+1. **Load** - task issue + parent bundle (map link, **Branch:**, decision IDs). Fetch binding paragraphs with `go run <wayfinder>/utilities/wf/wf.go log <log-num> --ids ...` and `--global`
 2. **Startup gates** - [REFERENCE Â§ Startup gates](REFERENCE.md#startup-gates) (Status, labels, Method, bundle branch, AFK serial)
 3. **Git** - checkout/pull bundle branch from bundle **Branch:** line; create if missing
 4. **Method dispatch** - record pre-Method `HEAD`; load and follow task **## Method** skill (HITL session override allowed; AFK requires valid Method)

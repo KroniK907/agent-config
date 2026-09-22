@@ -67,7 +67,7 @@ Map task bullets to build artifacts - resolution comment copies verbatim.
 | Tests at agreed seams | Test files exercise public interface only |
 | Typecheck / lint clean | Project typecheck passes (when applicable) |
 | Full test suite green | Documented run at end of Method |
-| Bundle **Decisions** honored | Constraints reflected in implementation scope |
+| Bundle **Decisions** honored | Decision text loaded with `wf log --ids` / `--global` and reflected in implementation scope |
 | No scope creep | Changes limited to task slice |
 
 Adapt to the task issue's actual **Done when** bullets.

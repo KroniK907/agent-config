@@ -37,7 +37,7 @@ gh issue view <bundle-num> --json body,title,url
 gh issue view <map-num> --json body,title,url
 ```
 
-From the bundle: **Decisions** (covered GM rows), **Constraints**, scope summary, boundaries, outcomes.
+From the bundle: decision IDs and one-line summaries, the line that all `[global]` log rows apply, scope summary, boundaries, outcomes. Load binding prose with `go run <wayfinder>/utilities/wf/wf.go log <log-num> --ids ...` and `--global`. Do not paste full decision paragraphs into task bodies.
 
 From the map: slug, decision log link, **Implementing**, **Decision coverage** for bundle-scoped GM IDs.
 
@@ -68,7 +68,7 @@ Create early with `gh issue create` or update drafts in place.
 
 **Parent bundle:** link in **Parent bundle** section (body link only; native sub-issues optional).
 
-**Decisions:** copy bundle **Decisions** rows **verbatim** + relevant **Constraints** the task must honor.
+**Decisions:** list the GM IDs this task must honor, each with a one-line summary, plus a link to the decision log and the line "all `[global]` rows in the log apply". Load full text with `wf log --ids` or `--global`.
 
 Fill **What to build**, **## Method**, **Outcomes/stories covered**, **Done when**, **Blocked by**.
 
@@ -88,7 +88,7 @@ When the user says **`scope approved`** (optionally naming task issues):
 2. **Map Decision coverage** - each bundle-scoped GM in bundle **Decisions** â†’ **`assigned`**, **Linked issue** â†’ task URL (when multiple tasks cover one GM, link the primary task or the task that completes that GM)
 3. **Comment** on each task summarizing executed updates
 
-Use `gh issue edit --body-file` for full map body replacements. Validate with [validate-map-body](../../utilities/scripts/validate-map-body.ps1) before upload - see [wayfinder REFERENCE Â§ Map body edits](../../REFERENCE.md#map-and-issue-body-edits-reconcile).
+Update the map with `wf map-edit` (coverage and Implementing rows). For a full body replacement, use `wf body get`, `wf validate`, and `wf body put`. See [map and issue body edits](../../references/reconcile.md#map-and-issue-body-edits-reconcile).
 
 **Do not** add `wf:approved` or set Status `ready` yet. Keep **`wf:needs-review`** until **`tasks approved`**.
 
@@ -126,7 +126,7 @@ See [REFERENCE.md](REFERENCE.md#implementation-reconcile).
 
 1. **Approved bundle only** - never split draft bundles
 2. **Planning To Do stays separate** - **Implementing** is the implementation frontier; do not move planning tickets
-3. **Globals inherited** - copy bundle **Constraints** into each task **Decisions**; never mark constraint-only GMs **`assigned`**
+3. **Globals inherited** - each task says all `[global]` log rows apply. Never mark constraint-only GMs **`assigned`**
 4. **Draft early** - create task issues while split is still being refined; update in place; always include **## Method** at draft
 5. **No bundle edits** - create-tasks does not change bundle Status or re-scope GM rows
 

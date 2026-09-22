@@ -58,7 +58,7 @@ In that closing reply:
 
 Use plain prose and whatever headings or lists help readability; do not force the standard four-part template. If the user says yes or names new branches, the **next** reply resumes the full output format and interaction rules from a sensible new baseline (update **Branches** accordingly).
 
-**Wayfinder maps:** When the session ran on a `wf:grilling` ticket, tell the user to invoke [wayfinder](../../SKILL.md) **Reconcile** after they accept the summary. Reconcile will propose decision-log rows, ticket candidates, bundle cluster suggestions, and map updates for approval - grill-me does not edit the map or decision log directly.
+**Wayfinder maps:** When the session ran on a `wf:grilling` ticket, tell the user to invoke [wayfinder](../../SKILL.md) **Reconcile** after they accept the summary. Reconcile proposes decision-log rows, ticket candidates, bundle cluster suggestions, and map updates for approval. On approval it posts new rows as comments with `wf log-append`. grill-me does not edit the map or the decision log.
 
 ## Output format (required unless session complete)
 

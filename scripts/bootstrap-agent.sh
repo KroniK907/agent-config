@@ -125,6 +125,29 @@ while IFS= read -r path; do
   esac
 done < <(jq -r '.skills[]?' "$MANIFEST")
 
+# Scripts tied to an enabled skill (catalog "skill" field). Warn when the
+# destination is missing, which happens when a project override kept an old copy.
+if jq -e '.scripts' "$CACHE/catalog.json" >/dev/null 2>&1; then
+  while IFS=$'\t' read -r skill_path tool_path; do
+    [[ -n "$skill_path" && -n "$tool_path" ]] || continue
+    enabled=0
+    while IFS= read -r enabled_path; do
+      if [[ "$enabled_path" == "$skill_path" ]]; then
+        enabled=1
+        break
+      fi
+    done < <(jq -r '.skills[]?' "$MANIFEST")
+    if [[ "$enabled" -ne 1 ]]; then
+      continue
+    fi
+    rel="${tool_path#skills/}"
+    dest="${SKILLS_HOME}/${rel}"
+    if [[ ! -e "$dest" ]]; then
+      echo "bootstrap-agent: warning: missing tool ${tool_path} for enabled skill ${skill_path}" >&2
+    fi
+  done < <(jq -r '.scripts | to_entries[] | select(.value.skill != null and .value.skill != "") | "\(.value.skill)\t\(.value.path)"' "$CACHE/catalog.json")
+fi
+
 while IFS= read -r path; do
   [[ -n "$path" ]] || continue
   catalog_has_path "$path" || die "path not in catalog at ${REF}: ${path}"

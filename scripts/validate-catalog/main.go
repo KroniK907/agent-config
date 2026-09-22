@@ -13,8 +13,8 @@ type catalogFile struct {
 	Catalog struct {
 		Version string `json:"version"`
 	} `json:"catalog"`
-	Skills  map[string]entry `json:"skills"`
-	Rules   map[string]entry `json:"rules"`
+	Skills  map[string]entry       `json:"skills"`
+	Rules   map[string]entry       `json:"rules"`
 	Scripts map[string]scriptEntry `json:"scripts"`
 }
 
@@ -27,6 +27,7 @@ type scriptEntry struct {
 	Path  string `json:"path"`
 	Label string `json:"label"`
 	Role  string `json:"role"`
+	Skill string `json:"skill"`
 }
 
 func main() {
@@ -68,8 +69,19 @@ func main() {
 	for key, e := range cat.Rules {
 		checkEntry("rule", key, e.Path)
 	}
+	skillPaths := map[string]bool{}
+	for _, e := range cat.Skills {
+		skillPaths[filepath.ToSlash(e.Path)] = true
+	}
+
 	for key, e := range cat.Scripts {
 		checkEntry("script", key, e.Path)
+		if e.Skill == "" {
+			continue
+		}
+		if !skillPaths[filepath.ToSlash(e.Skill)] {
+			errors = append(errors, fmt.Sprintf("script %q: skill %q is not a catalog skill path", key, e.Skill))
+		}
 	}
 
 	catalogSkillPaths := map[string]bool{}

@@ -20,7 +20,7 @@ Northern Utility Services team source for agent skills, Cursor rules, and bootst
 - `actions/` - build playbooks (`write-code`, `create-tasks`, `research`, …)
 - `ideation/` - planning interviews (`grill-me`, `feature-discovery`, …)
 - `orchestrators/` - `implement-task`, `one-off`
-- `utilities/` - bootstrap scripts, map validators - not installable skills
+- `utilities/` - bootstrap scripts and the `wf` helper (`go run utilities/wf/wf.go`) - not installable skills
 
 Repo-root skills under `skills/<name>/` are map-free utilities (PRD tools, `commit`, `unslop`, etc.).
 

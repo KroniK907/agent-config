@@ -31,17 +31,17 @@ Runs on a wayfinder map + its decision log. After approval, hand off to [create-
 ### 1. Load context
 
 ```text
-gh issue view <map-num> --json body,title,url
-gh issue view <log-num> --json body,title,url
+go run <wayfinder>/utilities/wf/wf.go section <map-num> "Decision coverage" "To Do" "Implementing" "Notes"
+go run <wayfinder>/utilities/wf/wf.go log <log-num> --list
 ```
 
-From the map: slug, decision log link, **Decision coverage**, **To Do**, **Implementing**, **Notes**.
+From the map: slug, decision log link, **Decision coverage**, **To Do**, **Implementing**, **Notes**. Load full text for the IDs you might claim with `wf log <log-num> --ids A,B`.
 
-From the log body: all `{MAP-SLUG}-GM-*` rows. Parse scope:
+From the log (body plus comments; a later entry with the same ID wins):
 
-- **`[global]`** in row text, or coverage status **`global`** â†’ Constraints only (never claimed)
-- **`- bundled via [#N]`** suffix â†’ already scoped to a bundle
-- Coverage **`open`** + no global tag â†’ bundle candidates
+- **`[global]`** in the row, or coverage status **`global`** - constraints only (never claimed). List them with `wf log <log-num> --global` when you need the prose.
+- Coverage **`scoped`**, **`assigned`**, or **`implemented`** - already claimed. The coverage table is the claim. Do not look for a suffix on the log row.
+- Coverage **`open`** and no global tag - bundle candidates.
 
 ### 2. Propose cluster
 
@@ -69,9 +69,9 @@ Create early with `gh issue create` or update an existing draft in place.
 
 **Map section:** link parent map, slug, decision log - body link only (no GraphQL sub-issues).
 
-**Decisions:** copy covered GM rows **verbatim** from the log body.
+**Decisions:** list each covered GM ID with a one-line summary and a link to the decision log. Do not paste the full paragraph.
 
-**Constraints:** copy every **`[global]`** log row verbatim - auto-included, not claimed.
+**Constraints:** one line that all `[global]` rows in the log apply, plus each global ID and a one-line summary. Do not paste the full paragraph. Agents load prose with `wf log --ids` or `wf log --global`.
 
 Fill **Scope summary**, **Boundaries**, **Open questions**, **User stories or Outcomes** (`N/A - meta/infra` + bullet outcomes when no user stories).
 
@@ -88,11 +88,10 @@ Add label **`wf:needs-review`** to the draft bundle issue.
 When the user says **`bundle approved`** (optionally naming the bundle issue or confirming/editing **Branch:**):
 
 1. **Bundle issue** - set **Status:** `approved` in body (`gh issue edit`); remove label **`wf:needs-review`**
-2. **Git branch** - create and push the confirmed **`Branch:`** name per [REFERENCE Â§ Bundle branch](REFERENCE.md#bundle-branch-wf-eco-gm-027); persist **Branch:** on bundle body
-3. **Map Decision coverage** - covered rows â†’ **`scoped`**, **Linked issue** â†’ bundle URL
-4. **Decision log body** - append ` - bundled via [#N](url)` to each covered row (immutable paragraph text before suffix)
-5. **Map Notes** - one-line approved-bundle link if helpful
-6. **Comment** on bundle issue summarizing executed updates (include branch name)
+2. **Git branch** - create and push the confirmed **`Branch:`** name per [REFERENCE - Bundle branch](REFERENCE.md#bundle-branch-wf-eco-gm-027); persist **Branch:** on bundle body
+3. **Map Decision coverage** - covered rows to **`scoped`**, **Linked issue** to the bundle URL (`wf map-edit --coverage`). That row is the claim. Do not edit the decision log.
+4. **Map Notes** - one-line approved-bundle link if helpful
+5. **Comment** on the bundle issue summarizing executed updates (include the branch name)
 
 Use `gh issue edit --body-file` for full body replacements. Requires `gh` auth.
 
@@ -109,9 +108,9 @@ Tell the user:
 
 ## Interaction rules
 
-1. **One bundle per build slice** - bundle-scoped GM rows are one-bundle-per-row (suffix on approval)
-2. **Globals are inherited** - list in Constraints; never suffix or mark **`scoped`**
-3. **Log body is authoritative** - binding prose lives in the log issue body only; comments are not binding
+1. **One bundle per build slice** - a bundle-scoped GM row is claimed by one bundle, recorded as coverage **`scoped`**
+2. **Globals are inherited** - list IDs under Constraints and state that every `[global]` log row applies. Never mark them **`scoped`**
+3. **Log body plus comments are binding** - fetch prose with `wf log`. Do not copy it into the bundle
 4. **Draft early** - create the bundle issue while scope is still being refined; update in place
 5. **No implementation** - this skill bundles decisions; it does not write product code unless the bundle itself is meta/infra (then follow bundle deliverables)
 
@@ -119,6 +118,6 @@ Tell the user:
 
 User: "Bundle decision-log rows for a build slice on map #N."
 
-Load map #N + decision log â†’ propose cluster â†’ create draft `wf:bundle` issue (with proposed **Branch:**) â†’ user says **`bundle approved`** â†’ create branch, sync coverage + suffixes â†’ suggest design-modules (when shape open) or create-tasks.
+Load map #N + decision log summaries, propose a cluster, create a draft `wf:bundle` issue (with proposed **Branch:**). After **`bundle approved`**, create the branch and set coverage to **`scoped`**. Then suggest design-modules (when shape is open) or create-tasks.
 
 See [REFERENCE.md](REFERENCE.md) for bundle template, approval phrases, and global-row rules.

@@ -22,7 +22,7 @@ First release after AFK v1 bundle lands: **`v0.1.0`**.
 
 Run on **`main`** after the AFK v1 bundle PR merges and all Implementing tasks are reconciled:
 
-1. **Verify main** - `orchestrators/implement-task`, `actions/` playbooks, `utilities/bootstrap/`, and hub REFERENCE rows present on `main`.
+1. **Verify main** - `orchestrators/implement-task`, `actions/` playbooks, `utilities/bootstrap/`, `utilities/wf/wf.go`, and hub REFERENCE rows present on `main`.
 2. **Tag** - annotated tag preferred:
 
    ```bash

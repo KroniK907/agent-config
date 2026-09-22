@@ -717,6 +717,52 @@ func TestApplyEnabled_skipsProjectOverride(t *testing.T) {
 	}
 }
 
+func TestApplyEnabled_warnsWhenSkillToolMissing(t *testing.T) {
+	cat := minimalCatalog()
+	cat.Scripts = map[string]scriptEntry{
+		"wayfinder-wf": {
+			Path:  "skills/commit/utilities/wf",
+			Label: "wf",
+			Role:  "skill-tool",
+			Skill: "skills/commit",
+		},
+	}
+	team := writeTeamFixture(t, cat)
+	project := t.TempDir()
+
+	dest := filepath.Join(project, ".cursor", "skills", "commit", "SKILL.md")
+	if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	body := "---\nagent-config-sync: false\n---\n\n# local override\n"
+	if err := os.WriteFile(dest, []byte(body), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	m := newManifest(team, project, cat.Catalog.Version)
+	m.LastCatalogPaths = catalogPaths(cat)
+	items := buildTree(cat, m, project)
+	for i := range items {
+		if items[i].Path == "skills/commit" {
+			items[i].Enabled = true
+		}
+	}
+
+	res := applyEnabled(team, project, items, m, cat)
+	if len(res.Warnings) != 1 || !strings.Contains(res.Warnings[0], "skills/commit/utilities/wf") {
+		t.Fatalf("Warnings = %v, want missing wf tool", res.Warnings)
+	}
+
+	tool := filepath.Join(project, ".cursor", "skills", "commit", "utilities", "wf")
+	if err := os.MkdirAll(tool, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	res = applyEnabled(team, project, items, m, cat)
+	if len(res.Warnings) != 0 {
+		t.Fatalf("Warnings = %v, want none when tool exists", res.Warnings)
+	}
+}
+
 func TestPreviouslyManaged_includesLastApplied(t *testing.T) {
 	m := &manifest{
 		Skills:      []string{"skills/a"},

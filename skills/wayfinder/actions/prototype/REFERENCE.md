@@ -72,7 +72,7 @@ Map task bullets to branch artifacts - resolution comment copies verbatim.
 | Verdict documented | Both | Verdict paragraph ready for resolution **Summary** |
 | Runnable without setup (logic) | Logic | Double-click HTML opens demo |
 | Runnable via project dev command (UI) | UI | One documented dev command starts app with prototype route |
-| Bundle **Decisions** honored | Both | Constraints reflected in prototype scope or verdict notes |
+| Bundle **Decisions** honored | Both | Decision text loaded with `wf log --ids` / `--global` and reflected in prototype scope or verdict notes |
 
 Adapt to the task issue's actual **Done when** bullets.
 

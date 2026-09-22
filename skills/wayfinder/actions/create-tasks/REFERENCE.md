@@ -25,9 +25,9 @@ Use for GitHub issue body. Title: `Task: {short name}`.
 
 ## Decisions
 
-*(Bundle Decisions verbatim + inherited Constraints this task must honor)*
+Decision log: [#N](log-url). All `[global]` rows in the log apply. Load prose with `wf log --ids` or `--global`.
 
-**{MAP-SLUG}-GM-NNN** - …
+- **{MAP-SLUG}-GM-NNN** - one-line summary
 
 ## Outcomes / stories covered
 

@@ -180,7 +180,7 @@ Owned by [wayfinder](../../SKILL.md) **Reconcile**, not one-off.
 | **`wf:approved`** | Removed by Reconcile on close |
 | Decision coverage | **No `implemented` updates** unless ticket body explicitly references GM rows |
 | Resolution type | Holistic Reconcile (session close) - same approval phrases as other map tickets |
-| Map body edits | Follow [wayfinder REFERENCE § Map body edits](../../REFERENCE.md#map-and-issue-body-edits-reconcile) - draft file, validate, `--body-file` |
+| Map body edits | Follow [map and issue body edits](../../references/reconcile.md#map-and-issue-body-edits-reconcile) - `wf map-edit`, or `wf body` plus `wf validate` |
 
 After **`awaiting-reconcile`**, suggest wayfinder **Reconcile** - not another implementation pass unless human resets **Status** to **`ready`**.
 

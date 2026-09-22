@@ -52,7 +52,7 @@ gh issue view <bundle-num> --json body,title,url,labels
 gh issue view <map-num> --json body,title,url
 ```
 
-From bundle: **Decisions**, **Constraints**, scope summary, boundaries, open questions.
+From bundle: decision IDs, one-line summaries, and the line that all `[global]` rows apply. Load binding paragraphs with `go run <wayfinder>/utilities/wf/wf.go log <log-num> --ids ...` and `--global`. Also load scope summary, boundaries, and open questions.
 
 **Planning entry:**
 
@@ -81,7 +81,7 @@ From loaded context:
 3. **Per module**, write a problem-space summary:
    - Problem the module solves; callers
    - Which **Decisions** / GM rows this module owns (when bundle entry)
-   - Constraints inherited from bundle **Constraints**
+   - Constraints from `wf log --global` (every `[global]` row applies)
    - Dependencies and category (see [DEEPENING.md](DEEPENING.md))
    - Rough illustrative sketch - not a proposal, just grounding
 
@@ -195,7 +195,7 @@ When only one module, use top-level `## Module design: {name}` instead of `### M
 | Topic | Bundle entry | Planning entry |
 |-------|--------------|----------------|
 | Comment target | Bundle issue | Ticket (or map comment if no ticket) |
-| Input authority | Bundle **Decisions** verbatim | Ticket **Question** |
+| Input authority | Decision log via `wf log --ids` for bundle GM IDs | Ticket **Question** |
 | Module count | Seam discovery from GM cluster | Seam discovery from **Question** scope |
 | Next step | create-tasks | Reconcile ticket when done |
 | Repo edits | Only on explicit human request | Same |

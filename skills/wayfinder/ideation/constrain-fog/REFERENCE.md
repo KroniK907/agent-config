@@ -177,7 +177,7 @@ Owned by [wayfinder](../../SKILL.md) **Reconcile**, not constrain-fog.
 | **Materialize** | **Not used** - constrain-fog output is not **`## Map discovery`** |
 | Close **`Constrain:`** ticket | Human **`Approved - reconcile and close`** |
 
-Resolution comment structure follows [wayfinder Reconcile template](../../REFERENCE.md#reconcile-resolution-template) - infer sections from **`## Fog resolution`** artifact.
+Resolution comment structure follows [wayfinder Reconcile template](../../references/reconcile.md#reconcile-resolution-template) - infer sections from **`## Fog resolution`** artifact.
 
 ---
 

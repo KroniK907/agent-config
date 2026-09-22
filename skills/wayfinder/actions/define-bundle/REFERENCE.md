@@ -36,15 +36,15 @@ Parent: [{FeatureName}:Map](map-issue-url) - slug `{MAP-SLUG}` - decision log [#
 
 ## Decisions
 
-*(Covered GM rows - binding prose verbatim from decision log)*
+Decision log: [#N](log-url). IDs only. Load prose with `wf log <log> --ids`.
 
-**{MAP-SLUG}-GM-NNN** - …
+- **{MAP-SLUG}-GM-NNN** - one-line summary
 
 ## Constraints
 
-*(Auto-included `[global]` rows - not claimed by this bundle)*
+All `[global]` rows in the decision log apply. Load them with `wf log <log> --global`.
 
-**{MAP-SLUG}-GM-NNN** - …
+- **{MAP-SLUG}-GM-NNN** - one-line summary
 
 ## Open questions
 
@@ -65,9 +65,9 @@ For product bundles with user stories, replace the `N/A` line with story bullets
 
 | User says | Agent may |
 |-----------|-----------|
-| **bundle approved** | Set bundle Status `approved`; remove **`wf:needs-review`**; create and push bundle git branch; persist **Branch:** on bundle body; update map Decision coverage (`scoped` + link); append log suffixes; optional Notes line |
+| **bundle approved** | Set bundle Status `approved`; remove **`wf:needs-review`**; create and push bundle git branch; persist **Branch:** on bundle body; update map Decision coverage (`scoped` + link); optional Notes line |
 | (edits requested) | Update draft bundle body in place; keep Status `draft`; keep **`wf:needs-review`** |
-| (no approval) | Narrate or post draft only; add **`wf:needs-review`**; **do not** write coverage or suffixes |
+| (no approval) | Narrate or post draft only; add **`wf:needs-review`**; **do not** write coverage |
 
 Synonyms accepted if unambiguous: "approve the bundle", "approve bundle #N".
 
@@ -81,11 +81,10 @@ Synonyms accepted if unambiguous: "approve the bundle", "approve bundle #N".
 |--------|---------------------|
 | `[global]` in log row text | **Constraints** only |
 | Decision coverage status **`global`** | **Constraints** only |
-| Coverage **`open`**, no suffix | May be **claimed** in **Decisions** |
-| `- bundled via [#N]` suffix | Already claimed - exclude |
-| Coverage **`scoped`** / **`assigned`** / **`implemented`** | Exclude from new bundles |
+| Coverage **`open`** | May be **claimed** in **Decisions** |
+| Coverage **`scoped`** / **`assigned`** / **`implemented`** | Already claimed - exclude |
 
-On **`bundle approved`**, only rows listed in **Decisions** receive the suffix and **`scoped`** coverage update.
+On **`bundle approved`**, rows listed in **Decisions** get coverage **`scoped`** and a link to the bundle. Do not edit the decision log.
 
 Reconcile proposes **`[global]`** vs bundle-scoped when appending new rows; human confirms. Default **`[global]` when unsure**. Reconcile may also propose **bundle cluster suggestions** in the resolution comment - human runs define-bundle to draft/approve bundle issues.
 
@@ -110,18 +109,6 @@ Later lifecycle (create-tasks / implementation Reconcile):
 | `assigned` | Implementation task exists | Task issue |
 | `implemented` | Shipped | Task issue (closed) |
 | `global` | Infrastructure; never bundled | - |
-
----
-
-## Log suffix format
-
-Append to the **end** of each covered row paragraph (after any `(from …)` source link):
-
-```markdown
- - bundled via [#N](https://github.com/org/repo/issues/N)
-```
-
-Do not alter binding prose before the suffix.
 
 ---
 
