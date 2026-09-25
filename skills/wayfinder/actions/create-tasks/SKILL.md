@@ -108,7 +108,7 @@ When the user says **`tasks approved`**, **`task approved`**, or issue comment *
 
 Tell the user:
 
-- **Next:** implement from the ready task(s) with **`wf:approved`** - [implement-task](../../orchestrators/implement-task/SKILL.md) on bundle **Branch:** from [define-bundle](../define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027)
+- **Next:** implement from the ready task(s) with **`wf:approved`** - [implement-task](../../orchestrators/implement-task/SKILL.md) opens a task worktree and a pull request into `integrationBranch`
 - Deferred tasks: label + AFK pickup comment added when blockers clear (implement-task unblock scan) or on a later **`tasks approved`** pass with the one-eligible-task pick
 - On completion: invoke wayfinder **Reconcile** with **`Approved - reconcile and close`** on the task issue
 

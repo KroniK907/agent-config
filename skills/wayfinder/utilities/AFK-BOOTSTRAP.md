@@ -4,7 +4,7 @@ Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Comp
 
 **Desktop project skills:** use **agent-config-wizard** ([scripts/wizard/README.md](../../../scripts/wizard/README.md)) - not this checklist. This doc is for Cloud AFK orchestration only.
 
-**Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/agent-config`](https://github.com/KroniK907/agent-config) pinned to a **semver tag**; one automation per repo; agents **never open PRs** - bundle branch + resolution comment only.
+**Binding contract:** tracker lives in each app repo; skills come from [`KroniK907/agent-config`](https://github.com/KroniK907/agent-config) pinned to a **semver tag**; one automation per repo; each task is a worktree plus a pull request into `integrationBranch`, then a resolution comment.
 
 ---
 
@@ -46,11 +46,11 @@ gh label list --limit 100 | Select-String wf:
 
 **Pin target:** `.cursor/agent-manifest.json` `source.ref` (semver tag). Do not use an `env` block in `environment.json` for repo/tag pin - that pattern is deprecated per AgentConfigHub map decisions.
 
-1. Copy [`.cursor/examples/agent-manifest.json.example`](../../../.cursor/examples/agent-manifest.json.example) to **`.cursor/agent-manifest.json`** in the app repo. Set **`source.ref`** to the exact semver tag you released (e.g. `v1.0.0`). List enabled **`skills`** and **`rules`** paths from [`catalog.json`](../../../catalog.json) at that tag.
+1. Copy [`.cursor/examples/agent-manifest.json.example`](../../../.cursor/examples/agent-manifest.json.example) to **`.cursor/agent-manifest.json`** in the app repo. Set **`source.ref`** to the exact semver tag you released (e.g. `v1.0.0`). Set **`integrationBranch`** to the branch pull requests target (`dev`, `staging`, or `main`). List enabled **`skills`** and **`rules`** paths from [`catalog.json`](../../../catalog.json) at that tag.
 2. Copy [`.cursor/examples/environment.json.example`](../../../.cursor/examples/environment.json.example) to **`.cursor/environment.json`** in the app repo root. Update the tag in the `install` curl URL to match **`source.ref`**.
 3. Commit both files under `.cursor/`.
 
-The **`install`** command runs on Cloud Agent Build creation. It invokes [`scripts/bootstrap-agent.sh`](../../../scripts/bootstrap-agent.sh), which reads the committed manifest, clones `source.repo` at `source.ref`, validates paths against `catalog.json`, copies skills to `~/.cursor/skills/`, and copies rules to `.cursor/rules/` in the workspace. The script must be **idempotent**.
+The **`install`** command runs on Cloud Agent Build creation. It invokes [`scripts/bootstrap-agent.sh`](../../../scripts/bootstrap-agent.sh), which reads the committed manifest, clones `source.repo` at `source.ref`, validates paths against `catalog.json`, copies skills into the installed skills directory (on Cursor Cloud, `~/.cursor/skills/`), and copies rules to `.cursor/rules/` in the workspace. The script must be **idempotent**.
 
 ```json
 {
@@ -122,7 +122,7 @@ Run at least **one** implementation task manually before enabling AFK on product
 
 1. Chart / define-bundle / create-tasks through to a **`wf:approved`** HITL task with **Status:** `ready`.
 2. In chat: `/implement-task` on that task (or invoke implement-task skill with issue `#N`).
-3. Confirm: bundle branch checkout, Method build, code-review, push, resolution comment, **Status:** `awaiting-reconcile`.
+3. Confirm: task worktree, Method build, code-review, push, pull request into `integrationBranch`, resolution comment, **Status:** `awaiting-reconcile`.
 4. Reconcile with **`Approved - reconcile and close`**.
 
 Only after HITL smoke passes:
@@ -140,7 +140,7 @@ Only after HITL smoke passes:
 |-------|--------|
 | Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump **`source.ref`** in app `.cursor/agent-manifest.json`; update tag in `.cursor/environment.json` **install** curl URL; rebuild Cloud Agent environment |
 | New wayfinder label | Add to [labels-manifest.json](bootstrap/labels-manifest.json) in skills repo; re-run bootstrap script in app repos |
-| Bundle complete | Human opens **one PR** from `afk/bundle-{N}-{slug}` - agents do not |
+| Task shipped | Review the pull request implement-task opened. Base is `integrationBranch` |
 | Task shipped | Human Reconcile **`Approved - reconcile and close`** per task resolution comment |
 
 ---

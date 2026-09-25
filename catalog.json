@@ -116,6 +116,10 @@
     "portable-skill-docs": {
       "path": "rules/portable-skill-docs.mdc",
       "label": "Portable skill docs"
+    },
+    "pull-request": {
+      "path": "rules/pull-request.mdc",
+      "label": "Pull request after file changes"
     }
   },
   "scripts": {

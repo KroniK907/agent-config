@@ -43,7 +43,7 @@ Post as a **new top-level comment** on the AFK task. The trigger phrase must app
 **Approved - AFK implement**
 
 Task **Status:** `ready` - label **`wf:approved`** added for reviewer visibility.
-**Method:** `{method-name}` - bundle branch from parent **Branch:** line.
+**Method:** `{method-name}` - task worktree and pull request per implement-task.
 
 <!-- Automation: issue comment trigger v1. Future: wf:approved label add may replace comment trigger. -->
 ```

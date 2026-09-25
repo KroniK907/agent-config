@@ -79,14 +79,15 @@ git commit -m "type(scope): short summary" -m "Optional body with rationale."
 
 Repeat until **chat-attributed** work is committed. **Expect** other local changes to remain modified or untracked - that is normal when scope is chat-only.
 
-### 5. Use `gh` after commits (when relevant)
+### 5. Push and open a pull request
 
-`gh` does not replace `git` for staging/commits. Use it when the user wants GitHub next steps, for example:
+`gh` does not replace `git` for staging and commits.
 
-- `gh pr create` after pushing a branch
-- `gh issue view <n>` to reference an issue in the PR or commit message
+**Done when:** the commits from this chat are on a branch other than `integrationBranch`, and `gh pr view --json url,baseRefName` shows a pull request into that branch. Read `integrationBranch` from `.cursor/agent-manifest.json`. If it is missing, ask once and stop.
 
-Do not push or open a PR unless the user asks.
+Push with `git push -u origin HEAD`. Run `gh pr create --base <integrationBranch>` when no open pull request exists for this head. If the diff against `origin/<integrationBranch>` is empty, stop. Do not open a pull request when the user says not to.
+
+Use `gh issue view <n>` when the commit or pull request should name an issue.
 
 ## Guardrails
 

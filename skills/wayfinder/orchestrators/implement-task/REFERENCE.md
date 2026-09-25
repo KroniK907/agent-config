@@ -28,7 +28,7 @@ gh issue view <bundle-num> --json body,title,url,labels
 
 From the task: **Status**, **Parent bundle**, **What to build**, **Decisions**, **Done when**, **Blocked by**, **## Method** (required for AFK).
 
-From the bundle: map link, **Branch:** line, covered **Decisions**, **Status:** `approved`.
+From the bundle: map link, covered **Decisions**, **Status:** `approved`.
 
 Optional: load map **Implementing** row for mode (HITL / AFK).
 
@@ -56,19 +56,30 @@ Resolve Method skill path:
 
 Record resolved Method name for resolution comment **Method** section.
 
-### 4. Bundle branch
+### 4. Task worktree
 
-From bundle body **`Branch:`** line - pattern **`afk/bundle-{issue-num}-{slug}`**.
+**Integration branch** is `.cursor/agent-manifest.json` field `integrationBranch` (for example `dev`, `staging`, or `main`). Read it before any git write.
+
+**Done when:** the field is a non-empty branch name that exists on `origin`, or the run has stopped and asked the human to set it. Guessing a name is a gate failure. Missing or empty field → **Blocked** after you ask once in chat (HITL) or in the Blocked comment (AFK).
+
+Each task gets its own worktree. The pull request into `integrationBranch` is the review artifact.
+
+**Done when:** the shell cwd is a linked worktree whose current branch is not `integrationBranch`.
+
+Stay in the current worktree when `git branch --show-current` is already not `integrationBranch`. A host worktree with another branch name counts. Do not add a second worktree.
+
+Create a worktree only when the checkout is `integrationBranch`. Branch name `task/{issue-num}-{slug}`. Slug is kebab-case from the task title, at most four words.
 
 ```powershell
 git fetch origin
-git checkout <branch>   # or git checkout -b <branch> when branch first needed
-git pull --rebase origin <branch>
+$base = (Get-Content .cursor/agent-manifest.json -Raw | ConvertFrom-Json).integrationBranch
+$branch = "task/<issue-num>-<slug>"
+$wt = Join-Path (Split-Path (git rev-parse --show-toplevel) -Parent) ("task-<issue-num>-<slug>")
+git worktree add -b $branch $wt "origin/$base"
+Set-Location $wt
 ```
 
-**Agents never open PRs.** Human opens PR when bundle is complete.
-
-Gate failure: branch missing and cannot be created, checkout conflict, or pull failure → **Blocked**.
+Gate failure: `integrationBranch` missing, `origin/$base` missing, or `git worktree add` fails → **Blocked**. Do not commit on the integration branch.
 
 ### 5. AFK serial gate - AFK only
 
@@ -90,7 +101,7 @@ Throughout the run:
 1. **Keep the task open** - do not close the implementation task issue
 2. **Keep `wf:approved`** on the task you are implementing
 3. **Leave Reconcile approval to the human** - do not post **`Approved - reconcile and close`** or **`Approved - reconcile, keep open`** on the task
-4. **Push to the bundle branch only** - do not open PRs
+4. **Ship through a pull request** - commit only in the task worktree; open the PR against `integrationBranch`
 5. **Orchestration vs build** - git push, code-review invoke, resolution comment, status `awaiting-reconcile`, unblock scan, AFK handoff stay in implement-task; Method skill owns product/doc deliverables; [code-review](../../actions/code-review/SKILL.md) owns review + obvious auto-fix
 
 ---
@@ -130,11 +141,15 @@ HITL and AFK both run code-review automatically. No task **## Method** override.
 
 After code-review completes:
 
-### 1. Commit and push
+### 1. Commit, push, and open the pull request
 
-- Commit on bundle branch - Method deliverables + code-review auto-fixes; messages reference task `#N` when helpful
-- **`git push origin <bundle-branch>`**
-- If push fails → narrate blocker; do not set **`awaiting-reconcile`** until push succeeds (or human directs otherwise)
+- If `git diff origin/<integrationBranch>...HEAD` is empty, skip push and the pull request. Post the resolution comment and say no files changed.
+- Otherwise commit in the task worktree. Method deliverables and code-review auto-fixes. Messages reference task `#N` when helpful.
+- `git push -u origin HEAD`
+- `gh pr create --base <integrationBranch>` when no open PR exists for this head. If `gh pr view` already returns one, use that URL. The head is the current branch, including a host worktree branch that is not `task/{issue-num}-{slug}`.
+- Write **PR:** and the URL on the task body.
+- **Done when:** `gh pr view --json url,baseRefName` shows that URL and `baseRefName` equals `integrationBranch`, or the diff against `integrationBranch` was empty.
+- If push or PR creation fails, narrate the blocker. Do not set **`awaiting-reconcile`** until both succeed (or the human directs otherwise).
 
 ### 2. Resolution comment
 

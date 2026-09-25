@@ -7,7 +7,7 @@
 | Path | Use when |
 |------|----------|
 | **one-off** | Map **To Do** ticket with **repo deliverables** (skill folder, code, docs in target repo) - one session or thin vertical slice |
-| **define-bundle → create-tasks → implement-task** | Multiple GM rows, shared bundle branch, **Implementing** frontier, AFK eligibility |
+| **define-bundle, create-tasks, implement-task** | Multiple GM rows, **Implementing** frontier, AFK eligibility, one pull request per task |
 | **Agent checklist or human** | Trivial map errands - no repo deliverables (retitle ticket, add label, post comment, edit map prose) |
 
 **Scope gate:** Human declares one-off intent. No ecosystem checklist beyond "is this map-scoped repo work?"
@@ -73,9 +73,9 @@ Parent: [{FeatureName}:Map](map-url)
 
 `ready`
 
-## Proposed branch
+## Proposed git
 
-`one-off/{issue-num}-{slug}` - slug from ticket title, kebab-case, ≤4 words
+Task worktree `task/{issue-num}-{slug}` and a pull request into `integrationBranch`, per [implement-task](../implement-task/REFERENCE.md#4-task-worktree). Slug from the ticket title, kebab-case, at most four words.
 ```
 
 End with: *Review the draft - reply **draft approved** to materialize and build, or request edits.*
@@ -89,7 +89,7 @@ GitHub issue body after materialize. Title: `Task: {short name}`.
 ```markdown
 **Status:** ready
 
-**Branch:** one-off/{issue-num}-{slug}
+**PR:** {url after implement-task opens it}
 
 ## Question
 
@@ -122,9 +122,8 @@ When entered via **one-off**, apply these overrides to [implement-task startup g
 
 | Gate | Standard implement-task | One-off waiver |
 |------|-------------------------|----------------|
-| Bundle parent | Required; Status `approved` | **Waived** - no bundle |
+| Bundle parent | Required; Status `approved` | **Waived** - no bundle. Still run [task worktree](../implement-task/REFERENCE.md#4-task-worktree) and open the pull request |
 | Label **`wf:approved`** | Required at pickup | **Expected at materialize** - one-off adds it before build tail |
-| Bundle branch | Checkout `afk/bundle-*` from bundle **Branch:** | **Waived** - use ticket **Branch:** (`one-off/{issue-num}-{slug}`) |
 | **Blocked by** | Stops on open blockers | **Kept** - no waiver |
 | AFK serial | AFK only | **N/A** - HITL only |
 | Method validation | Per implement-task | **Kept** |
@@ -136,22 +135,9 @@ Run the full implement-task tail: Method → code-review → push → resolution
 
 ---
 
-## Git branch
+## Git
 
-| Rule | Detail |
-|------|--------|
-| Pattern | `one-off/{issue-num}-{slug}` |
-| Base | Map **Dev branch:** line when present; else remote `dev`, then `develop`, then default branch |
-| **Branch:** line | Write on ticket body at branch creation |
-| Never | Commit directly to `main` / dev base; never use `afk/bundle-*` |
-
-```powershell
-git fetch origin
-git checkout <dev-base>          # or main when no dev branch
-git pull origin <dev-base>
-git checkout -b one-off/<num>-<slug>
-git push -u origin one-off/<num>-<slug>
-```
+Use [implement-task task worktree](../implement-task/REFERENCE.md#4-task-worktree). One-off does not define a second checkout. Commit only in the task worktree. The pull request targets `integrationBranch`.
 
 ---
 
@@ -160,7 +146,7 @@ git push -u origin one-off/<num>-<slug>
 Post on the one-off ticket at end-of-run. Same structure as [implement-task success template](../implement-task/references/resolution-comment.md#success-template) with these deltas:
 
 - **Task** line only - omit **Bundle:** (no parent bundle)
-- **Next** - review diff on ticket **Branch:**, not bundle branch
+- **Next** - review the pull request on **PR:**
 - All other sections unchanged: Summary, Method, Code review, Commits, Done when, Reconcile
 
 After posting: set **Status:** `awaiting-reconcile`; add **`wf:needs-review`**; keep **`wf:approved`**.
@@ -191,13 +177,13 @@ After **`awaiting-reconcile`**, suggest wayfinder **Reconcile** - not another im
 **Situation:** Map `{FeatureName}:Map` has a **To Do** row - ship a new sibling skill folder while planning tickets remain open.
 
 1. **Declare** - Human: "One-off: add `{skill-name}` skill on `{FeatureName}:Map`."
-2. **Draft** - Agent posts chat draft (Question, Done when, **## Method** `{skill-name}` or `writing-for-agents` for meta skills, proposed branch `one-off/{N}-{skill-name}`).
+2. **Draft** - Agent posts chat draft (Question, Done when, **## Method** `{skill-name}` or `writing-for-agents` for meta skills).
 3. **Approve** - Human: **`draft approved`**.
 4. **Materialize** - `gh issue create` with labels; **Status:** `ready`; **To Do** row on map; **`wf:approved`** added.
-5. **Branch** - `git checkout -b one-off/{N}-{skill-name}`; persist **Branch:** on ticket.
+5. **Git** - task worktree per implement-task; branch `task/{N}-{skill-name}`.
 6. **Build** - Follow task **## Method** skill; record pre-Method SHA.
 7. **Code review** - implement-task mode on diff since pre-Method SHA.
-8. **Push** - commit on one-off branch; push.
+8. **Push** - commit in the worktree; push; open the pull request; write **PR:** on the ticket.
 9. **Resolve** - post resolution comment; **Status:** `awaiting-reconcile`; **`wf:needs-review`**.
 10. **Reconcile** - Human **`Approved - reconcile and close`** → Completed gist; close ticket.
 

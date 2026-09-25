@@ -257,7 +257,7 @@ Suggest-only - user starts the recommended skill. Map ticket **Type** â†’ d
 | Approved bundle (post-approval) | [design-modules](actions/design-modules/SKILL.md) | Optional HITL modules shaping (one or more) before [create-tasks](actions/create-tasks/SKILL.md) |
 | `task` (To Do) | [one-off](orchestrators/one-off/SKILL.md) | Map-scoped repo deliverables; trivial checklist-only errands stay *Agent checklist or human* |
 | GM cluster ready to build | `define-bundle` | While planning To Do or fog may stay open; see [define-bundle REFERENCE](actions/define-bundle/REFERENCE.md#route-heuristics-for-wayfinder) |
-| Approved bundle | `create-tasks` | Splits into **Implementing** tasks; bundle **Branch:** already set by [define-bundle](actions/define-bundle/REFERENCE.md#bundle-branch-wf-eco-gm-027) |
+| Approved bundle | `create-tasks` | Splits into **Implementing** tasks. Each task later gets a worktree and a pull request |
 | Small scope, no map | `write-a-prd` â†’ `prd-to-issues` | **Not** a map Route handoff |
 | New feature, no map | wayfinder **Chart** | Then `feature-discovery` |
 
@@ -307,7 +307,7 @@ Cross-map conflicts â†’ parent grilling ticket, not silent edits to child l
 |----------|--------|
 | Map | `wf:map` |
 | Decision log | `wf:decision-log` |
-| Build bundle | `wf:bundle` - body **Branch:** `afk/bundle-{issue-num}-{slug}` when approved |
+| Build bundle | `wf:bundle` - no feature branch on the bundle |
 | To Do ticket | `wf:todo` + type + mode |
 | Implementation task (draft) | `wf:task` or `:prototype` + `:hitl` or `:afk` |
 | Approved implementation task | above + **`wf:approved`**; body **Status:** `ready` \| `awaiting-reconcile` |
@@ -384,19 +384,19 @@ Skills that **write** wayfinder state:
 | [constrain-fog](ideation/constrain-fog/SKILL.md) | Auto-created **`Constrain:`** ticket; **`## Fog resolution`** artifact; Reconcile materializes ticket candidates |
 | `strategic-ideation` | Scope handoff (chat); Reconcile records on map |
 | `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes full-session tracker delta (tickets, bundle clusters, route) |
-| `define-bundle` | Draft/approved bundle issue; proposed **Branch:** in draft; git branch create + push on **`bundle approved`**; Decision coverage `scoped` (the coverage row is the claim) |
+| `define-bundle` | Draft/approved bundle issue; Decision coverage `scoped` on **`bundle approved`** (the coverage row is the claim). Does not create a git branch |
 | `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; deferred/serial **`wf:approved`** on **`tasks approved`**; `implemented` on Reconcile close |
-| [one-off](orchestrators/one-off/SKILL.md) | HITL To Do implementation without bundle pipeline; draft/materialize ticket; `one-off/*` branch; implement-task tail with gate waivers in one-off REFERENCE |
-| [implement-task](orchestrators/implement-task/SKILL.md) | Bundle-branch run; Method dispatch; **code-review** after Method; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
+| [one-off](orchestrators/one-off/SKILL.md) | HITL To Do implementation without bundle pipeline; draft/materialize ticket; same task worktree and pull request as implement-task; gate waivers in one-off REFERENCE |
+| [implement-task](orchestrators/implement-task/SKILL.md) | Task worktree; Method dispatch; **code-review** after Method; push and pull request; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
 | [code-review](actions/code-review/SKILL.md) | Two-axis Standards + Spec review; auto-fix obvious mistakes when invoked by implement-task; ad-hoc branch/PR/WIP review on request |
-| [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wf:prototype`** Method - throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) on bundle branch |
+| [actions/prototype](actions/prototype/SKILL.md) | **`wf:prototype`** Method - throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) in the task worktree |
 | `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
 | [research](actions/research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
-| Cloud AFK automation | Issue comment trigger **`Approved - AFK implement`** (v1); label **`wf:approved`** for reviewer + gates; runs [implement-task](orchestrators/implement-task/SKILL.md) on bundle branch; **push + resolution comment** (no agent PRs); human Reconcile closes task - setup via [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md) |
+| Cloud AFK automation | Issue comment trigger **`Approved - AFK implement`** (v1); label **`wf:approved`** for reviewer + gates; runs [implement-task](orchestrators/implement-task/SKILL.md) in a task worktree; **push, pull request, resolution comment**; human Reconcile closes task - setup via [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md) |
 
 **Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](actions/code-review/SKILL.md) in ad-hoc mode. Complements built-in `review-bugbot` / `review-security`. During **implement-task**, code-review runs automatically after Method - no separate Route handoff.
 
-**Handoff chain:** Chart â†’ feature-discovery â†’ Materialize â†’ sibling skills â†’ Reconcile â†’ **`define-bundle`** ( **`bundle approved`** â†’ create **Branch:** `afk/bundle-{N}-{slug}` ) â†’ **`create-tasks`** ( **`tasks approved`** â†’ **`wf:approved`** + AFK pickup comment when unblocked ) â†’ **`implement-task`** (checkout bundle branch â†’ Method â†’ **code-review** â†’ push) â†’ Reconcile. Map-free: grill-me â†’ `write-a-prd` â†’ `prd-to-issues`.
+**Handoff chain:** Chart, feature-discovery, Materialize, sibling skills, Reconcile, **`define-bundle`** (`bundle approved` sets coverage, no feature branch), **`create-tasks`** (`tasks approved` adds **`wf:approved`** and an AFK pickup comment when unblocked), **`implement-task`** (task worktree, Method, **code-review**, push, pull request), Reconcile. Map-free: grill-me, `write-a-prd`, `prd-to-issues`.
 
 ---
 

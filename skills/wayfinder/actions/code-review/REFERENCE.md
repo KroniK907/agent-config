@@ -44,7 +44,7 @@ Apply fixes **before** returning the orchestrator artifact. Re-run review mental
 | **Documented standard - single fix** | Violation of an explicit repo rule with one clear remediation (e.g. required frontmatter field missing) |
 | **Trivial typos** | Obvious spelling in user-facing strings, comments, or skill descriptions when meaning is unambiguous |
 
-Commit auto-fixes on the bundle branch. Note each fix in **Auto-fixes applied**.
+Commit auto-fixes in the task worktree. Note each fix in **Auto-fixes applied**.
 
 ### Defer (report in resolution - do not fix)
 

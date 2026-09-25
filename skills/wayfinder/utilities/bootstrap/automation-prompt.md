@@ -1,6 +1,6 @@
 # Cursor automation prompt - wayfinder AFK implementation pickup
 
-Copy this prompt into **one repo-scoped Cursor automation** per implementation repository. Do **not** enable PR creation in the automation - agents push to the bundle branch only.
+Copy this prompt into **one repo-scoped Cursor automation** per implementation repository. The agent opens one pull request per task into `integrationBranch`.
 
 ## Trigger
 
@@ -20,13 +20,13 @@ Optional bypass: an issue comment containing **`@cursor`** on an AFK task skips 
 You are picking up a wayfinder implementation task in AFK (unattended) mode.
 
 1. Read the triggered issue number from the automation context (the issue that received the pickup comment).
-2. Invoke the **implement-task** skill on that issue (`/implement-task` or load wayfinder/orchestrators/implement-task/SKILL.md from ~/.cursor/skills/).
+2. Invoke the **implement-task** skill on that issue (`/implement-task` or load wayfinder/orchestrators/implement-task/SKILL.md from the installed skills directory; Cursor Cloud copies that directory to ~/.cursor/skills/).
 3. Follow implement-task exactly - orchestration only:
- - Run startup gates; stop on first failure (Status, labels, Method, bundle branch, AFK serial lock)
- - Checkout/pull bundle branch from parent bundle **Branch:** line
+ - Run startup gates; stop on first failure (Status, labels, Method, integration branch, AFK serial lock)
+ - Create the task worktree from integrationBranch
  - Method dispatch from task **## Method** (required for AFK - no session override)
  - Code review after Method (implement-task mode)
- - Commit + push to bundle branch - **never open PRs**
+ - Commit, push, and open a pull request into integrationBranch
  - Post resolution comment; set task **Status:** awaiting-reconcile
  - Keep the task open with wf:approved until wayfinder Reconcile closes it
 4. On startup gate failure, post Blocked resolution per implement-task references/resolution-comment.md - no repo edits.
@@ -44,9 +44,9 @@ GH_TOKEN: use the Cursor dashboard secret by default; optional per-repo override
 ## Human steps after automation runs
 
 1. Review the **Implementation resolution** comment on the task issue.
-2. Review diff on the bundle branch named in the parent bundle issue.
+2. Review the pull request linked from the task **PR:** line.
 3. Invoke wayfinder **Reconcile** with **`Approved - reconcile and close`** when accepted.
 
 ## PR creation
 
-**OFF.** Bundle work accumulates on `afk/bundle-{N}-{slug}` until a human opens one PR for the complete bundle.
+**ON.** implement-task opens one pull request per task. The base is `integrationBranch` in `.cursor/agent-manifest.json`.

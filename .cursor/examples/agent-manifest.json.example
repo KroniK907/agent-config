@@ -3,6 +3,7 @@
     "repo": "KroniK907/agent-config",
     "ref": "v1.1.0"
   },
+  "integrationBranch": "main",
   "skills": [],
   "rules": []
 }

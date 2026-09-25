@@ -2,7 +2,8 @@
 # Cloud Agent Build install hook - manifest-driven copy-only bootstrap.
 # Reads .cursor/agent-manifest.json from the workspace (CWD or AGENT_CONFIG_WORKSPACE).
 #
-# Cloud bootstrap: skills -> ~/.cursor/skills/<path-after-skills/>; rules -> .cursor/rules/
+# Cursor Cloud install target: skills -> ~/.cursor/skills/<path-after-skills/>; rules -> .cursor/rules/
+# Agent docs call ~/.cursor/skills the installed skills directory for this host.
 # Validates manifest paths against catalog.json at source.ref; no directory-walk fallback.
 #
 # Requires: git, jq

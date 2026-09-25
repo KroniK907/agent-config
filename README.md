@@ -67,7 +67,7 @@ Skills for large-feature planning and incremental implementation via GitHub map 
 - **write-code** (action) - Default bundle **`wf:task`** Method: TDD at pre-agreed seams via implement-task.
 - **create-tasks** (action) - Split an approved bundle into implementation tasks on the map **Implementing** frontier.
 - **research** (action) - Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
-- **implement-task** (orchestrator) - Pick up **`wf:approved`** tasks on a bundle branch; code review, push, resolution comment.
+- **implement-task** (orchestrator) - Pick up **`wf:approved`** tasks in a worktree; code review, push, pull request, resolution comment.
 - **one-off** (orchestrator) - Map **To Do** tickets that ship repo work without the define-bundle pipeline.
 - **prototype** (action) - Throwaway demos when **## Method:** `prototype`.
 - **code-review** (action) - Standards + spec review; auto-fix obvious issues in implement-task mode.
@@ -86,7 +86,7 @@ Skills for shaping work without a wayfinder map - small scope, PRDs, or standalo
 
 - **triage-issue** - Investigate a bug by exploring the codebase, identify root cause, and file a GitHub issue with a TDD-based fix plan.
 - **improve-codebase-architecture** - Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and testability.
-- **commit** - Stage and commit only changes attributable to the current agent chat (split into logical commits when appropriate).
+- **commit** - Stage and commit only changes attributable to the current agent chat, then open a pull request into `integrationBranch` unless the user says not to.
 
 ## Writing and knowledge
 
