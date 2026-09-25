@@ -104,7 +104,7 @@ Once a variant has won (or a synthesis is named):
 - **Verdict** - which variant (or hybrid) and why; explicit non-goals.
 - **Artifact paths** - route, variant component files, switcher path; runnable command.
 
-Hand verdict + paths to **implement-task** for resolution. On the bundle branch, keep all variants as primary source until a follow-on task folds the winner into production code:
+Hand verdict + paths to **implement-task** for resolution. In the task worktree, keep all variants as primary source until a follow-on task folds the winner into production code:
 
 - **Sub-shape A** - follow-on build task folds the winner into the existing page; drop losing variants and switcher from main when shipped.
 - **Sub-shape B** - follow-on build promotes the winning variant to a real route; drop throwaway route when shipped.

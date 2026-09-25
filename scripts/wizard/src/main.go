@@ -52,13 +52,14 @@ const (
 // --- manifest (AGENT-CFG-GM-006) ---
 
 type manifest struct {
-	Source           sourceMeta        `json:"source"`
-	ProjectPath      string            `json:"projectPath"`
-	Skills           []string          `json:"skills"`
-	Rules            []string          `json:"rules"`
-	EnvDetails       bool              `json:"envDetails"`
-	LastApplied      map[string]string `json:"lastApplied,omitempty"`
-	LastCatalogPaths []string          `json:"lastCatalogPaths,omitempty"`
+	Source            sourceMeta        `json:"source"`
+	ProjectPath       string            `json:"projectPath"`
+	IntegrationBranch string            `json:"integrationBranch,omitempty"`
+	Skills            []string          `json:"skills"`
+	Rules             []string          `json:"rules"`
+	EnvDetails        bool              `json:"envDetails"`
+	LastApplied       map[string]string `json:"lastApplied,omitempty"`
+	LastCatalogPaths  []string          `json:"lastCatalogPaths,omitempty"`
 }
 
 type sourceMeta struct {
@@ -130,9 +131,10 @@ func newManifest(teamRoot, projectRoot, ref string) *manifest {
 // --- cloud manifest (AGENT-CFG-GM-006) ---
 
 type cloudManifest struct {
-	Source cloudSourceMeta `json:"source"`
-	Skills []string        `json:"skills"`
-	Rules  []string        `json:"rules"`
+	Source            cloudSourceMeta `json:"source"`
+	IntegrationBranch string          `json:"integrationBranch,omitempty"`
+	Skills            []string        `json:"skills"`
+	Rules             []string        `json:"rules"`
 }
 
 type cloudSourceMeta struct {

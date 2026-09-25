@@ -6,7 +6,7 @@ agent-config-sync: true
 
 # One-off
 
-**HITL-only** entry for map **To Do** tickets that ship repo deliverables without the **define-bundle â†’ create-tasks â†’ Implementing** pipeline. Draft (or load) ticket â†’ materialize with **`wf:approved`** â†’ dedicated branch â†’ full **implement-task** tail with documented gate waivers.
+**HITL-only** entry for map **To Do** tickets that ship repo deliverables without the **define-bundle, create-tasks, Implementing** pipeline. Draft (or load) ticket, materialize with **`wf:approved`**, then the **implement-task** tail (task worktree and pull request) with documented gate waivers.
 
 Detail: [REFERENCE.md](REFERENCE.md)
 
@@ -15,7 +15,7 @@ Detail: [REFERENCE.md](REFERENCE.md)
 | Skill | When instead |
 |-------|----------------|
 | [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
-| [define-bundle](../../actions/define-bundle/SKILL.md) | GM cluster â†’ approved bundle + bundle branch |
+| [define-bundle](../../actions/define-bundle/SKILL.md) | GM cluster into an approved bundle |
 | [create-tasks](../../actions/create-tasks/SKILL.md) | Split approved bundle â†’ **Implementing** tasks |
 | [implement-task](../implement-task/SKILL.md) | Direct pickup on **`wf:approved`** bundle tasks - stops on To Do tickets unless entered via **one-off** |
 | Agent checklist or human | Trivial map errands with no repo deliverables (rename label, post comment, update tracker text) |
@@ -39,7 +39,7 @@ gh issue view <ticket-num> --json body,title,url,labels   # when ticket exists
 
 From the map: slug, decision log link, **To Do**, optional **Dev branch:** line.
 
-From the ticket (if loading existing): **Question**, **Done when**, **## Method**, **Blocked by**, **Status**, **Branch:**
+From the ticket (if loading existing): **Question**, **Done when**, **## Method**, **Blocked by**, **Status**, **PR:**
 
 **Wrong entry:** If the user invoked [implement-task](../implement-task/SKILL.md) on a To Do ticket with no bundle parent, stop and redirect here - see [REFERENCE Â§ Wrong-entry redirect](REFERENCE.md#wrong-entry-redirect).
 
@@ -66,7 +66,7 @@ See [REFERENCE Â§ Ticket template](REFERENCE.md#ticket-template).
 
 ### 4. Git
 
-Create branch per [REFERENCE Â§ Git](REFERENCE.md#git-branch) - pattern **`one-off/{issue-num}-{slug}`**; write **`Branch:`** on ticket body. Never use bundle `afk/bundle-*` branches.
+Run [implement-task task worktree](../implement-task/REFERENCE.md#4-task-worktree) for this ticket. Same integration branch, same `task/{issue-num}-{slug}` worktree, same pull request. There is no separate one-off branch pattern.
 
 ### 5. Implementation tail
 
@@ -80,7 +80,7 @@ Ticket stays on map **To Do** throughout - never **Implementing**.
 
 Tell the human:
 
-- Task is **`awaiting-reconcile`** on **`Branch:`** - review resolution comment and diff
+- Task is **`awaiting-reconcile`** - review the resolution comment and the pull request on **PR:**
 - Invoke wayfinder **Reconcile** with **`Approved - reconcile and close`** when accepted
 - **Reconcile** moves map **To Do â†’ Completed** gist and closes ticket - no Decision coverage **`implemented`** updates unless the ticket body explicitly references GM rows
 
@@ -96,6 +96,6 @@ Tell the human:
 
 User: "One-off: ship {deliverable} on map #N."
 
-Load map â†’ draft ticket (or load #ticket) â†’ **`draft approved`** â†’ materialize â†’ branch â†’ implement-task tail with waivers â†’ resolution â†’ Reconcile.
+Load map, draft ticket (or load #ticket), **`draft approved`**, materialize, task worktree, implement-task tail with waivers, resolution, Reconcile.
 
 See [REFERENCE.md](REFERENCE.md) for templates, gate waivers, and worked example.

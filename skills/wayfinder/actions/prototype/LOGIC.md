@@ -62,10 +62,10 @@ Send them the file, or open it for them. They'll click through the walkthroughs 
 Once the prototype has answered its question:
 
 - **Verdict** - what was learned; what should change in the real design (or explicit "validated as-is").
-- **Artifact** - path to the HTML file on the bundle branch.
+- **Artifact** - path to the HTML file in the task worktree.
 - **Liftable module** - note which pure module shape is validated for future implementation tasks.
 
-Hand verdict + paths to **implement-task** for the resolution comment. The HTML shell stays on the bundle branch as primary source; the validated logic module is what folds into production when a follow-on task requires it.
+Hand verdict + paths to **implement-task** for the resolution comment. The HTML shell stays in the task worktree as primary source; the validated logic module is what folds into production when a follow-on task requires it.
 
 ## Anti-patterns
 

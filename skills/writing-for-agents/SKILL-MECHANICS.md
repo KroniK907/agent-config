@@ -6,10 +6,11 @@ The skill-specific branch of [`writing-for-agents`](SKILL.md). Covers frontmatte
 
 | Type | Path | Scope |
 |------|------|-------|
-| Personal | `~/.cursor/skills/<name>/` | Available across all projects |
-| Project | `.cursor/skills/<name>/` | Shared with anyone using the repository |
+| Personal | Installed skills directory, `<name>/` | Available across all projects on that host |
+| Cursor personal install | `~/.cursor/skills/<name>/` | Cursor's copy of the installed skills directory |
+| Project | `.cursor/skills/<name>/` | Shared with anyone using the repository, when the host reads project skills |
 
-Never create skills in `~/.cursor/skills-cursor/`. That directory is reserved for Cursor built-in skills.
+On Cursor, do not create skills in `~/.cursor/skills-cursor/`. That directory is reserved for Cursor built-in skills.
 
 Layout:
 

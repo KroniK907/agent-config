@@ -2,13 +2,13 @@
 
 Method playbook for bundle **`wf:prototype`** tasks. Implements [PATTERNS.md](../PATTERNS.md) five mandatory sections.
 
-Playbook shape adapted from [mattpocock/skills - engineering/prototype](https://github.com/mattpocock/skills/tree/main/skills/engineering/prototype): **LOGIC** vs **UI** branch, throwaway code, capture verdict on bundle branch.
+Playbook shape adapted from [mattpocock/skills - engineering/prototype](https://github.com/mattpocock/skills/tree/main/skills/engineering/prototype): **LOGIC** vs **UI** branch, throwaway code, capture the verdict in the task worktree.
 
 ---
 
 ## 1. Output artifact
 
-Branch-dependent deliverables on the **bundle branch** (implement-task pushes):
+Branch-dependent deliverables in the **task worktree** (implement-task pushes and opens the pull request):
 
 | Branch | Artifact | Typical shape |
 |--------|----------|---------------|
@@ -30,7 +30,7 @@ No production merge, PR, or tests unless task **Done when** explicitly requires 
 
 Hard gates (implement-task runs first):
 
-- **`wf:approved`** task; bundle branch checked out
+- **`wf:approved`** task; task worktree is the cwd
 - Task **What to build** states or implies a design question (logic/state vs UI look)
 - **Done when** lists verifiable artifacts (file paths, route, variant count, verdict)
 - AFK: **## Method:** `prototype` valid
@@ -82,11 +82,11 @@ Adapt to the task issue's actual **Done when** bullets.
 
 | implement-task | prototype (this skill) |
 |----------------|------------------------|
-| Startup gates, bundle branch, AFK serial | Pick LOGIC vs UI branch; build throwaway artifact |
+| Startup gates, task worktree, AFK serial | Pick LOGIC vs UI branch; build throwaway artifact |
 | `git commit` / `push` | Write prototype files on branch |
 | Resolution comment + **`awaiting-reconcile`** | Supply verdict, paths, run instructions, Done when evidence |
 | Unblock scan + AFK handoff | - |
-| Never close task; never open PR | Never close task; never push or post resolution |
+| Opens the pull request; does not close the task | Does not close the task; does not push or post resolution |
 
 **HITL vs AFK:** Same prototype shape; queue semantics are implement-task only.
 

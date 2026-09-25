@@ -8,7 +8,7 @@ agent-config-sync: true
 
 A prototype is **throwaway code that answers a question**. The question decides the shape.
 
-Dispatched by [implement-task](../../orchestrators/implement-task/SKILL.md) on bundle branch after startup gates. Contract: [REFERENCE.md](REFERENCE.md). Branch playbooks: [LOGIC.md](LOGIC.md) - [UI.md](UI.md).
+Dispatched by [implement-task](../../orchestrators/implement-task/SKILL.md) in the task worktree after startup gates. Contract: [REFERENCE.md](REFERENCE.md). Branch playbooks: [LOGIC.md](LOGIC.md) - [UI.md](UI.md).
 
 ## When to use
 
@@ -39,5 +39,5 @@ The two branches produce very different artifacts - getting this wrong wastes th
 3. **No persistence by default.** State lives in memory. Persistence is the thing the prototype is _checking_, not something it should depend on. If the question explicitly involves a database, hit a scratch DB or a local file with a clear "PROTOTYPE - wipe me" name.
 4. **Skip the polish.** No tests, no error handling beyond what keeps the prototype runnable, no abstractions. Speed over completeness.
 5. **Show state after every action.** After every action (logic) or on every variant switch (UI), print or render the full relevant state so the user can see what changed.
-6. **Capture the answer when done.** Record the verdict and the question it settled for [implement-task](../../orchestrators/implement-task/SKILL.md) resolution **Summary** / **Done when**. Prototype files stay on the **bundle branch** as primary source - implement-task commits and pushes; agents never open PRs. Fold validated decisions into real code only when the task **Done when** requires it; otherwise leave the prototype as the artifact.
+6. **Capture the answer when done.** Record the verdict and the question it settled for [implement-task](../../orchestrators/implement-task/SKILL.md) resolution **Summary** / **Done when**. Prototype files stay in the **task worktree** as primary source. implement-task commits, pushes, and opens the pull request. Fold validated decisions into real code only when the task **Done when** requires it; otherwise leave the prototype as the artifact.
 7. **Load decisions with `wf`.** Task and bundle bodies list IDs. Binding paragraphs come from `go run <wayfinder>/utilities/wf/wf.go log <log-num> --ids ...` and `--global`.

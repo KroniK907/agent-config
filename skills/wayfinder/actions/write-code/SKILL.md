@@ -6,7 +6,7 @@ agent-config-sync: true
 
 # Write code
 
-Build the task **What to build** on the bundle branch using **vertical-slice TDD** at pre-agreed seams, plus regular typecheck and test runs. Dispatched by [implement-task](../../orchestrators/implement-task/SKILL.md) after startup gates.
+Build the task **What to build** in the task worktree using **vertical-slice TDD** at pre-agreed seams, plus regular typecheck and test runs. Dispatched by [implement-task](../../orchestrators/implement-task/SKILL.md) after startup gates. Git and the pull request stay with implement-task.
 
 Detail: [REFERENCE.md](REFERENCE.md). TDD reference: [tests.md](tests.md) - [mocking.md](mocking.md).
 
@@ -21,7 +21,7 @@ Adapted from [mattpocock/skills - engineering/implement](https://github.com/matt
 
 | Skill | When instead |
 |-------|----------------|
-| [implement-task](../../orchestrators/implement-task/SKILL.md) | Gates, bundle branch, code-review, commit, push, resolution comment |
+| [implement-task](../../orchestrators/implement-task/SKILL.md) | Gates, task worktree, code-review, commit, push, pull request, resolution comment |
 | [code-review](../code-review/SKILL.md) | Standards + Spec review after Method (always implement-task) |
 | [prototype](../prototype/SKILL.md) | Throwaway demos when **## Method:** `prototype` |
 | [design-modules](../design-modules/SKILL.md) | Modules interface shaping before tasks exist |

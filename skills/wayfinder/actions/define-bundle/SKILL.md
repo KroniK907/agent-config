@@ -75,9 +75,9 @@ Create early with `gh issue create` or update an existing draft in place.
 
 Fill **Scope summary**, **Boundaries**, **Open questions**, **User stories or Outcomes** (`N/A - meta/infra` + bullet outcomes when no user stories).
 
-**Branch (draft):** Propose the full **`Branch:`** line per [REFERENCE Â§ Bundle branch](REFERENCE.md#bundle-branch-wf-eco-gm-027) - pattern `afk/bundle-{issue-num}-{slug}`. Do not create the git branch until **`bundle approved`**.
+Do not put a **Branch:** line on the bundle. Each implementation task gets its own worktree and pull request. The pull request base is `integrationBranch` in `.cursor/agent-manifest.json`, read by [implement-task](../../orchestrators/implement-task/REFERENCE.md#4-task-worktree).
 
-Post or narrate the draft; end with: *Review the bundle - reply **bundle approved** when scope is accepted (optionally confirm or rename **Branch:**), or request edits.*
+Post or narrate the draft; end with: *Review the bundle - reply **bundle approved** when scope is accepted, or request edits.*
 
 Add label **`wf:needs-review`** to the draft bundle issue.
 
@@ -85,13 +85,14 @@ Add label **`wf:needs-review`** to the draft bundle issue.
 
 ### 4. On `bundle approved`
 
-When the user says **`bundle approved`** (optionally naming the bundle issue or confirming/editing **Branch:**):
+When the user says **`bundle approved`** (optionally naming the bundle issue):
 
 1. **Bundle issue** - set **Status:** `approved` in body (`gh issue edit`); remove label **`wf:needs-review`**
-2. **Git branch** - create and push the confirmed **`Branch:`** name per [REFERENCE - Bundle branch](REFERENCE.md#bundle-branch-wf-eco-gm-027); persist **Branch:** on bundle body
-3. **Map Decision coverage** - covered rows to **`scoped`**, **Linked issue** to the bundle URL (`wf map-edit --coverage`). That row is the claim. Do not edit the decision log.
-4. **Map Notes** - one-line approved-bundle link if helpful
-5. **Comment** on the bundle issue summarizing executed updates (include the branch name)
+2. **Map Decision coverage** - covered rows to **`scoped`**, **Linked issue** to the bundle URL (`wf map-edit --coverage`). That row is the claim. Do not edit the decision log.
+3. **Map Notes** - one-line approved-bundle link if helpful
+4. **Comment** on the bundle issue summarizing executed updates
+
+**Done when:** bundle **Status** is `approved`, coverage rows for claimed IDs are `scoped` and link this issue, and no git branch was created for the bundle.
 
 Use `gh issue edit --body-file` for full body replacements. Requires `gh` auth.
 
@@ -103,7 +104,7 @@ Tell the user:
 
 - **Next (recommended when module shape is unclear):** [design-modules](../design-modules/SKILL.md) on the approved bundle (HITL; posts module-design artifact comment(s)) â†’ then [create-tasks](../create-tasks/SKILL.md)
 - **Next (when shape is clear):** [create-tasks](../create-tasks/SKILL.md) with the approved bundle link, **or** implement directly from the bundle when a single session needs no task split
-- Bundle **Branch:** is created and pushed - all bundle tasks commit on that branch via [implement-task](../../orchestrators/implement-task/SKILL.md)
+- Each task opens its own pull request via [implement-task](../../orchestrators/implement-task/SKILL.md). This skill does not create a branch.
 - Planning **To Do** may stay open
 
 ## Interaction rules
@@ -118,6 +119,6 @@ Tell the user:
 
 User: "Bundle decision-log rows for a build slice on map #N."
 
-Load map #N + decision log summaries, propose a cluster, create a draft `wf:bundle` issue (with proposed **Branch:**). After **`bundle approved`**, create the branch and set coverage to **`scoped`**. Then suggest design-modules (when shape is open) or create-tasks.
+Load map #N and decision log summaries, propose a cluster, create a draft `wf:bundle` issue. After **`bundle approved`**, set coverage to **`scoped`**. Then suggest design-modules (when shape is open) or create-tasks.
 
 See [REFERENCE.md](REFERENCE.md) for bundle template, approval phrases, and global-row rules.

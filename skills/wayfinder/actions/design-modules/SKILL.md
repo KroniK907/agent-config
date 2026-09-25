@@ -21,7 +21,7 @@ Adapted from [mattpocock/skills - engineering/codebase-design](https://github.co
 | [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
 | [define-bundle](../define-bundle/SKILL.md) | Group GM rows into draft/approved bundles |
 | [create-tasks](../create-tasks/SKILL.md) | Split approved bundle into implementation tasks |
-| [prototype](../actions/prototype/SKILL.md) | Throwaway code on bundle branch when **## Method:** `prototype` |
+| [prototype](../prototype/SKILL.md) | Throwaway code in the task worktree when **## Method:** `prototype` |
 | [improve-codebase-architecture](../../improve-codebase-architecture/SKILL.md) | Codebase-wide exploration â†’ GitHub RFC issues |
 | [grill-me](../../ideation/grill-me/SKILL.md) | Binding decisions via Q&A â†’ GM rows |
 

@@ -38,7 +38,7 @@ Post as a **new top-level comment** on the implementation task at end-of-run. Co
 
 ### Next
 
-- Human: review this comment and diff on bundle branch **`{branch-name}`**
+- Human: review this comment and the pull request **{pr-url}**
 - Invoke wayfinder **Reconcile** with **`Approved - reconcile and close`** when accepted
 - <optional follow-up - blocked dependents, doc gaps, etc.>
 
@@ -68,7 +68,7 @@ Run stopped at startup - <gate name>. No repository edits on this run.
 
 ### Blocked reason
 
-<Exact gate that failed - e.g. missing `wf:approved`, invalid **## Method**, could not checkout `afk/bundle-23-…`, `wf:afk-running` held by #other.>
+<Exact gate that failed - e.g. missing `wf:approved`, invalid **## Method**, missing `integrationBranch`, worktree add failed, `wf:afk-running` held by #other.>
 
 ### Method
 

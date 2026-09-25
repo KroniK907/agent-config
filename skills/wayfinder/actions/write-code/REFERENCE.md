@@ -8,7 +8,7 @@ Combines Matt Pocock [implement](https://github.com/mattpocock/skills/tree/main/
 
 ## 1. Output artifact
 
-On the **bundle branch** (implement-task commits and pushes):
+In the **task worktree** (implement-task commits, pushes, and opens the pull request):
 
 | Artifact | Shape |
 |----------|--------|
@@ -24,7 +24,7 @@ No PR, no resolution comment, no task **Status** edits from this skill.
 
 Hard gates (implement-task runs first):
 
-- **`wf:approved`** task; bundle branch checked out
+- **`wf:approved`** task; task worktree is the cwd
 - Task **What to build**, **Done when**, **Decisions**, and **## Method:** `write-code`
 - AFK: **## Method** required and valid
 
@@ -78,12 +78,12 @@ Adapt to the task issue's actual **Done when** bullets.
 
 | implement-task | write-code (this skill) |
 |----------------|-------------------------|
-| Startup gates, bundle branch, AFK serial | Agree seams; vertical-slice TDD build |
+| Startup gates, task worktree, AFK serial | Agree seams; vertical-slice TDD build |
 | [code-review](../code-review/SKILL.md) after Method | - |
-| `git commit` / `push` | Edit files on branch only |
+| `git commit` / `push` / pull request | Edit files in the worktree only |
 | Resolution comment + **`awaiting-reconcile`** | Supply change summary, test evidence, Done when mapping |
 | Unblock scan + AFK handoff | - |
-| Never close task; never open PR | Never commit, push, review, or post resolution |
+| Does not close the task | Does not commit, push, review, or post resolution |
 
 **HITL vs AFK:** Same build shape; seam confirmation may be chat-driven (HITL) or inferred from task text (AFK).
 

@@ -67,7 +67,7 @@ Skills for large-feature planning and incremental implementation via GitHub map 
 - **write-code** (action) - Default bundle **`wf:task`** Method: TDD at pre-agreed seams via implement-task.
 - **create-tasks** (action) - Split an approved bundle into implementation tasks on the map **Implementing** frontier.
 - **research** (action) - Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
-- **implement-task** (orchestrator) - Pick up **`wf:approved`** tasks on a bundle branch; code review, push, resolution comment.
+- **implement-task** (orchestrator) - Pick up **`wf:approved`** tasks in a worktree; code review, push, pull request, resolution comment.
 - **one-off** (orchestrator) - Map **To Do** tickets that ship repo work without the define-bundle pipeline.
 - **prototype** (action) - Throwaway demos when **## Method:** `prototype`.
 - **code-review** (action) - Standards + spec review; auto-fix obvious issues in implement-task mode.
