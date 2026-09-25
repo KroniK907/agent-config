@@ -1,0 +1,18 @@
+---
+description: After this session changes files in a git repo, open a pull request into integrationBranch.
+agent-config-sync: true
+alwaysApply: true
+---
+
+# Pull request after file changes
+
+When this session changes any file in a git repo, finish by opening a pull request. Questions that do not edit files stop with no pull request.
+
+**Done when:** `gh pr view --json url,baseRefName` returns a URL whose `baseRefName` equals `integrationBranch`, or the session changed no files.
+
+1. Read `integrationBranch` from `.cursor/agent-manifest.json`. If it is missing or empty, ask once and stop. Do not guess `dev`, `staging`, or `main`.
+2. Stay in the current worktree when its branch is not `integrationBranch`. A host worktree counts. Create a new worktree only when the checkout is `integrationBranch` itself. Do not commit on `integrationBranch`.
+3. Commit the files this session changed. Push. Open the pull request with `gh pr create --base <integrationBranch>` when `gh pr view` does not already show one.
+4. If `git diff origin/<integrationBranch>...HEAD` is empty, stop. There is nothing to review.
+
+Skip the pull request only when the user says not to open one.

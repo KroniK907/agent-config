@@ -62,11 +62,13 @@ Record resolved Method name for resolution comment **Method** section.
 
 **Done when:** the field is a non-empty branch name that exists on `origin`, or the run has stopped and asked the human to set it. Guessing a name is a gate failure. Missing or empty field → **Blocked** after you ask once in chat (HITL) or in the Blocked comment (AFK).
 
-Each task gets its own worktree and a short-lived branch `task/{issue-num}-{slug}`. Slug is kebab-case from the task title, at most four words. The pull request into `integrationBranch` is the review artifact.
+Each task gets its own worktree. The pull request into `integrationBranch` is the review artifact.
 
-**Done when:** the shell cwd is that worktree, `git status` shows branch `task/{issue-num}-{slug}`, and `git rev-parse HEAD` is an ancestor of the commits you are about to make (fresh worktree: HEAD equals `origin/<integrationBranch>`).
+**Done when:** the shell cwd is a linked worktree whose current branch is not `integrationBranch`.
 
-If this session is already that worktree, stay in it. Otherwise:
+Stay in the current worktree when `git branch --show-current` is already not `integrationBranch`. A host worktree with another branch name counts. Do not add a second worktree.
+
+Create a worktree only when the checkout is `integrationBranch`. Branch name `task/{issue-num}-{slug}`. Slug is kebab-case from the task title, at most four words.
 
 ```powershell
 git fetch origin
@@ -141,12 +143,13 @@ After code-review completes:
 
 ### 1. Commit, push, and open the pull request
 
-- Commit in the task worktree - Method deliverables + code-review auto-fixes; messages reference task `#N` when helpful
+- If `git diff origin/<integrationBranch>...HEAD` is empty, skip push and the pull request. Post the resolution comment and say no files changed.
+- Otherwise commit in the task worktree. Method deliverables and code-review auto-fixes. Messages reference task `#N` when helpful.
 - `git push -u origin HEAD`
-- `gh pr create --base <integrationBranch> --head task/<issue-num>-<slug>` when no open PR exists for that head. If `gh pr view` already returns one, use that URL
-- Write **PR:** and the URL on the task body
-- **Done when:** `gh pr view --json url,baseRefName` shows that URL and `baseRefName` equals `integrationBranch`
-- If push or PR creation fails, narrate the blocker. Do not set **`awaiting-reconcile`** until both succeed (or the human directs otherwise)
+- `gh pr create --base <integrationBranch>` when no open PR exists for this head. If `gh pr view` already returns one, use that URL. The head is the current branch, including a host worktree branch that is not `task/{issue-num}-{slug}`.
+- Write **PR:** and the URL on the task body.
+- **Done when:** `gh pr view --json url,baseRefName` shows that URL and `baseRefName` equals `integrationBranch`, or the diff against `integrationBranch` was empty.
+- If push or PR creation fails, narrate the blocker. Do not set **`awaiting-reconcile`** until both succeed (or the human directs otherwise).
 
 ### 2. Resolution comment
 

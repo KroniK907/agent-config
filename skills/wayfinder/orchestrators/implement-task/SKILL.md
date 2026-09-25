@@ -28,7 +28,7 @@ Run in order. **Stop at first gate failure** - post **Blocked** resolution per [
 4. **Method dispatch** - record pre-Method `HEAD`; load and follow task **## Method** skill (HITL session override allowed; AFK requires valid Method)
 5. **Build** - action skill owns deliverables; orchestrator does not duplicate build steps
 6. **Code review** - [code-review](../../actions/code-review/SKILL.md) in **implement-task mode** on `<pre-method-sha>...HEAD`; auto-fix obvious mistakes; capture [return artifact](../../actions/code-review/REFERENCE.md#implement-task-return-artifact) ([REFERENCE Â§ Code review](REFERENCE.md#code-review))
-7. **Push** - commit Method + auto-fixes in the task worktree; push; open a pull request into `integrationBranch`; write **PR:** on the task body
+7. **Push** - commit Method + auto-fixes in the task worktree; push; open a pull request into `integrationBranch` when files changed; write **PR:** on the task body
 8. **Resolve** - post success resolution comment (include **Code review** section); set body **Status:** `awaiting-reconcile` (keep **`wf:approved`**); add label **`wf:needs-review`**
 9. **Unblock** - scan dependents; for each cleared AFK dependent: add **`wf:approved`** + post AFK pickup comment ([references/afk-pickup-comment.md](references/afk-pickup-comment.md)); HITL dependents: label only ([REFERENCE Â§ Unblock and handoff](REFERENCE.md#unblock-and-handoff))
 10. **AFK only** - remove **`wf:afk-running`**; serial handoff to next eligible AFK task (**`wf:approved`** + pickup comment per [afk-pickup-comment.md](references/afk-pickup-comment.md))
