@@ -1,6 +1,6 @@
 # Agent config hub
 
-Team skills, Cursor rules, and scripts for NUS agent tooling. v1 layout per **AgentConfigHub** map.
+Team skills, project rules, and scripts for NUS agent tooling. v1 layout per **AgentConfigHub** map. Claude CLI and Cursor CLI both load this pack.
 
 **Repo:** [`KroniK907/agent-config`](https://github.com/KroniK907/agent-config). **Catalog:** [`catalog.json`](catalog.json) lists every installable skill, rule, and script with paths and labels.
 
@@ -9,7 +9,7 @@ Team skills, Cursor rules, and scripts for NUS agent tooling. v1 layout per **Ag
 | Path | Purpose |
 |------|---------|
 | `skills/` | Agent skills - flat folders + `skills/wayfinder/` tree |
-| `rules/` | Team Cursor rules pack (`*.mdc`) |
+| `rules/` | Team rules pack (`*.mdc`) |
 | `scripts/` | Bootstrap, validation, and [agent-config-wizard](scripts/wizard/README.md) apply TUI |
 | `skills/wayfinder/utilities/wf/` | `wf` helper for decision-log comments and surgical map edits (`go run wf.go`) |
 | `AGENTS.md` | What agents should know about this repo |
@@ -90,10 +90,10 @@ Skills for shaping work without a wayfinder map - small scope, PRDs, or standalo
 
 ## Writing and knowledge
 
-- **writing-for-agents** - Write documents agents consume (skills, AGENTS.md, Cursor rules): context pointers, information hierarchy, completion criteria, leading words.
+- **writing-for-agents** - Write documents agents consume (skills, AGENTS.md, CLAUDE.md, project rules): context pointers, information hierarchy, completion criteria, leading words.
 - **write-a-skill** - Router to `writing-for-agents` for backward-compatible installs when creating a new skill.
 - **ubiquitous-language** - Extract a DDD-style ubiquitous language glossary from the current conversation; saves to `UBIQUITOUS_LANGUAGE.md`.
 - **unslop** - Cut AI tells from any writing; rewrite for plain human voice. **Always on** via description + optional rule.
 - **ccr-summary** - Generate the opening summary for a CCR from a full report PDF per 40 CFR § 141.156.
 
-Cursor product skills (hooks, canvas, SDK) live in a separate `skills-cursor` tree - not bundled here.
+Host-bundled product skills (editor hooks, canvas, SDK) stay outside this repo.

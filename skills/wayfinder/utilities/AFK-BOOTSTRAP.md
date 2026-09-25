@@ -13,7 +13,7 @@ Cross-repo setup for **wayfinder AFK v1** unattended implementation pickup. Comp
 - [ ] GitHub issues enabled on the app repo (wayfinder map tracker)
 - [ ] `gh` CLI authenticated with issue write on the app repo
 - [ ] `jq` available for Unix label bootstrap script (`bootstrap-labels.sh`)
-- [ ] Cursor Cloud Agents / Automations access for the org or user
+- [ ] An automation host that can start an agent from an issue comment, plus a secret store for `GH_TOKEN`
 - [ ] Skills repo **semver tag** published (see [RELEASE.md](RELEASE.md) - pin `v0.1.0` or later)
 
 ---
@@ -28,7 +28,7 @@ Run once per app repo from any checkout that includes this skills pack:
 ```
 
 ```bash
-# macOS / Linux / Cloud Agent shell
+# macOS / Linux / cloud shell
 bash wayfinder/utilities/bootstrap/bootstrap-labels.sh
 ```
 
@@ -50,7 +50,7 @@ gh label list --limit 100 | Select-String wf:
 2. Copy [`.cursor/examples/environment.json.example`](../../../.cursor/examples/environment.json.example) to **`.cursor/environment.json`** in the app repo root. Update the tag in the `install` curl URL to match **`source.ref`**.
 3. Commit both files under `.cursor/`.
 
-The **`install`** command runs on Cloud Agent Build creation. It invokes [`scripts/bootstrap-agent.sh`](../../../scripts/bootstrap-agent.sh), which reads the committed manifest, clones `source.repo` at `source.ref`, validates paths against `catalog.json`, copies skills into the installed skills directory (on Cursor Cloud, `~/.cursor/skills/`), and copies rules to `.cursor/rules/` in the workspace. The script must be **idempotent**.
+The **`install`** command runs when the cloud environment is built. It invokes [`scripts/bootstrap-agent.sh`](../../../scripts/bootstrap-agent.sh), which reads the committed manifest, clones `source.repo` at `source.ref`, validates paths against `catalog.json`, copies skills into the installed skills directory (on Cursor Cloud, `~/.cursor/skills/`), and copies rules to `.cursor/rules/` in the workspace. The script must be **idempotent**. Those paths are the bootstrap layout. Claude CLI and Cursor CLI both read the same skill and rule text once it is installed for that host.
 
 ```json
 {
@@ -93,10 +93,10 @@ Cloud agents need **`gh`** and GitHub API access for issue edits, comments, and 
 
 | Source | When |
 |--------|------|
-| Cursor dashboard **Secrets** | Default - set `GH_TOKEN` (PAT or fine-grained token with repo + issues scope) |
+| Host secret store | Default. Set `GH_TOKEN` (PAT or fine-grained token with repo and issues scope) |
 | `environment.json` **`env.GH_TOKEN`** | Optional override when dashboard secret is not set |
 
-Do **not** commit tokens. Verify in a Cloud Agent shell:
+Do **not** commit tokens. Verify in a cloud agent shell:
 
 ```bash
 gh auth status
@@ -104,10 +104,10 @@ gh auth status
 
 ---
 
-## 4. Duplicate Cursor automation (one per repo)
+## 4. One repo automation (one per repo)
 
-1. Open Cursor **Automations** for the app repo.
-2. Create **one** repo-scoped automation - trigger: **issue comment** containing **`Approved - AFK implement`** (exact phrase).
+1. Open the host automation UI for the app repo.
+2. Create **one** repo-scoped automation. Trigger: **issue comment** containing **`Approved - AFK implement`** (exact phrase).
 3. Paste prompt from [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md).
 4. **Disable PR creation** in automation settings.
 5. Save and note the automation name for your runbook.
@@ -138,7 +138,7 @@ Only after HITL smoke passes:
 
 | Event | Action |
 |-------|--------|
-| Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump **`source.ref`** in app `.cursor/agent-manifest.json`; update tag in `.cursor/environment.json` **install** curl URL; rebuild Cloud Agent environment |
+| Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump **`source.ref`** in app `.cursor/agent-manifest.json`; update tag in `.cursor/environment.json` **install** curl URL; rebuild the cloud environment |
 | New wayfinder label | Add to [labels-manifest.json](bootstrap/labels-manifest.json) in skills repo; re-run bootstrap script in app repos |
 | Task shipped | Review the pull request implement-task opened. Base is `integrationBranch` |
 | Task shipped | Human Reconcile **`Approved - reconcile and close`** per task resolution comment |
@@ -153,11 +153,11 @@ Only after HITL smoke passes:
 | [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) | Canonical `wf:*` labels |
 | [bootstrap/bootstrap-labels.ps1](bootstrap/bootstrap-labels.ps1) | Label bootstrap (Windows) |
 | [bootstrap/bootstrap-labels.sh](bootstrap/bootstrap-labels.sh) | Label bootstrap (Unix) |
-| [bootstrap/environment.json.example](bootstrap/environment.json.example) | Legacy Cloud Agent env template (use `.cursor/examples/environment.json.example` instead) |
+| [bootstrap/environment.json.example](bootstrap/environment.json.example) | Legacy cloud env template (use `.cursor/examples/environment.json.example` instead) |
 | [bootstrap/install-skills.ps1](bootstrap/install-skills.ps1) | Legacy local / Windows skills install |
-| [bootstrap/install-skills.sh](bootstrap/install-skills.sh) | Legacy Cloud Agent skills install |
-| [scripts/bootstrap-agent.sh](../../../scripts/bootstrap-agent.sh) | Manifest-driven Cloud Agent bootstrap (primary) |
-| [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md) | Cursor automation prompt template |
+| [bootstrap/install-skills.sh](bootstrap/install-skills.sh) | Legacy cloud skills install |
+| [scripts/bootstrap-agent.sh](../../../scripts/bootstrap-agent.sh) | Manifest-driven cloud bootstrap (primary) |
+| [bootstrap/automation-prompt.md](bootstrap/automation-prompt.md) | Repo automation prompt template |
 | [RELEASE.md](RELEASE.md) | Skills repo semver release process |
 | [implement-task/SKILL.md](../../orchestrators/implement-task/SKILL.md) | AFK/HITL orchestration contract |
 | [create-tasks/REFERENCE.md](../../actions/create-tasks/REFERENCE.md) | Implementation task body template |

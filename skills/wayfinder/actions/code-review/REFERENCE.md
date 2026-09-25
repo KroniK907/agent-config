@@ -113,7 +113,7 @@ For wayfinder tasks, scan **What to build**, **Done when**, **Decisions**, bundl
 | Source | Examples |
 |--------|----------|
 | Project docs | `CONTRIBUTING.md`, `CODING_STANDARDS.md`, `AGENTS.md` |
-| Cursor rules | `.cursor/rules/*.mdc` |
+| Project rules | `.cursor/rules/*.mdc`, `.claude/rules/`, `AGENTS.md`, `CLAUDE.md` |
 | Skill conventions | [writing-for-agents](../../../writing-for-agents/SKILL.md), [wayfinder REFERENCE](../../REFERENCE.md) |
 | Language defaults | Only when repo is silent |
 
@@ -142,7 +142,7 @@ From Fowler (*Refactoring*, ch. 3). Paste in full into Standards sub-agent promp
 
 ## Sub-agent prompts
 
-Send both in **one message** as parallel Task calls (`subagent_type: generalPurpose`).
+Send both in **one message** as parallel general-purpose sub-agents.
 
 ### Standards sub-agent
 

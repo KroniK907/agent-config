@@ -10,9 +10,9 @@ Approved - AFK implement
 
 | Role | Detail |
 |------|--------|
-| **Automation trigger (v1)** | Cursor repo automation: **issue comment** containing this exact phrase (case-sensitive) |
+| **Automation trigger (v1)** | Repo automation: **issue comment** containing this exact phrase (case-sensitive) |
 | **Human signal** | Label **`wf:approved`** on the task - reviewer visibility; implement-task startup gate |
-| **Future** | When Cursor supports **issue label added** on **`wf:approved`**, automation may switch to label-only; keep posting this comment until all app repos migrate |
+| **Future** | When the automation host can trigger on **issue label added** for **`wf:approved`**, switch to label-only. Keep posting this comment until every app repo has migrated |
 
 Do **not** use **`tasks approved`**, bare **`approved`**, or Reconcile phrases (**`Approved - reconcile and close`**) as the AFK pickup trigger - those gate different skills.
 

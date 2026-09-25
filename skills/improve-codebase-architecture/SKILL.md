@@ -14,7 +14,7 @@ A **deep module** (John Ousterhout, "A Philosophy of Software Design") has a sma
 
 ### 1. Explore the codebase
 
-Use the Agent tool with subagent_type=Explore to navigate the codebase. Note where you hit friction:
+Use an explore sub-agent to navigate the codebase. Note where you hit friction:
 
 - Understanding one concept requires bouncing between many small files
 - The interface is nearly as complex as the implementation (shallow module)
@@ -57,7 +57,7 @@ Show this to the user, then proceed to Step 5. The user reads while the sub-agen
 
 ### 5. Design multiple interfaces
 
-Spawn 3+ sub-agents in parallel using the Agent tool. Each must produce a **distinct** interface for the deepened module.
+Spawn 3+ sub-agents in parallel. Each must produce a **distinct** interface for the deepened module.
 
 Prompt each sub-agent with a separate technical brief (file paths, coupling details, dependency category, what's being hidden). Give each agent a different design constraint:
 

@@ -2,7 +2,7 @@
 
 Execution detail for wayfinder **Reconcile**. The hub skill states when to run it. This file is the resolution template, inference rules, approval phrases, and the `wf` commands that apply an approval.
 
-`wf` is `go run <wayfinder>/utilities/wf/wf.go`. `<wayfinder>` is the installed skill root (`skills/wayfinder` in this repo, or `.cursor/skills/wayfinder` / `~/.cursor/skills/wayfinder` after apply). Optional `-R owner/repo` targets another repo. Needs `gh` auth and Go.
+`wf` is `go run <wayfinder>/utilities/wf/wf.go`. `<wayfinder>` is the installed skill root (`skills/wayfinder` in this repo, or the applied copy under the host skill directory such as `.cursor/skills/wayfinder`, `~/.cursor/skills/wayfinder`, `.claude/skills/wayfinder`, or `~/.claude/skills/wayfinder`). Optional `-R owner/repo` targets another repo. Needs `gh` auth and Go.
 
 ## Reconcile resolution template
 

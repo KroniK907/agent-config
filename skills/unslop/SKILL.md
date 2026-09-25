@@ -16,7 +16,10 @@ Apply this skill to **every text you send** before you send it: chat replies, is
 
 Write clean as you draft. Do not generate slop and run a cleanup pass afterward.
 
-For global enforcement across all projects, copy [`rules/unslop.mdc`](../../rules/unslop.mdc) to `~/.cursor/rules/unslop.mdc` (same pattern as personal rules like `ascii-dashes.mdc`).
+For global enforcement across all projects, install [`rules/unslop.mdc`](../../rules/unslop.mdc) as an always-on user rule on each CLI.
+
+- Cursor CLI reads `~/.cursor/rules/unslop.mdc`.
+- Claude CLI reads user instructions in `~/.claude/CLAUDE.md`. Put the rule body there.
 
 ## Process
 

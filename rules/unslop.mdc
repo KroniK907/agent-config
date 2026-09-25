@@ -23,6 +23,6 @@ Before sending, read the **unslop** skill if its full pattern list is not alread
 - Active voice when the actor matters.
 - Say what it does with a concrete fact or mechanism, not how it feels.
 
-Full pattern list lives in the **unslop** skill (`skills/unslop/SKILL.md` in this repo; `~/.cursor/skills/unslop/SKILL.md` when installed to a project).
+Full pattern list lives in the **unslop** skill (`skills/unslop/SKILL.md` in this repo, or the installed copy in the host skill directory).
 
 Self-audit before send: what would still read as AI-generated?

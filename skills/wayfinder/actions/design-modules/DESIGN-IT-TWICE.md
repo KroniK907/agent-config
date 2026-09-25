@@ -22,7 +22,7 @@ Show this to the user, then proceed to step 2. The user reads while sub-agents w
 
 ### 2. Spawn sub-agents
 
-Spawn 3+ sub-agents in parallel via Task tool. Each must produce a **radically different** interface for **this module**.
+Spawn 3+ sub-agents in parallel. Each must produce a **radically different** interface for **this module**.
 
 Prompt each sub-agent with a separate technical brief (relevant **Decisions**, file paths when known, dependency category, what sits behind the seam). Give each agent a different design constraint:
 

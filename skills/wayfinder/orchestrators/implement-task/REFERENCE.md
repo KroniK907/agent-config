@@ -88,7 +88,7 @@ Before repo edits on an AFK task:
 1. If repo already has **`wf:afk-running`** on another open issue → **Blocked** (serial queue)
 2. Else add **`wf:afk-running`** to **this** task
 
-**Bypass:** Issue comment containing **`@cursor`** on the AFK task skips the serial gate for that pickup (still run other gates).
+**Bypass:** An issue comment containing **`afk-serial-bypass`** on the AFK task skips the serial gate for that pickup (still run other gates). A comment containing **`@cursor`** is the same bypass.
 
 HITL tasks **never** add or remove **`wf:afk-running`**.
 
@@ -177,11 +177,11 @@ See [Unblock and handoff](#unblock-and-handoff) below.
 
 | Topic | HITL | AFK |
 |-------|------|-----|
-| Pickup | Human starts chat with task link / `#N` | Cursor automation on issue comment **`Approved - AFK implement`** ([afk-pickup-comment.md](references/afk-pickup-comment.md)) |
+| Pickup | Human starts chat with task link / `#N` | Repo automation on issue comment **`Approved - AFK implement`** ([afk-pickup-comment.md](references/afk-pickup-comment.md)) |
 | **`wf:approved`** | Startup gate; added by create-tasks or unblock | Same - **plus** human reviewer signal; **not** the v1 automation trigger |
 | **`wf:afk-running`** | Never | Acquire at startup; remove at end-of-run |
 | Serial queue | N/A | One AFK run per repo; handoff after end-of-run |
-| **`@cursor` bypass** | N/A | Comment on task skips serial gate |
+| **Serial bypass** | N/A | Comment **`afk-serial-bypass`** (or **`@cursor`**) on the task skips the serial gate |
 | Method | Default from task; session override OK | **## Method** required; no override |
 | Resolution + **`awaiting-reconcile`** | Same | Same |
 | Unblock scan | Label **`wf:approved`** only | Label + AFK pickup comment |
