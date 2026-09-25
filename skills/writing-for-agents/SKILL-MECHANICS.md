@@ -4,13 +4,14 @@ The skill-specific branch of [`writing-for-agents`](SKILL.md). Covers frontmatte
 
 ## Storage
 
-| Type | Path | Scope |
-|------|------|-------|
-| Personal | Installed skills directory, `<name>/` | Available across all projects on that host |
-| Cursor personal install | `~/.cursor/skills/<name>/` | Cursor's copy of the installed skills directory |
-| Project | `.cursor/skills/<name>/` | Shared with anyone using the repository, when the host reads project skills |
+Write the skill into the directory for the CLI that will run it. The folder layout is the same on every host. Personal skills live in that host's installed skills directory.
 
-On Cursor, do not create skills in `~/.cursor/skills-cursor/`. That directory is reserved for Cursor built-in skills.
+| Host | Personal (all projects) | Project (when the host reads project skills) |
+|------|-------------------------|-----------------------------------------------|
+| Cursor CLI | `~/.cursor/skills/<name>/` | `.cursor/skills/<name>/` |
+| Claude CLI | `~/.claude/skills/<name>/` | `.claude/skills/<name>/` |
+
+Leave each host's built-in skill directory alone. On Cursor, do not create skills in `~/.cursor/skills-cursor/`. That directory is reserved for Cursor built-in skills.
 
 Layout:
 

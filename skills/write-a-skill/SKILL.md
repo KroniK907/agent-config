@@ -1,6 +1,6 @@
 ---
 name: write-a-skill
-description: write-a-skill, create a skill, write a skill, build an agent skill, new Cursor skill
+description: write-a-skill, create a skill, write a skill, build an agent skill, new agent skill
 disable-model-invocation: true
 agent-config-sync: true
 ---

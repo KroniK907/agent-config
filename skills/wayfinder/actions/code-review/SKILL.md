@@ -11,16 +11,16 @@ Two-axis review of the diff between `HEAD` and a **fixed point**:
 - **Standards** - documented coding standards + Fowler smell baseline where the repo is silent
 - **Spec** - faithful implementation of the originating issue / spec
 
-Both axes run as **parallel sub-agents** (Task tool, `generalPurpose`). Aggregate under separate `## Standards` and `## Spec` headings - do **not** merge or rerank across axes.
+Both axes run as **parallel general-purpose sub-agents**. Aggregate under separate `## Standards` and `## Spec` headings. Do not merge or rerank across axes.
 
 Detail: [REFERENCE.md](REFERENCE.md)
 
 ## Not this skill
 
-| Skill | When instead |
-|-------|----------------|
-| `review-bugbot` | Fixed-prompt bug diff review - no spec lookup |
-| `review-security` | Fixed-prompt security diff review |
+| Kind of review | When instead |
+|----------------|----------------|
+| Bug-only diff review | Fixed prompt, no spec lookup |
+| Security diff review | Fixed prompt for security issues |
 | [implement-task](../../orchestrators/implement-task/SKILL.md) | Full orchestration - this skill is invoked **by** implement-task after Method |
 
 ## Invocation modes

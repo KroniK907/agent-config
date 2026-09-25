@@ -1,6 +1,6 @@
-# Cursor automation prompt - wayfinder AFK implementation pickup
+# Automation prompt - wayfinder AFK implementation pickup
 
-Copy this prompt into **one repo-scoped Cursor automation** per implementation repository. The agent opens one pull request per task into `integrationBranch`.
+Copy this prompt into **one repo-scoped automation** per implementation repository. The agent opens one pull request per task into `integrationBranch`.
 
 ## Trigger
 
@@ -10,9 +10,9 @@ Copy this prompt into **one repo-scoped Cursor automation** per implementation r
 | Match | Comment body contains **`Approved - AFK implement`** (exact phrase, case-sensitive) |
 | Scope | This repository only |
 
-**Why comment, not label:** Cursor automations v1 support PR label triggers reliably; **issue label added** for **`wf:approved`** is not available yet. Skills still add **`wf:approved`** for human reviewers and implement-task startup gates; the comment phrase is the automation trigger. When issue-label triggers ship, app repos may switch automation to **`wf:approved`** label add and optionally stop posting pickup comments - see [afk-pickup-comment.md](../../orchestrators/implement-task/references/afk-pickup-comment.md).
+**Why comment, not label:** Comment-body triggers match this phrase on every host we use. An **issue label added** trigger for **`wf:approved`** is not available on every host. Skills still add **`wf:approved`** for human reviewers and implement-task startup gates. The comment phrase is the automation trigger. When a host can trigger on that label, app repos may switch and stop posting pickup comments. See [afk-pickup-comment.md](../../orchestrators/implement-task/references/afk-pickup-comment.md).
 
-Optional bypass: an issue comment containing **`@cursor`** on an AFK task skips the serial queue gate for that pickup ([implement-task REFERENCE](../../orchestrators/implement-task/REFERENCE.md#5-afk-serial-gate--afk-only)).
+Optional bypass: an issue comment containing **`afk-serial-bypass`** on an AFK task skips the serial queue gate for that pickup. A comment containing **`@cursor`** is the same bypass ([implement-task REFERENCE](../../orchestrators/implement-task/REFERENCE.md#5-afk-serial-gate--afk-only)).
 
 ## Prompt
 
@@ -20,7 +20,7 @@ Optional bypass: an issue comment containing **`@cursor`** on an AFK task skips 
 You are picking up a wayfinder implementation task in AFK (unattended) mode.
 
 1. Read the triggered issue number from the automation context (the issue that received the pickup comment).
-2. Invoke the **implement-task** skill on that issue (`/implement-task` or load wayfinder/orchestrators/implement-task/SKILL.md from the installed skills directory; Cursor Cloud copies that directory to ~/.cursor/skills/).
+2. Invoke the **implement-task** skill on that issue (`/implement-task`, or load `wayfinder/orchestrators/implement-task/SKILL.md` from the installed skills directory). On Cursor Cloud that directory is `~/.cursor/skills/`.
 3. Follow implement-task exactly - orchestration only:
  - Run startup gates; stop on first failure (Status, labels, Method, integration branch, AFK serial lock)
  - Create the task worktree from integrationBranch
@@ -38,7 +38,7 @@ Contract references:
 - Task body template (identical for HITL and AFK): wayfinder/actions/create-tasks/REFERENCE.md
 - AFK bootstrap checklist: wayfinder/utilities/AFK-BOOTSTRAP.md
 
-GH_TOKEN: use the Cursor dashboard secret by default; optional per-repo override via `environment.json` `env.GH_TOKEN` when dashboard secret is not set.
+GH_TOKEN: use the host secret store by default. Optional per-repo override via `environment.json` `env.GH_TOKEN` when that secret is not set.
 ```
 
 ## Human steps after automation runs

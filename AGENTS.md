@@ -1,13 +1,13 @@
 # Agent config hub
 
-Northern Utility Services team source for agent skills, Cursor rules, and bootstrap scripts. Other repos opt in via agent-config apply; this repo is the canonical copy those tools pull from.
+Northern Utility Services team source for agent skills, project rules, and bootstrap scripts. Other repos opt in via agent-config apply; this repo is the canonical copy those tools pull from. Claude CLI and Cursor CLI both load these skills and rules.
 
 ## What lives here
 
 | Path | Role |
 |------|------|
 | `skills/` | Installable agent skills - flat folders plus `skills/wayfinder/` sub-tree |
-| `rules/` | Team `.mdc` rules copied into project `.cursor/rules/` |
+| `rules/` | Team rules (`*.mdc`) applied into the project for whichever CLI loads them |
 | `scripts/` | Validation, bootstrap, and **agent-config-wizard** ([scripts/wizard/](scripts/wizard/README.md)) |
 | `catalog.json` | Sole catalog - every skill, rule, and script with `path` and `label` |
 | `.cursor/` | Example project templates only - not the live rules pack |

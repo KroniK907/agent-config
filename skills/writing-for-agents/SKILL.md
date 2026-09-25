@@ -1,10 +1,10 @@
 ---
 name: writing-for-agents
-description: writing for agents, create or edit skills, AGENTS.md, CLAUDE.md, Cursor rules, skill description pointers, context pointers, leading words
+description: writing for agents, create or edit skills, AGENTS.md, CLAUDE.md, project rules, skill description pointers, context pointers, leading words
 agent-config-sync: true
 ---
 
-Reference for writing any document an agent consumes - a skill, an `AGENTS.md` / `CLAUDE.md`, a Cursor rule, a doc reached by a pointer. The packaging differs. The writing does not. The same levers make each one predictable - the agent taking the same _process_ every run, not producing the same output.
+Reference for writing any document an agent consumes. That includes a skill, an `AGENTS.md` or `CLAUDE.md`, a project rule, and a doc reached by a pointer. The packaging differs. The writing does not. The same levers make each one predictable - the agent taking the same _process_ every run, not producing the same output.
 
 Adapted from [mattpocock/skills - writing-for-agents](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents).
 

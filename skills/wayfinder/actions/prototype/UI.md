@@ -53,7 +53,7 @@ Draft each variant. Hold each one to:
 
 Variants must be **structurally different** - different layout, different information hierarchy, different primary affordance, not just different colours. Three slightly-tweaked card grids isn't a UI prototype, it's wallpaper. If two drafts come out too similar, redo one with explicit "do not use a card grid" guidance.
 
-Use parallel sub-agents (Task tool) when generating variants - assign each agent a structurally divergent constraint.
+Use parallel sub-agents when generating variants. Assign each agent a structurally divergent constraint.
 
 ### 3. Wire them together
 

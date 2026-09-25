@@ -152,7 +152,7 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 |------------|--------------|-----|
 | Design constrain-fog skill for map fog resolution | **Grill:** constrain-fog skill design | "Design â€¦ skill" reads like implementation; `Grill:` signals Q&A first |
 | Specify research ticket workflow | **Grill:** research ticket workflow | "Specify" is ambiguous; grilling resolves the contract |
-| Cursor cloud automations for AFK pickup | **Research:** Cursor cloud automations for AFK pickup | Names the investigation |
+| Cloud automations for AFK pickup | **Research:** cloud automations for AFK pickup | Names the investigation |
 | Subfeature map worked example in REFERENCE | **Prototype:** subfeature map worked example | Names exploration, not a shipped doc yet |
 | implement create-tasks skill | **Task:** implement create-tasks skill | Deliverable prefix |
 | Group GM-012-015 into first bundle | **Task:** define-bundle for palette shell | Bundling work; Route â†’ define-bundle |
@@ -394,7 +394,7 @@ Skills that **write** wayfinder state:
 | [research](actions/research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
 | Cloud AFK automation | Issue comment trigger **`Approved - AFK implement`** (v1); label **`wf:approved`** for reviewer + gates; runs [implement-task](orchestrators/implement-task/SKILL.md) in a task worktree; **push, pull request, resolution comment**; human Reconcile closes task - setup via [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md) |
 
-**Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](actions/code-review/SKILL.md) in ad-hoc mode. Complements built-in `review-bugbot` / `review-security`. During **implement-task**, code-review runs automatically after Method - no separate Route handoff.
+**Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](actions/code-review/SKILL.md) in ad-hoc mode. A host bug-only or security review can sit beside it. During **implement-task**, code-review runs automatically after Method. No separate Route handoff.
 
 **Handoff chain:** Chart, feature-discovery, Materialize, sibling skills, Reconcile, **`define-bundle`** (`bundle approved` sets coverage, no feature branch), **`create-tasks`** (`tasks approved` adds **`wf:approved`** and an AFK pickup comment when unblocked), **`implement-task`** (task worktree, Method, **code-review**, push, pull request), Reconcile. Map-free: grill-me, `write-a-prd`, `prd-to-issues`.
 
