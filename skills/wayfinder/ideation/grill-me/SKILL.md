@@ -1,12 +1,14 @@
 ---
 name: grill-me
-description: grill me, stress-test plan, stress-test design, get grilled, wf:grilling, Grill: ticket, wayfinder Reconcile, depth-first Q&A, coverage zones, Surfaces & experience, layout-bearing surface, rough layout, five zones
+description: grill me, stress-test plan, stress-test design, get grilled, wf:grilling, Grill: ticket, wayfinder Reconcile, depth-first Q&A, coverage zones, Surfaces & experience, layout-bearing surface, rough layout, five zones, sous-vide remainder, grilling session starts sous-vide
 agent-config-sync: true
 ---
 
 # Grill me
 
-Explore the plan or design until every tracked branch is settled or explicitly deferred. Work **depth-first**: choose **one** branch of the decision tree, drill into it until every detail that matters for that branch is settled, then move to the **next** branch. Finish the current branch (or explicitly agree it is deferred) before starting another.
+[Sous-vide](../../orchestrators/sous-vide/SKILL.md) is the orchestrator for a grilling session. When someone asks to grill a topic, a plan, or a design, and sous-vide has not already handed over an **Ask** table, follow sous-vide from the start. Do not ask the first grill question in this skill.
+
+Once sous-vide hands over the **Ask** table, explore those rows until each is settled or explicitly deferred. Work **depth-first**: choose **one** branch of the decision tree, drill into it until every detail that matters for that branch is settled, then move to the **next** branch. Finish the current branch (or explicitly agree it is deferred) before starting another.
 
 ## Coverage zones (canonical branches)
 
@@ -20,9 +22,17 @@ Use these **five stack-neutral zones** so sessions do not miss whole categories 
 | Persistence & data | [persistence-and-data.md](references/persistence-and-data.md) |
 | Change, risk & evidence | [change-risk-and-evidence.md](references/change-risk-and-evidence.md) |
 
+### After sous-vide
+
+When [sous-vide](../../orchestrators/sous-vide/SKILL.md) starts this skill, the **shape** is already settled. Ask only the rows in that bag's **Ask** table, one per turn. Do not re-ask Proposed or N/A rows.
+
+Seed **Branches** with the five zone names as usual. A zone is `complete` when every slice cell in it is accepted, replaced, N/A, or answered in this pass. A zone with any Ask row stays `not started` until you reach it, then `in-progress`. If the user marks a shape row wrong, stop and return to sous-vide for the cascade.
+
+When every Ask id from this bag is answered, stop the grill format. Return those answers to sous-vide for the next wave. Skip the session-complete question about more branches. Reconcile waits until sous-vide finishes the loop.
+
 ### Session startup (before the first question)
 
-1. **Mandatory lightweight pass:** Read **each** zone file only through **Quick triage** (and headings), **for every session** - no skipping files based on an early guess.
+1. **Lightweight pass:** Read **each** zone file only through **Quick triage** (and headings). Skip this pass when a signed-off sous-vide bag already triaged every cell. Otherwise do not skip a file based on an early guess.
 2. **Seed `Branches`:** In the **first reply**, the **Branches** list **must** include **exactly these five zone names** as rows (**verbatim** from the tableâ€™s first column, including the parenthetical on **Surfaces & experience**), each with status `in-progress`, `not started`, or `complete`.
 3. **Close N/A early:** For any zone that is **not applicable**, set it to `complete` **in that first reply** (or as soon as confirmed) and add **one short reason** in **Follow Up** (what is absent or unchanged). If uncertain, keep it `not started` and ask **one** question that resolves scope - still **depth-first** (at most one row `in-progress`).
 4. **Deep read:** After triage, **fully read** the reference body **only** for zones that remain plausibly in scope; use those prompts to drive questions **within** the current zone.
