@@ -1,20 +1,5 @@
 # Implement task reference
 
----
-
-## Split from create-tasks
-
-| Phase | Owner | Human gates | Agent may |
-|-------|-------|-------------|-----------|
-| Split bundle → draft tasks | [create-tasks](../../actions/create-tasks/SKILL.md) | **`scope approved`** | Create task issues; map **Implementing**; coverage **`assigned`** |
-| Promote to pickup | create-tasks | **`tasks approved`** / **`approved`** | **Status:** `ready`; label **`wf:approved`** |
-| Implementation run | **implement-task** | **`Approved - reconcile and close`** (wayfinder Reconcile) | Build via Method; push; resolution comment; **Status:** `awaiting-reconcile` |
-| Close + coverage | [wayfinder](../../SKILL.md) Reconcile | **`Approved - reconcile and close`** | Close task; remove **`wf:approved`**; **Implementing** → **Completed**; coverage **`implemented`** |
-
-create-tasks never runs Method playbooks or posts implementation resolution comments. implement-task never splits bundles or adds **`wf:approved`**.
-
----
-
 ## Startup gates
 
 Run **before any repository edit**. First failure → **Blocked** resolution ([resolution-comment.md](references/resolution-comment.md)); stop.
@@ -37,7 +22,7 @@ Optional: load map **Implementing** row for mode (HITL / AFK).
 | Gate | Stop when |
 |------|-----------|
 | Label | Missing **`wf:approved`** |
-| Status | Not **`ready`** (re-runs: also accept **`awaiting-reconcile`** only when human explicitly restarted implementation in chat) |
+| Status | Not **`ready`** (or **`awaiting-reconcile`** when the user asked for rework) |
 | Blockers | Any **Blocked by** issue still **open** |
 | Bundle parent | Bundle **Status** not **`approved`** |
 | Mode label | Missing **`wf:hitl`** or **`wf:afk`** |
@@ -52,7 +37,7 @@ Resolve Method skill path:
 | Mode | Rule |
 |------|------|
 | **AFK** | **## Method** required; skill file must exist - stop if missing or invalid |
-| **HITL** | Use task **## Method** by default; operator may **session-only override** in chat; persist override to task body only on explicit human request |
+| **HITL** | Use task **## Method**; the user may override it for the session. Write the override to the task body if they want it kept |
 
 Record resolved Method name for resolution comment **Method** section.
 
@@ -60,7 +45,7 @@ Record resolved Method name for resolution comment **Method** section.
 
 **Integration branch** is `.cursor/agent-manifest.json` field `integrationBranch` (for example `dev`, `staging`, or `main`). Read it before any git write.
 
-**Done when:** the field is a non-empty branch name that exists on `origin`, or the run has stopped and asked the human to set it. Guessing a name is a gate failure. Missing or empty field → **Blocked** after you ask once in chat (HITL) or in the Blocked comment (AFK).
+**Done when:** the field names a branch that exists on `origin`. If it is missing, ask the user (HITL) or post **Blocked** (AFK) rather than guessing.
 
 Each task gets its own worktree. The pull request into `integrationBranch` is the review artifact.
 
@@ -96,13 +81,9 @@ HITL tasks **never** add or remove **`wf:afk-running`**.
 
 ## Invariants
 
-Throughout the run:
-
-1. **Keep the task open** - do not close the implementation task issue
-2. **Keep `wf:approved`** on the task you are implementing
-3. **Leave Reconcile approval to the human** - do not post **`Approved - reconcile and close`** or **`Approved - reconcile, keep open`** on the task
-4. **Ship through a pull request** - commit only in the task worktree; open the PR against `integrationBranch`
-5. **Orchestration vs build** - git push, code-review invoke, resolution comment, status `awaiting-reconcile`, unblock scan, AFK handoff stay in implement-task; Method skill owns product/doc deliverables; [code-review](../../actions/code-review/SKILL.md) owns review + obvious auto-fix
+1. The task stays open with **`wf:approved`** - Reconcile closes it after the user reviews the PR.
+2. Commit only in the task worktree; ship through a PR against `integrationBranch`.
+3. implement-task owns push, code-review, resolution, status, unblock, and AFK handoff; the Method skill owns the deliverables.
 
 ---
 
@@ -131,7 +112,7 @@ After Method build work completes, **before commit/push**:
 3. Apply [auto-fix policy](../../actions/code-review/REFERENCE.md#auto-fix-policy) - code-review fixes obvious items in-repo
 4. Capture [return artifact](../../actions/code-review/REFERENCE.md#implement-task-return-artifact) for resolution **Code review** section
 
-Code-review does **not** replace human Reconcile - remaining Standards/Spec findings are for reviewer attention, not blockers unless the run cannot proceed (e.g. unfixable build break - narrate and stop before push).
+Remaining Standards/Spec findings go to the reviewer in the resolution comment. They block only when the run cannot proceed (e.g. an unfixable build break - say so and stop before push).
 
 HITL and AFK both run code-review automatically. No task **## Method** override.
 
@@ -149,13 +130,13 @@ After code-review completes:
 - `gh pr create --base <integrationBranch>` when no open PR exists for this head. If `gh pr view` already returns one, use that URL. The head is the current branch, including a host worktree branch that is not `task/{issue-num}-{slug}`.
 - Write **PR:** and the URL on the task body.
 - **Done when:** `gh pr view --json url,baseRefName` shows that URL and `baseRefName` equals `integrationBranch`, or the diff against `integrationBranch` was empty.
-- If push or PR creation fails, narrate the blocker. Do not set **`awaiting-reconcile`** until both succeed (or the human directs otherwise).
+- If push or PR creation fails, say why and hold off on **`awaiting-reconcile`** until both succeed.
 
 ### 2. Resolution comment
 
 Post **Success** template from [references/resolution-comment.md](references/resolution-comment.md):
 
-Sections: **Summary**, **Method**, **Code review**, **Commits**, **Done when**, **Next**, **Reconcile**
+Sections: **Summary**, **Method**, **Code review**, **Commits**, **Done when**, **Next**
 
 Paste code-review [return artifact](../../actions/code-review/REFERENCE.md#implement-task-return-artifact) under **Code review**. Map each task **Done when** bullet in the table with evidence.
 
@@ -165,7 +146,7 @@ Paste code-review [return artifact](../../actions/code-review/REFERENCE.md#imple
 gh issue edit <task-num> --body-file path\to\updated-body.md
 ```
 
-Set **Status:** `awaiting-reconcile`. Keep **`wf:approved`**. Add **`wf:needs-review`**. Do not remove **`wf:approved`**.
+Set **Status:** `awaiting-reconcile`, keep **`wf:approved`**, and add **`wf:needs-review`**.
 
 ### 4. Unblock and handoff
 
@@ -178,14 +159,14 @@ See [Unblock and handoff](#unblock-and-handoff) below.
 | Topic | HITL | AFK |
 |-------|------|-----|
 | Pickup | Human starts chat with task link / `#N` | Repo automation on issue comment **`Approved - AFK implement`** ([afk-pickup-comment.md](references/afk-pickup-comment.md)) |
-| **`wf:approved`** | Startup gate; added by create-tasks or unblock | Same - **plus** human reviewer signal; **not** the v1 automation trigger |
+| **`wf:approved`** | Startup gate; added by create-tasks or unblock | Same; the pickup comment is what triggers automation |
 | **`wf:afk-running`** | Never | Acquire at startup; remove at end-of-run |
 | Serial queue | N/A | One AFK run per repo; handoff after end-of-run |
 | **Serial bypass** | N/A | Comment **`afk-serial-bypass`** (or **`@cursor`**) on the task skips the serial gate |
 | Method | Default from task; session override OK | **## Method** required; no override |
 | Resolution + **`awaiting-reconcile`** | Same | Same |
 | Unblock scan | Label **`wf:approved`** only | Label + AFK pickup comment |
-| Reconcile close | Human **`Approved - reconcile and close`** | Same - automation never closes task |
+| Close | Reconcile, after the user reviews the PR | Same - automation never closes the task |
 
 Task bodies are **identical** for HITL and AFK. Mode is label-only.
 
@@ -199,12 +180,10 @@ After success resolution and **`awaiting-reconcile`**:
 
 Scan implementation tasks (map **Implementing** or bundle siblings) that list this task in **Blocked by**:
 
-- When **all** blockers for a dependent are **closed** or **`awaiting-reconcile`** / reconciled as shipped, and dependent **Status** is **`ready`** with **`scope approved`** already applied:
- - Add **`wf:approved`** to the dependent (create-tasks deferred label when blocked; implement-task restores when unblocked)
- - **AFK only** (`wf:afk`): post pickup comment per [references/afk-pickup-comment.md](references/afk-pickup-comment.md) - trigger phrase **`Approved - AFK implement`**
-- Do **not** start the dependent automatically in HITL unless the human asks
-
-create-tasks owns deferring **`wf:approved`** while blockers exist; implement-task performs the **add** (+ AFK pickup comment) when blockers clear.
+- When **all** blockers for a dependent are **closed** or **`awaiting-reconcile`**, and the dependent is **`ready`**:
+ - Add **`wf:approved`** to the dependent
+ - **AFK only** (`wf:afk`): post pickup comment per [references/afk-pickup-comment.md](references/afk-pickup-comment.md)
+- In HITL, leave starting the dependent to the user
 
 ### AFK serial handoff (AFK only)
 
@@ -219,14 +198,7 @@ If no eligible task, queue idle.
 
 ## Status lifecycle
 
-| Status | Set by | Meaning |
-|--------|--------|---------|
-| `draft` | create-tasks | Task not approved for pickup |
-| `ready` | create-tasks on **`tasks approved`** | Eligible for implement-task |
-| `awaiting-reconcile` | **implement-task** end-of-run | Work pushed; resolution posted; awaits human Reconcile |
-| (closed) | wayfinder Reconcile | Human **`Approved - reconcile and close`** |
-
-Only implement-task sets **`awaiting-reconcile`**.
+See [create-tasks status lifecycle](../../actions/create-tasks/REFERENCE.md#status-lifecycle). Only implement-task sets `awaiting-reconcile`; Reconcile closes the task.
 
 ---
 
@@ -238,4 +210,4 @@ Suggest **implement-task** when:
 - User says "implement task #N" or "pick up #N" on an approved implementation task
 - AFK automation triggers on issue comment **`Approved - AFK implement`** (see [references/afk-pickup-comment.md](references/afk-pickup-comment.md))
 
-After **`awaiting-reconcile`**, suggest wayfinder **Reconcile** - not another implement-task pass unless human requests rework (reset **Status** to **`ready`** explicitly before re-run).
+After **`awaiting-reconcile`**, suggest wayfinder **Reconcile**. For rework, reset **Status** to `ready` and re-run.

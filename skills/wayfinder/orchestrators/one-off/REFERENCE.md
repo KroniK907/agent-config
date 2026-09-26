@@ -10,7 +10,7 @@
 | **define-bundle, create-tasks, implement-task** | Multiple GM rows, **Implementing** frontier, AFK eligibility, one pull request per task |
 | **Agent checklist or human** | Trivial map errands - no repo deliverables (retitle ticket, add label, post comment, edit map prose) |
 
-**Scope gate:** Human declares one-off intent. No ecosystem checklist beyond "is this map-scoped repo work?"
+**Scope gate:** is this map-scoped repo work that fits one session?
 
 ---
 
@@ -30,7 +30,7 @@ Narrate: *This ticket is on map **To Do** with no bundle - use **one-off** for m
 
 ## Ticket draft (chat-only)
 
-Present before `gh issue create`. Pause for human review.
+Show before `gh issue create`.
 
 ```markdown
 ## Draft one-off ticket
@@ -78,7 +78,7 @@ Parent: [{FeatureName}:Map](map-url)
 Task worktree `task/{issue-num}-{slug}` and a pull request into `integrationBranch`, per [implement-task](../implement-task/REFERENCE.md#4-task-worktree). Slug from the ticket title, kebab-case, at most four words.
 ```
 
-End with: *Review the draft - reply **draft approved** to materialize and build, or request edits.*
+Ask for any changes, then materialize and build once the user is happy.
 
 ---
 
@@ -128,8 +128,7 @@ When entered via **one-off**, apply these overrides to [implement-task startup g
 | AFK serial | AFK only | **N/A** - HITL only |
 | Method validation | Per implement-task | **Kept** |
 | Code review | After Method | **Kept** |
-| Close task / remove **`wf:approved`** | Never | **Kept** |
-| Reconcile phrases | Never posted by agent | **Kept** |
+| Close task / remove **`wf:approved`** | Left to Reconcile | **Kept** |
 
 Run the full implement-task tail: Method → code-review → push → resolution → **`awaiting-reconcile`**.
 
@@ -157,18 +156,7 @@ After posting: set **Status:** `awaiting-reconcile`; add **`wf:needs-review`**; 
 
 ## Reconcile handoff
 
-Owned by [wayfinder](../../SKILL.md) **Reconcile**, not one-off.
-
-| Topic | One-off behavior |
-|-------|------------------|
-| Map table | **To Do → Completed** gist - ticket never entered **Implementing** |
-| Close ticket | Human **`Approved - reconcile and close`** |
-| **`wf:approved`** | Removed by Reconcile on close |
-| Decision coverage | **No `implemented` updates** unless ticket body explicitly references GM rows |
-| Resolution type | Holistic Reconcile (session close) - same approval phrases as other map tickets |
-| Map body edits | Follow [map and issue body edits](../../references/reconcile.md#map-and-issue-body-edits-reconcile) - `wf map-edit`, or `wf body` plus `wf validate` |
-
-After **`awaiting-reconcile`**, suggest wayfinder **Reconcile** - not another implementation pass unless human resets **Status** to **`ready`**.
+Wayfinder **Reconcile** closes the ticket once the user is happy with the PR: **To Do** row → **Completed** gist, **`wf:approved`** removed, coverage untouched unless the ticket body names GM rows. After `awaiting-reconcile`, suggest Reconcile; for rework, reset **Status** to `ready`.
 
 ---
 
@@ -178,14 +166,14 @@ After **`awaiting-reconcile`**, suggest wayfinder **Reconcile** - not another im
 
 1. **Declare** - Human: "One-off: add `{skill-name}` skill on `{FeatureName}:Map`."
 2. **Draft** - Agent posts chat draft (Question, Done when, **## Method** `{skill-name}` or `writing-for-agents` for meta skills).
-3. **Approve** - Human: **`draft approved`**.
+3. **Agree** - User signs off on the draft.
 4. **Materialize** - `gh issue create` with labels; **Status:** `ready`; **To Do** row on map; **`wf:approved`** added.
 5. **Git** - task worktree per implement-task; branch `task/{N}-{skill-name}`.
 6. **Build** - Follow task **## Method** skill; record pre-Method SHA.
 7. **Code review** - implement-task mode on diff since pre-Method SHA.
 8. **Push** - commit in the worktree; push; open the pull request; write **PR:** on the ticket.
 9. **Resolve** - post resolution comment; **Status:** `awaiting-reconcile`; **`wf:needs-review`**.
-10. **Reconcile** - Human **`Approved - reconcile and close`** → Completed gist; close ticket.
+10. **Reconcile** - after the user reviews the PR → Completed gist; close ticket.
 
 **Not this example:** Trivial "add a Note line to the map" - use agent checklist, not one-off.
 
@@ -204,15 +192,3 @@ Do **not** suggest one-off for:
 - **`Implementing`** rows - use [implement-task](../implement-task/SKILL.md)
 - Trivial checklist errands
 - AFK pickup (one-off is HITL-only permanently)
-
----
-
-## Design defaults
-
-| Topic | Default |
-|-------|---------|
-| Mode | HITL only - labels `wf:hitl`; never `wf:afk` |
-| Map placement | **To Do** for entire lifecycle |
-| Bundle pipeline | Skipped - no `wf:bundle`, no **Implementing** row |
-| implement-task files | Unchanged - waivers documented here only |
-| Skill docs | Generalized placeholders - no live issue numbers or decision-log IDs in committed markdown |

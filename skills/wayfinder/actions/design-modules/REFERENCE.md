@@ -35,7 +35,7 @@ See full definitions and principles in workflow step 2.
 - **Planning entry:** open ticket with **Question** and **Map** link, or human-declared module question on a map
 - HITL only - never add **`wf:afk`**
 
-**Gate (bundle):** If bundle **Status** is `draft`, hand off to [define-bundle](../define-bundle/SKILL.md) for **`bundle approved`**.
+**Gate (bundle):** If bundle **Status** is `draft`, hand off to [define-bundle](../define-bundle/SKILL.md) to finish it.
 
 **Gate (planning):** If the question is fact-gathering not interface shape, hand off to [research](../research/SKILL.md).
 
@@ -218,7 +218,7 @@ When only one module, use top-level `## Module design: {name}` instead of `### M
 
 Suggest **design-modules** when:
 
-- User finished **`bundle approved`** and asks to shape modules before splitting tasks
+- A bundle was just approved and the user wants to shape modules before splitting tasks
 - [define-bundle](../define-bundle/SKILL.md) hand off - optional step before create-tasks
 - Map **To Do** `wf:prototype` ticket explores interface variants (planning entry)
 - User mentions "design modules", "deep module", "design it twice", or module interface shaping

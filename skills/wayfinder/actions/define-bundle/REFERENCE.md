@@ -59,20 +59,6 @@ For product bundles with user stories, replace the `N/A` line with story bullets
 
 ---
 
-## Approval phrases
-
-| User says | Agent may |
-|-----------|-----------|
-| **bundle approved** | Set bundle Status `approved`; remove **`wf:needs-review`**; update map Decision coverage (`scoped` + link); optional Notes line. Do not create a git branch |
-| (edits requested) | Update draft bundle body in place; keep Status `draft`; keep **`wf:needs-review`** |
-| (no approval) | Narrate or post draft only; add **`wf:needs-review`**; **do not** write coverage |
-
-Synonyms accepted if unambiguous: "approve the bundle", "approve bundle #N".
-
-**Separate from Reconcile:** `bundle approved` is owned by **define-bundle**, not wayfinder Reconcile. Reconcile still owns grilling ticket close + new GM row append.
-
----
-
 ## Global vs bundle-scoped rows
 
 | Signal | Treatment in bundle |
@@ -82,15 +68,13 @@ Synonyms accepted if unambiguous: "approve the bundle", "approve bundle #N".
 | Coverage **`open`** | May be **claimed** in **Decisions** |
 | Coverage **`scoped`** / **`assigned`** / **`implemented`** | Already claimed - exclude |
 
-On **`bundle approved`**, rows listed in **Decisions** get coverage **`scoped`** and a link to the bundle. Do not edit the decision log.
-
-Reconcile proposes **`[global]`** vs bundle-scoped when appending new rows; human confirms. Default **`[global]` when unsure**. Reconcile may also propose **bundle cluster suggestions** in the resolution comment - human runs define-bundle to draft/approve bundle issues.
+When the bundle is approved, rows in **Decisions** get coverage `scoped` and a link to the bundle. The decision log is not edited.
 
 ---
 
 ## Decision coverage updates
 
-On **`bundle approved`**, for each covered GM ID in **Decisions**:
+When the bundle is approved, for each covered GM ID in **Decisions**:
 
 ```markdown
 | {MAP-SLUG}-GM-NNN | scoped | [#bundle](bundle-url) |
@@ -120,10 +104,10 @@ define-bundle does not create a branch. Each task that [implement-task](../../or
 
 Suggest **define-bundle** when:
 
-- User explicitly asks to bundle or implement from the decision log
+- User asks to bundle or implement from the decision log
 - **Decision coverage** has a cluster of **`open`** rows clearly describing one deliverable
 - User wants to ship while planning **To Do** or **Not yet specified** remain non-empty
 
 Prefer planning frontier skills (grill-me, research ticket, etc.) when rows are still **`open`** because work is incomplete - not because fog exists elsewhere on the map.
 
-After approval, suggest **[design-modules](design-modules/SKILL.md)** when module interface shape is still open (one or more modules), then **create-tasks** (or direct implementation if create-tasks is unavailable). Narrate that each task will open its own pull request through implement-task.
+After approval, suggest [design-modules](../design-modules/SKILL.md) when module shape is still open, then create-tasks.

@@ -1,110 +1,98 @@
 ---
 name: wayfinder
-description: wayfinder, FeatureName:Map, wf:map, wf:decision-log, Chart handoff, Materialize, map-discovery artifact, Reconcile, Route, frontier, To Do tickets, sync chat to map, starting large feature, subfeature map, wf:needs-review, Approved - reconcile and close, navigate wayfinder across sessions
+description: wayfinder, FeatureName:Map, wf:map, wf:decision-log, Chart handoff, Materialize, map-discovery artifact, Reconcile, Route, frontier, To Do tickets, sync chat to map, starting large feature, subfeature map, wf:needs-review, navigate wayfinder across sessions
 disable-model-invocation: true
 agent-config-sync: true
 ---
 
 # Wayfinder
 
-**Tracker and router** for large features: map skeleton → [feature-discovery](ideation/feature-discovery/SKILL.md) → tickets → related skills → **Reconcile** → [define-bundle](actions/define-bundle/SKILL.md) → [create-tasks](actions/create-tasks/SKILL.md). Part of a **skill ecosystem** - see [REFERENCE.md](REFERENCE.md) for templates, materialize rules, approval protocol, routing table, and GitHub ops.
+**Tracker and router** for large features: map skeleton → [feature-discovery](ideation/feature-discovery/SKILL.md) → tickets → sibling skills → **Reconcile** → [define-bundle](actions/define-bundle/SKILL.md) → [create-tasks](actions/create-tasks/SKILL.md). Templates, materialize rules, routing table, and GitHub ops: [REFERENCE.md](REFERENCE.md).
 
-**Plan, don't implement** unless the map **Notes** say otherwise. Wayfinder does **not** run discovery interviews, strategic ideation, or grilling - it creates/updates GitHub state and suggests what skill to use next.
+Wayfinder plans; it does not implement unless the map **Notes** say so. It does not run discovery, ideation, or grilling - it updates GitHub state and suggests the next skill.
+
+## Working with the user
+
+Act as a coding partner. When the user signs off on a draft - in any wording - act on it. When the conversation already shows the work is done and accepted, go ahead. Ask one short question only when you genuinely can't tell whether the user considers the work ready, or when a step would close, delete, or supersede something they may still want.
 
 ## When to use
 
 | Situation | Mode |
 |-----------|------|
 | Rough feature idea, too big for one chat | **Chart** - skeleton → hand off to feature-discovery |
-| Discovery capture ready | **Materialize** - create To Do tickets from map-discovery artifact |
-| After sibling skill session; user approved outcome | **Reconcile** - comment, decision log, close ticket, update map |
+| Discovery capture ready | **Materialize** - create To Do tickets from the map-discovery artifact |
+| Sibling skill session finished | **Reconcile** - resolution comment, decision log, map, close ticket |
 | Existing map; need next step | **Route** - frontier + skill suggestion |
-| Child subsystem needs its own planning | **Chart** subfeature map; link from parent **Subfeatures** |
+| Child subsystem needs its own planning | **Chart** a subfeature map; link from parent **Subfeatures** |
 
 Skip wayfinder when the path is clear - use `sous-vide` for a grilling session, or implement directly.
 
 ## Modes
 
-### Chart (create skeleton)
+### Chart
 
-1. **Accept seed** - User’s one-paragraph feature description (and target repo if not obvious).
-2. **Name the map** - `{FeatureName}:Map` (e.g. `CommandPalette:Map`). Derive **map slug** per [REFERENCE.md](REFERENCE.md#map-slug-and-decision-log-prefix).
-3. **Set target outcome** - What this map works toward (usually a buildable PRD). One or two lines.
-4. **Create artifacts** - GitHub issues (preferred): decision log (`wf:decision-log`) → map (`wf:map`) linking the log. Local fallback: [plans/](utilities/plans/README.md). **To Do** empty; **Phase:** `charting`.
-5. **Hand off to feature-discovery** - Tell user to continue with [feature-discovery](ideation/feature-discovery/SKILL.md) in this or a new chat. Pass: **map issue** link, target outcome, seed. **Do not** interview zones in wayfinder.
-6. **Stop** - Chart does not create tickets. Next step after discovery: **Materialize**.
+1. **Seed** - the user's feature description (and target repo if not obvious).
+2. **Name** - `{FeatureName}:Map`; derive the [map slug](REFERENCE.md#map-slug-and-decision-log-prefix).
+3. **Target outcome** - one or two lines, usually a buildable PRD.
+4. **Create** - decision log issue (`wf:decision-log`), then map issue (`wf:map`) linking it. **To Do** empty; **Phase:** `charting`. Local fallback: [plans/](utilities/plans/README.md).
+5. **Hand off** - point the user to [feature-discovery](ideation/feature-discovery/SKILL.md) with the map link, target outcome, and seed. Chart creates no tickets.
 
-### Materialize (capture → tickets)
+### Materialize
 
-1. **Load map** - Confirm map issue and slug.
-2. **Ingest map-discovery artifact** - From (in order): current chat block with `## Map discovery`; latest map-issue comment with that heading and **Status:** `ready for materialize`; user paste. See [materialize rules](REFERENCE.md#materialize-from-map-discovery).
-3. **Create To Do tickets** - One child issue per **Ticket candidates** row. Labels: `wf:todo` + type + mode. Titles per [ticket title conventions](REFERENCE.md#ticket-title-conventions). Wire **blocked-by** in a second pass per materialize rules.
-4. **Update map** - Populate **To Do** table; copy **Fog** → **Not yet specified**; confirm **Out of scope suggestions** with user if present; set **Phase:** `deciding`. Append **Completed** gist: *Map discovery materialized - N tickets*. Reply on map-discovery comment: **Status:** `materialized`.
-5. **Route** - Suggest first frontier ticket and skill (see **Route** below).
+1. **Load** the map and the map-discovery artifact: a `## Map discovery` block in chat, the latest map comment with **Status:** `ready for materialize`, or a user paste.
+2. **Create To Do tickets** - one child issue per **Ticket candidates** row, labelled `wf:todo` + type + mode, titled per [ticket title conventions](REFERENCE.md#ticket-title-conventions). Wire blocked-by in a second pass.
+3. **Update the map** - **To Do** table; **Fog** → **Not yet specified**; confirm **Out of scope suggestions** with the user; **Phase:** `deciding`; **Completed** gist *Map discovery materialized - N tickets*. Reply on the discovery comment with **Status:** `materialized`.
+4. **Route** to the first frontier ticket.
 
-### Reconcile (sync session → GitHub)
+Full rules: [materialize from map-discovery](REFERENCE.md#materialize-from-map-discovery).
 
-Run when user explicitly invokes wayfinder after a sibling skill session.
+### Reconcile
 
-1. **Load map + ticket + session output** - From user message, frontier context, or sibling skill thread (grilling Q&A, research findings, prototype outcome, etc.).
-2. **Infer full-session tracker delta** - Per [Reconcile inference](references/reconcile.md#reconcile-inference), derive:
- - Decision-log rows (`{MAP-SLUG}-GM-NNN`) with `[global]` vs bundle-scoped tags
- - **Decision coverage** row additions/updates
- - Map diff: **Completed** gist, **Not yet specified**, **Out of scope**, **Notes**
- - **New ticket candidates** (research / prototype / grilling / task) for unresolved or follow-on work
- - **Bundle cluster suggestions** for define-bundle (name, GM IDs, rationale - draft bundle issues are **not** created here)
- - **Ticket invalidations** - close, retitle, or move superseded To Do items
- - **Route hint** - recommended next skill(s)
-3. **Post resolution** - Comment on the ticket using the [resolution template](references/reconcile.md#reconcile-resolution-template). Add label **`wf:needs-review`** to the ticket. End with: *Ready for review - reply **Approved - reconcile and close** (or **Approved - reconcile, keep open**) when accepted. Edit any section in this comment before approving.*
-4. **On approval** - When the user says an [approval phrase](references/reconcile.md#approval-phrases), run [approved reconcile steps](references/reconcile.md#approved-reconcile-steps): `wf log-append` (comment on the log, not a body rewrite), `wf map-edit` (complete the row, coverage, fog), `gh issue close` and remove **`wf:needs-review`** on full approval, `gh issue create` for new tickets. Full body replacement, when `map-edit` cannot express the change, follows [map and issue body edits](references/reconcile.md#map-and-issue-body-edits-reconcile) (`wf body` and `wf validate`). Requires `gh` auth and Go.
-5. **Partial approval** - **Approved - reconcile, keep open** runs `wf log-append` and `wf map-edit` plus optional ticket creates, and does not close the source ticket.
+Turns a finished sibling session (grilling, research, prototype, task, constrain-fog) into tracker state. Details: [references/reconcile.md](references/reconcile.md).
 
-**Default:** Reconcile only when the user invokes wayfinder after a sibling skill session. Related skills may remind: *Invoke wayfinder Reconcile when ready.*
+1. **Load** the map, the session ticket, and the session output.
+2. **Infer** the tracker delta per [reconcile inference](references/reconcile.md#reconcile-inference): decision-log rows, **Decision coverage**, map updates, new ticket candidates, bundle cluster suggestions, ticket invalidations, route hint.
+3. **Post** the [resolution comment](references/reconcile.md#resolution-comment) on the ticket.
+4. **Apply** with [`wf`](references/reconcile.md#apply-steps): append the log, edit the map, create tickets, apply invalidations. Close the ticket when its work is done; leave it open when gaps remain and say why.
 
-**Grilling sessions:** Reconcile is how depth-first Q&A becomes map state. It proposes decision-log rows, frontier tickets, bundle-ready clusters, and route hints. **`bundle approved`** remains [define-bundle](actions/define-bundle/SKILL.md). Reconcile **suggests** clusters only.
+If the user already said the session's outcome is accepted, apply in the same pass. Otherwise add **`wf:needs-review`**, summarize the delta in chat, and apply once they're happy with it. Reconcile only *suggests* bundle clusters - [define-bundle](actions/define-bundle/SKILL.md) creates bundles.
 
-### Route (suggest next step)
+### Route
 
-1. **Load map** - Low-res body (not every ticket thread) + decision log link.
-2. **Compute planning frontier** - First open, unblocked, unclaimed **To Do** item per [REFERENCE.md](REFERENCE.md#frontier-queries).
-3. **Check implementation path** - If **Decision coverage** has a cluster of **`open`** rows ready to build (see [define-bundle route heuristics](actions/define-bundle/REFERENCE.md#route-heuristics-for-wayfinder)), suggest [define-bundle](actions/define-bundle/SKILL.md) alongside or instead of planning frontier when user wants to ship incrementally.
-4. **Suggest** - One recommended next step + skill from [routing table](REFERENCE.md#routing-table). Optional second choice if ambiguous. User picks skill and starts work.
+1. **Load** the map body (low-res) and decision log link.
+2. **Frontier** - first open, unblocked, unclaimed **To Do** item ([frontier queries](REFERENCE.md#frontier-queries)).
+3. **Implementation path** - if **Decision coverage** has a build-ready cluster of `open` rows, suggest [define-bundle](actions/define-bundle/SKILL.md). Approved bundles → [create-tasks](actions/create-tasks/SKILL.md). **`wf:approved`** **Implementing** tasks → [implement-task](orchestrators/implement-task/SKILL.md).
+4. **Suggest** one next step and skill from the [routing table](REFERENCE.md#routing-table); a second only if genuinely ambiguous.
 
-**Done when:** You have named one skill and one ticket (or bundle) as the recommended next step.
-
-Approved bundles → suggest [create-tasks](actions/create-tasks/SKILL.md). **`wf:approved`** **Implementing** tasks → suggest [implement-task](orchestrators/implement-task/SKILL.md). **`write-a-prd`** / **`prd-to-issues`** only for small map-free scope - not a map Route handoff.
+**Done when:** you have named one skill and one ticket (or bundle).
 
 ## Decision log
 
-Each map owns a **scoped decision log** (`{MAP-SLUG}-GM-NNN`). Sibling skills and **Reconcile** append rows as comments on the log issue. The map links to that issue. Full rules: [REFERENCE.md](REFERENCE.md#map-slug-and-decision-log-prefix).
+Each map owns a scoped log (`{MAP-SLUG}-GM-NNN`). Rows are appended as comments on the log issue. Rules: [REFERENCE.md](REFERENCE.md#map-slug-and-decision-log-prefix).
 
 ## Subfeatures
 
-Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under parent **Subfeatures**. Parent stays integration index. See [REFERENCE.md](REFERENCE.md#subfeature-maps).
+Large work may spawn child maps (`SearchPanel:Map`) linked under the parent's **Subfeatures**. See [REFERENCE.md](REFERENCE.md#subfeature-maps).
 
-## Ecosystem (related skills)
+## Ecosystem
 
 | Skill | Role |
 |-------|------|
-| [feature-discovery](ideation/feature-discovery/SKILL.md) | Chart handoff - posts map-discovery comment on map issue |
-| [constrain-fog](ideation/constrain-fog/SKILL.md) | Groom **Not yet specified** fog - **`Constrain:`** ticket + fog-resolution artifact |
-| [strategic-ideation](ideation/strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune (ticket or pre-PRD) |
-| [sous-vide](orchestrators/sous-vide/SKILL.md) | Orchestrate a plan - settle Proposed, grill-me asks Ask, then the next wave |
-| [grill-me](ideation/grill-me/SKILL.md) | Asks the sous-vide **Ask** list, one question at a time |
-| [design-modules](actions/design-modules/SKILL.md) | Modules shaping (one or more) - bundle step before create-tasks; planning `wf:prototype` interface exploration |
-| [define-bundle](actions/define-bundle/SKILL.md) | GM cluster → draft/approved `wf:bundle` issue |
+| [feature-discovery](ideation/feature-discovery/SKILL.md) | After Chart - posts the map-discovery comment |
+| [constrain-fog](ideation/constrain-fog/SKILL.md) | Groom **Not yet specified** on a `Constrain:` ticket |
+| [strategic-ideation](ideation/strategic-ideation/SKILL.md) | Scope/strategy: expand → tension → prune |
+| [sous-vide](orchestrators/sous-vide/SKILL.md) | Orchestrate a grilling session |
+| [grill-me](ideation/grill-me/SKILL.md) | Asks the sous-vide **Ask** list one question at a time |
+| [design-modules](actions/design-modules/SKILL.md) | Module interface shaping before create-tasks |
+| [define-bundle](actions/define-bundle/SKILL.md) | GM cluster → `wf:bundle` issue |
 | [create-tasks](actions/create-tasks/SKILL.md) | Approved bundle → **Implementing** tasks |
-| [one-off](orchestrators/one-off/SKILL.md) | HITL map **To Do** implementation without bundle pipeline |
-| [implement-task](orchestrators/implement-task/SKILL.md) | **`wf:approved`** tasks → Method → **code-review** → push → **`awaiting-reconcile`** |
-| [code-review](actions/code-review/SKILL.md) | Standards + Spec review; auto-fix obvious; invoked by implement-task or ad-hoc |
-| [actions/prototype](actions/prototype/SKILL.md) | Bundle **`wf:prototype`** Method (LOGIC / UI branches via implement-task) |
-| [actions/write-code](actions/write-code/SKILL.md) | Default bundle **`wf:task`** Method (TDD build via implement-task) |
+| [one-off](orchestrators/one-off/SKILL.md) | Implement a map **To Do** ticket without the bundle pipeline |
+| [implement-task](orchestrators/implement-task/SKILL.md) | **`wf:approved`** task → Method → code-review → PR → `awaiting-reconcile` |
+| [code-review](actions/code-review/SKILL.md) | Standards + Spec review |
+| [prototype](actions/prototype/SKILL.md) | **`wf:prototype`** Method |
+| [write-code](actions/write-code/SKILL.md) | Default **`wf:task`** Method |
 | [research](actions/research/SKILL.md) | `wf:research` tickets → findings comment |
 
-Map-free path only: [write-a-prd](../../write-a-prd/SKILL.md) → [prd-to-issues](../../prd-to-issues/SKILL.md).
+Map-free path: [write-a-prd](../../write-a-prd/SKILL.md) → [prd-to-issues](../../prd-to-issues/SKILL.md). Cloud AFK: [REFERENCE.md](REFERENCE.md#ecosystem-integration).
 
-Cloud AFK automation - see [REFERENCE.md](REFERENCE.md#ecosystem-integration).
-
-## Refer by name
-
-In narration and map sections, use **ticket titles**, not bare `#42`. IDs live inside linked names.
+In narration and map sections, refer to tickets by title, not bare `#42`.

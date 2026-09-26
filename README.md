@@ -59,7 +59,7 @@ Use for a single skill without full project apply. Substitute your fork if neede
 Skills for large-feature planning and incremental implementation via GitHub map trackers. Hub skill: `skills/wayfinder/SKILL.md`.
 
 - **wayfinder** - Bootstrap and maintain `FeatureName:Map` GitHub trackers: map skeleton, materialize tickets from map-discovery comment, reconcile after approval, suggest next skill. Use when a feature is too big for one session.
-- **define-bundle** (action) - Group decision-log clusters into draft `wf:bundle` issues; promote on `bundle approved` while planning To Do or fog stay open.
+- **define-bundle** (action) - Group decision-log clusters into draft `wf:bundle` issues; approve them while planning To Do or fog stay open.
 - **feature-discovery** (ideation) - Breadth-first five-zone interview; posts a map-discovery artifact as a comment on the map issue for wayfinder Materialize.
 - **strategic-ideation** (ideation) - Expand/tension/prune at idea level for scope and strategy; hand off to grill-me or PRD.
 - **grill-me** (ideation) - Stress-test a plan or design through sequential Q&A until open branches are resolved.

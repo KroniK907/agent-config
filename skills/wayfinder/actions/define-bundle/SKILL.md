@@ -1,30 +1,21 @@
 ---
 name: define-bundle
-description: define-bundle, build bundles, bundle approved, GM cluster ready, group decisions into bundle, wayfinder Route bundling, wayfinder Route define-bundle, wf:bundle draft
+description: define-bundle, build bundles, approve bundle, GM cluster ready, group decisions into bundle, wayfinder Route define-bundle, wf:bundle draft
 agent-config-sync: true
 ---
 
 # Define bundle
 
-Group **`open`** decision-log rows into a **draft bundle issue** (`wf:bundle`), then on human **`bundle approved`** promote it and sync map **Decision coverage** + log suffixes. Maps implement incrementally. Do **not** wait for empty To Do, a PRD, or cleared fog.
+Group **`open`** decision-log rows into a bundle issue (`wf:bundle`), and once the user is happy with it, mark it approved and claim its rows in map **Decision coverage**. Maps implement incrementally - don't wait for an empty To Do, a PRD, or cleared fog.
 
-Runs on a wayfinder map + its decision log. After approval, hand off to [create-tasks](../create-tasks/SKILL.md) or implement directly from the bundle when splitting is unnecessary.
+| Instead | When |
+|---------|------|
+| [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route |
+| [grill-me](../../ideation/grill-me/SKILL.md) | Unknowns still need binding GM rows |
+| [design-modules](../design-modules/SKILL.md) | Shape module interfaces from an approved bundle |
+| [create-tasks](../create-tasks/SKILL.md) | Split an approved bundle into tasks |
 
-## Not this skill
-
-| Skill | When instead |
-|-------|----------------|
-| [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
-| [grill-me](../../ideation/grill-me/SKILL.md) | Resolve unknowns → new binding GM rows |
-| [design-modules](../design-modules/SKILL.md) | Shape one or more module interfaces from approved bundle before task split |
-| [create-tasks](../create-tasks/SKILL.md) | Split an **approved** bundle into implementation tasks |
-| [write-a-prd](../../write-a-prd/SKILL.md) | Small map-free scope only |
-
-## Prerequisites
-
-- Map issue (`wf:map`) with **Decision coverage** table and linked decision log
-- `gh` authenticated on the target repo
-- Label `wf:bundle` available
+Needs: a `wf:map` with **Decision coverage** and a linked log, `gh` auth, label `wf:bundle`.
 
 ## Workflow
 
@@ -35,90 +26,40 @@ go run <wayfinder>/utilities/wf/wf.go section <map-num> "Decision coverage" "To 
 go run <wayfinder>/utilities/wf/wf.go log <log-num> --list
 ```
 
-From the map: slug, decision log link, **Decision coverage**, **To Do**, **Implementing**, **Notes**. Load full text for the IDs you might claim with `wf log <log-num> --ids A,B`.
+Load full text for candidate IDs with `wf log <log-num> --ids A,B`. Classify each row by [global vs bundle-scoped](REFERENCE.md#global-vs-bundle-scoped-rows): coverage `open` without `[global]` are candidates; globals are constraints only; `scoped` / `assigned` / `implemented` are already claimed.
 
-From the log (body plus comments; a later entry with the same ID wins):
+### 2. Propose the cluster
 
-- **`[global]`** in the row, or coverage status **`global`** - constraints only (never claimed). List them with `wf log <log-num> --global` when you need the prose.
-- Coverage **`scoped`**, **`assigned`**, or **`implemented`** - already claimed. The coverage table is the claim. Do not look for a suffix on the log row.
-- Coverage **`open`** and no global tag - bundle candidates.
+Give the user a build-oriented **name**, the **covered GM IDs** (one vertical slice - same subsystem, shared deliverables), the **rationale**, and **excluded rows**. Adjust from their feedback.
 
-### 2. Propose cluster
+### 3. Draft the bundle issue
 
-Present to the user:
+`gh issue create` (or update an existing draft in place) with title `Bundle: {short name}`, label `wf:bundle`, **Status:** `draft`, body per the [bundle template](REFERENCE.md#bundle-issue-template).
 
-- **Bundle name** (short, build-oriented)
-- **Covered GM IDs** (contiguous cluster, one build slice)
-- **Rationale** - why these rows ship together
-- **Excluded rows** - globals, already bundled, or still foggy
+- **Decisions** and **Constraints** list IDs with one-line summaries and a log link - agents load prose with `wf log --ids` / `--global`.
+- Link the parent map in the body; no sub-issues, no **Branch:** line. Each task gets its own worktree and PR later.
 
-Wait for confirmation or edits before creating/updating the bundle issue.
+Hand the draft to the user and add **`wf:needs-review`**. If they already agreed to the cluster in step 2 and the draft matches it, go straight to step 4.
 
-**Cluster heuristics:** same subsystem or skill; one vertical slice; rows that share deliverables. Do not bundle rows already **`scoped`**, **`assigned`**, or **`implemented`**.
+### 4. Approve
 
-### 3. Draft bundle issue
+Once the user is happy with the bundle:
 
-Create early with `gh issue create` or update an existing draft in place.
+1. Set **Status:** `approved`; remove **`wf:needs-review`**.
+2. `wf map-edit --coverage` each covered row to `scoped`, linked to the bundle. That row is the claim; the decision log is not edited.
+3. Optionally add a Notes line linking the bundle, and comment on the bundle with what changed.
 
-| Field | Value |
-|-------|--------|
-| Title | `Bundle: {short name}` |
-| Label | `wf:bundle` |
-| Body | Per [REFERENCE.md](REFERENCE.md#bundle-issue-template) |
-| **Status** | `draft` |
+**Done when:** the bundle is `approved` and every covered row is `scoped` with a link to it.
 
-**Map section:** link parent map, slug, decision log - body link only (no GraphQL sub-issues).
-
-**Decisions:** list each covered GM ID with a one-line summary and a link to the decision log. Do not paste the full paragraph.
-
-**Constraints:** one line that all `[global]` rows in the log apply, plus each global ID and a one-line summary. Do not paste the full paragraph. Agents load prose with `wf log --ids` or `wf log --global`.
-
-Fill **Scope summary**, **Boundaries**, **Open questions**, **User stories or Outcomes** (`N/A - meta/infra` + bullet outcomes when no user stories).
-
-Do not put a **Branch:** line on the bundle. Each implementation task gets its own worktree and pull request. The pull request base is `integrationBranch` in `.cursor/agent-manifest.json`, read by [implement-task](../../orchestrators/implement-task/REFERENCE.md#4-task-worktree).
-
-Post or narrate the draft; end with: *Review the bundle - reply **bundle approved** when scope is accepted, or request edits.*
-
-Add label **`wf:needs-review`** to the draft bundle issue.
-
-**Default:** do not run **`bundle approved`** writes without the explicit phrase.
-
-### 4. On `bundle approved`
-
-When the user says **`bundle approved`** (optionally naming the bundle issue):
-
-1. **Bundle issue** - set **Status:** `approved` in body (`gh issue edit`); remove label **`wf:needs-review`**
-2. **Map Decision coverage** - covered rows to **`scoped`**, **Linked issue** to the bundle URL (`wf map-edit --coverage`). That row is the claim. Do not edit the decision log.
-3. **Map Notes** - one-line approved-bundle link if helpful
-4. **Comment** on the bundle issue summarizing executed updates
-
-**Done when:** bundle **Status** is `approved`, coverage rows for claimed IDs are `scoped` and link this issue, and no git branch was created for the bundle.
-
-Use `gh issue edit --body-file` for full body replacements. Requires `gh` auth.
-
-**Do not** move rows to **Implementing** - that is [create-tasks](../create-tasks/SKILL.md).
+Rows move to **Implementing** in [create-tasks](../create-tasks/SKILL.md), not here.
 
 ### 5. Hand off
 
-Tell the user:
+Suggest [design-modules](../design-modules/SKILL.md) when module shape is still open, otherwise [create-tasks](../create-tasks/SKILL.md) - or implement straight from the bundle when one session covers it. Planning **To Do** may stay open.
 
-- **Next (recommended when module shape is unclear):** [design-modules](../design-modules/SKILL.md) on the approved bundle (HITL; posts module-design artifact comment(s)) → then [create-tasks](../create-tasks/SKILL.md)
-- **Next (when shape is clear):** [create-tasks](../create-tasks/SKILL.md) with the approved bundle link, **or** implement directly from the bundle when a single session needs no task split
-- Each task opens its own pull request via [implement-task](../../orchestrators/implement-task/SKILL.md). This skill does not create a branch.
-- Planning **To Do** may stay open
+## Rules
 
-## Interaction rules
-
-1. **One bundle per build slice** - a bundle-scoped GM row is claimed by one bundle, recorded as coverage **`scoped`**
-2. **Globals are inherited** - list IDs under Constraints and state that every `[global]` log row applies. Never mark them **`scoped`**
-3. **Log body plus comments are binding** - fetch prose with `wf log`. Do not copy it into the bundle
-4. **Draft early** - create the bundle issue while scope is still being refined; update in place
-5. **No implementation** - this skill bundles decisions; it does not write product code unless the bundle itself is meta/infra (then follow bundle deliverables)
-
-## Quick start
-
-User: "Bundle decision-log rows for a build slice on map #N."
-
-Load map #N and decision log summaries, propose a cluster, create a draft `wf:bundle` issue. After **`bundle approved`**, set coverage to **`scoped`**. Then suggest design-modules (when shape is open) or create-tasks.
-
-See [REFERENCE.md](REFERENCE.md) for bundle template, approval phrases, and global-row rules.
+1. **One bundle per row** - a bundle-scoped GM is claimed by one bundle (`scoped`).
+2. **Globals are inherited** - listed under Constraints, never `scoped`.
+3. **The log is binding** - reference it; don't copy prose into the bundle.
+4. **Bundle, don't build** - product code belongs to tasks, unless the bundle itself is meta/infra.

@@ -6,7 +6,7 @@ agent-config-sync: true
 
 # Research
 
-Load a **`wf:research`** ticket, investigate per [behavior rules](REFERENCE.md#behavior-rules), post a **structured findings comment** on the ticket, and hand off **non-binding Proposed tracker updates**. Does **not** post decision-log comments, post Reconcile approval phrases, or edit the map without human review.
+Load a **`wf:research`** ticket, investigate per [behavior rules](REFERENCE.md#behavior-rules), post a **structured findings comment** on the ticket, and hand off **non-binding Proposed tracker updates**. Decision-log rows and map edits happen later, in Reconcile.
 
 **v1 is human-initiated HITL only** - cloud AFK pickup deferred.
 
@@ -71,24 +71,16 @@ gh issue comment <research-num> --body-file path\to\findings.md
 
 Each session posts a **new** comment; prior runs stay in the thread.
 
-**Default:** Do not post Reconcile approval phrases or edit map/decision log from this skill.
-
 ### 5. Hand off
 
-Tell the user:
-
-- Findings are **non-binding** - review **Proposed tracker updates** before any map or log edits
-- **Binding decisions:** run [grill-me](../../ideation/grill-me/SKILL.md) on findings, or invoke wayfinder **Reconcile** after explicit human approval
-- **Follow-up research:** start a new session on the same ticket (new comment); or close via wayfinder **Reconcile** when **Done when** is satisfied and user approves
-
-End with: *Review the findings - invoke wayfinder **Reconcile** when ready to sync approved outcomes to the map.*
+Summarize the findings for the user and suggest the next step: [grill-me](../../ideation/grill-me/SKILL.md) when findings point at a decision, another research session when gaps remain, or wayfinder **Reconcile** when **Done when** is satisfied.
 
 ## Interaction rules
 
-1. **Non-binding only** - post findings and proposed tracker updates; leave decision-log rows and Reconcile approval to the human
+1. **Findings, not decisions** - post findings and proposed tracker updates; decisions come from grilling or the user
 2. **Comment, not file** - findings live on the ticket thread, not repo Markdown
 3. **One scope-expansion pass** - if Coverage still fails after expansion, note gaps and stop
-4. **HITL v1** - wait for human direction before follow-up research or Reconcile
+4. **HITL v1** - check with the user before a follow-up research pass
 5. **Invalid premise is rare** - distinguish from insufficient evidence
 
 ## Quick start

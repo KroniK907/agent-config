@@ -6,7 +6,7 @@ agent-config-sync: true
 
 # Constrain fog
 
-**HITL-only** orchestrator for grooming **Not yet specified** fog on **existing** maps (post Chart/Materialize). Runs session cleanup, per-item mini-discovery, optional inline full discovery, and a **`## Fog resolution`** artifact on an auto-created **`Constrain:`** ticket. Approved ticket candidates materialize via wayfinder **Reconcile**, not **Materialize**.
+**HITL-only** orchestrator for grooming **Not yet specified** fog on **existing** maps (post Chart/Materialize). Runs session cleanup, per-item mini-discovery, optional inline full discovery, and a **`## Fog resolution`** artifact on an auto-created **`Constrain:`** ticket. Ticket candidates materialize via wayfinder **Reconcile**, not **Materialize**.
 
 Detail: [REFERENCE.md](REFERENCE.md)
 
@@ -81,7 +81,7 @@ Replace content by editing the ticket body (or post follow-up comment only when 
 When artifact **Status:** `ready for reconcile`:
 
 1. Tell the user to invoke [wayfinder](../../SKILL.md) **Reconcile** on the **`Constrain:`** ticket
-2. Reconcile materializes approved **New ticket candidates** to map **To Do** - not Materialize
+2. Reconcile materializes **New ticket candidates** to map **To Do** - not Materialize
 3. Reconcile applies fog rewrites/removals, **Out of scope** additions, and **Ticket invalidations**
 
 **Binding decisions** from CONSTRAIN become **Grill / Ideate** ticket seeds - **not** GM rows unless the user explicitly requests a decision-log row.
@@ -90,10 +90,9 @@ When artifact **Status:** `ready for reconcile`:
 
 1. **HITL only** - no AFK path; never add **`wf:afk`** or **`wf:afk-running`**
 2. **One fog item per CONSTRAIN turn** - finish verify gate before advancing
-3. **No map To Do edits** until Reconcile approval
+3. **Map To Do edits happen in Reconcile**
 4. **To Do dedup** - before proposing a ticket candidate, check open **To Do** and recent **Completed** for overlapping **Question**; narrate merge/skip/supersede
 5. **Recap + Session state** - mandatory every reply
-6. **Human closes the ticket** - requires **`Approved - reconcile and close`**
 
 ## Quick start
 

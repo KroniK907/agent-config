@@ -1,32 +1,20 @@
 ---
 name: create-tasks
-description: create-tasks, wf:bundle approved, bundle approved, scope approved, tasks approved, split bundle into tasks, implementation tasks from bundle, wayfinder Route create-tasks, wf:task draft
+description: create-tasks, split bundle into tasks, implementation tasks from bundle, approved wf:bundle, approve tasks, wayfinder Route create-tasks, wf:task draft
 agent-config-sync: true
 ---
 
 # Create tasks
 
-Split an **approved** bundle issue (`wf:bundle`, Status `approved`) into **thin vertical slices** sized for one session or one PR as draft implementation issues, then on human approval sync map **Implementing** + **Decision coverage**. Does **not** implement product code unless the task itself is the work.
+Split an **approved** bundle (`wf:bundle`, **Status:** `approved`) into **thin vertical slices** - each one session or one PR - as task issues, then put them on the map's **Implementing** frontier and mark the first one ready for pickup. No product code unless the task itself is the work.
 
-Runs on an approved bundle + parent map + decision log. After **`tasks approved`**, hand off to implementation; on ship, invoke [wayfinder](../SKILL.md) **Reconcile** to close the task and move coverage to **`implemented`**.
+| Instead | When |
+|---------|------|
+| [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route |
+| [define-bundle](../define-bundle/SKILL.md) | Bundle is still `draft`, or rows need bundling |
+| [design-modules](../design-modules/SKILL.md) | Module shape is still open - recommended before splitting |
 
-## Not this skill
-
-| Skill | When instead |
-|-------|----------------|
-| [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
-| [define-bundle](../define-bundle/SKILL.md) | Group GM rows into draft/approved bundles |
-| [design-modules](../design-modules/SKILL.md) | Per-module design artifacts on bundle before splitting |
-| [grill-me](../../ideation/grill-me/SKILL.md) | Resolve unknowns → new binding GM rows |
-| [write-a-prd](../../write-a-prd/SKILL.md) | Small map-free scope only |
-
-## Prerequisites
-
-- Approved bundle issue (`wf:bundle`, **Status:** `approved`)
-- When bundle scope needs module shaping first, run [design-modules](../design-modules/SKILL.md) (HITL) and post module-design artifact comment(s) on the bundle - one per module when multiple apply; recommended, not required
-- Parent map with **Implementing** table and **Decision coverage**
-- `gh` authenticated on the target repo
-- Labels `wf:task` or `wf:prototype`, `wf:hitl` or `wf:afk`, `wf:approved`
+Needs: the approved bundle, a parent map with **Implementing** and **Decision coverage**, `gh` auth, labels `wf:task` / `wf:prototype`, `wf:hitl` / `wf:afk`, `wf:approved`.
 
 ## Workflow
 
@@ -37,103 +25,39 @@ gh issue view <bundle-num> --json body,title,url
 gh issue view <map-num> --json body,title,url
 ```
 
-From the bundle: decision IDs and one-line summaries, the line that all `[global]` log rows apply, scope summary, boundaries, outcomes. Load binding prose with `go run <wayfinder>/utilities/wf/wf.go log <log-num> --ids ...` and `--global`. Do not paste full decision paragraphs into task bodies.
+From the bundle: decision IDs, scope, boundaries, outcomes, and any module-design comments. Load binding prose with `wf log <log-num> --ids ...` / `--global`. From the map: slug, log link, **Implementing**, coverage for the bundle's GMs.
 
-From the map: slug, decision log link, **Implementing**, **Decision coverage** for bundle-scoped GM IDs.
+### 2. Propose the split
 
-**Gate:** Bundle **Status** must be `approved`. If `draft`, hand off to [define-bundle](../define-bundle/SKILL.md) for **`bundle approved`**.
-
-### 2. Propose split
-
-Present to the user:
-
-- **Task count** and titles (1-3 typical; more only when deliverables are clearly separable)
-- **Per task:** what ships, which bundle outcomes it covers, HITL vs AFK, blocked-by if any
-- **Rationale** - why this slice boundaries
-
-**Split heuristics:** See [REFERENCE.md](REFERENCE.md#split-heuristics). Default **one task** when the bundle is meta/infra and fits one session (e.g. a single skill folder). Split when subsystems, dependencies, or session size clearly warrant it.
-
-Wait for confirmation or edits before creating/updating task issues.
+Give the user the task titles, what each ships, which outcomes it covers, HITL vs AFK, blocked-by, and why the boundaries fall there. Default to **one task** for a meta/infra bundle that fits one session; split only when subsystems, dependencies, or session size warrant it ([split heuristics](REFERENCE.md#split-heuristics)). Adjust from their feedback.
 
 ### 3. Draft task issues
 
-Create early with `gh issue create` or update drafts in place.
+`gh issue create` (or update drafts in place): title `Task: {short name}`, labels type + mode, **Status:** `draft`, body per the [task template](REFERENCE.md#task-issue-template). Link the parent bundle in the body. List the GM IDs each task honors with one-line summaries; all `[global]` rows apply.
 
-| Field | Value |
-|-------|--------|
-| Title | `Task: {short name}` |
-| Labels | `wf:task` or `wf:prototype` + `wf:hitl` or `wf:afk` |
-| Body | Per [REFERENCE.md](REFERENCE.md#task-issue-template) - include **## Method** at draft |
-| **Status** | `draft` |
+Every task gets a **## Method** at draft - default **`write-code`**, **`prototype`** for throwaway exploration ([Method field](REFERENCE.md#method-field)). AFK tasks cannot be picked up without one.
 
-**Parent bundle:** link in **Parent bundle** section (body link only; native sub-issues optional).
+Hand the drafts to the user and add **`wf:needs-review`**. If they already agreed to the split in step 2 and the drafts match it, go straight to step 4.
 
-**Decisions:** list the GM IDs this task must honor, each with a one-line summary, plus a link to the decision log and the line "all `[global]` rows in the log apply". Load full text with `wf log --ids` or `--global`.
+### 4. Promote
 
-Fill **What to build**, **## Method**, **Outcomes/stories covered**, **Done when**, **Blocked by**.
+Once the user is happy with the split:
 
-**Method (required at draft):** Propose **## Method** for every task when splitting - pick from `wayfinder/` or `wayfinder/actions/` skills (frontmatter `name`). Repo-root one-offs only when the human explicitly sets them. **AFK tasks** must have a valid **## Method** before **`wf:approved`**; [implement-task](../../orchestrators/implement-task/SKILL.md) stops without one. See [REFERENCE § Method field](REFERENCE.md#method-field) and [implement-task Method validation](../../orchestrators/implement-task/REFERENCE.md#method-validation).
+1. **Map Implementing** - one row per task (Ticket, Bundle, Mode, Status `ready`, Blocked by), via `wf map-edit`.
+2. **Decision coverage** - each bundle-scoped GM → `assigned`, linked to the task that completes it.
+3. **Tasks** - **Status:** `ready`; remove **`wf:needs-review`**.
+4. **`wf:approved`** - add to **one** unblocked task, the next in build order ([pickup order](REFERENCE.md#pickup-order)). Tasks with open blockers wait; implement-task labels them when blockers clear.
+5. **AFK pickup** - if that task is `wf:afk`, post the [AFK pickup comment](../../orchestrators/implement-task/references/afk-pickup-comment.md).
 
-Post or narrate drafts; end with: *Review the tasks - reply **scope approved** when the split is accepted, or request edits.*
+**Done when:** every task is on **Implementing** as `ready`, its GMs are `assigned`, and exactly one unblocked task carries **`wf:approved`**.
 
-Add label **`wf:needs-review`** to each draft task issue.
+### 5. Hand off
 
-**Default:** do not run **`scope approved`** writes without the explicit phrase.
+Point the user at the **`wf:approved`** task: [implement-task](../../orchestrators/implement-task/SKILL.md) opens a worktree and a PR into `integrationBranch`. When it ships, wayfinder **Reconcile** closes it and marks its GMs `implemented`.
 
-### 4. On `scope approved`
+## Rules
 
-When the user says **`scope approved`** (optionally naming task issues):
-
-1. **Map Implementing** - one row per draft task (Ticket, Bundle link, Mode, Status `draft`, Blocked by)
-2. **Map Decision coverage** - each bundle-scoped GM in bundle **Decisions** → **`assigned`**, **Linked issue** → task URL (when multiple tasks cover one GM, link the primary task or the task that completes that GM)
-3. **Comment** on each task summarizing executed updates
-
-Update the map with `wf map-edit` (coverage and Implementing rows). For a full body replacement, use `wf body get`, `wf validate`, and `wf body put`. See [map and issue body edits](../../references/reconcile.md#map-and-issue-body-edits-reconcile).
-
-**Do not** add `wf:approved` or set Status `ready` yet. Keep **`wf:needs-review`** until **`tasks approved`**.
-
-### 5. On `tasks approved`
-
-When the user says **`tasks approved`**, **`task approved`**, or issue comment **`approved`** (per task or all):
-
-1. **Task issue(s)** - set **Status:** `ready` in body for all approved tasks; remove label **`wf:needs-review`**
-2. **`wf:approved`** - add **only when unblocked**; when multiple tasks are ready and unblocked, add to **one** eligible task per approval decision ([REFERENCE § Deferred approval](REFERENCE.md#deferred-wayfinderapproved-wf-eco-gm-026) - use pick prompt)
-3. **AFK pickup comment** - when step 2 adds **`wf:approved`** to a **`wf:afk`** task, post pickup comment with trigger phrase **`Approved - AFK implement`** per [implement-task afk-pickup-comment.md](../../orchestrators/implement-task/references/afk-pickup-comment.md) (HITL tasks: label only)
-4. **Map Implementing** - update Status column to `ready` for approved tasks
-5. **Comment** on each task - ready for implementation; note deferred label if blockers remain
-
-**Default:** do not start implementation without **`wf:approved`** on the task. AFK pickup requires **## Method** populated and the pickup comment posted (v1 comment trigger; **`wf:approved`** is reviewer signal + implement-task gate).
-
-### 6. Hand off
-
-Tell the user:
-
-- **Next:** implement from the ready task(s) with **`wf:approved`** - [implement-task](../../orchestrators/implement-task/SKILL.md) opens a task worktree and a pull request into `integrationBranch`
-- Deferred tasks: label + AFK pickup comment added when blockers clear (implement-task unblock scan) or on a later **`tasks approved`** pass with the one-eligible-task pick
-- On completion: invoke wayfinder **Reconcile** with **`Approved - reconcile and close`** on the task issue
-
-## Implementation Reconcile (after ship)
-
-Owned by [wayfinder](../../SKILL.md) **Reconcile**, not create-tasks. On **`Approved - reconcile and close`** for an implementation task:
-
-1. Close task issue; remove **`wf:approved`** and **`wf:needs-review`** labels
-2. **Map Implementing** - move row gist to **Completed**
-3. **Decision coverage** - bundle-scoped GMs fully shipped by this task → **`implemented`**, linked issue stays task URL
-
-See [REFERENCE.md](REFERENCE.md#implementation-reconcile).
-
-## Interaction rules
-
-1. **Approved bundle only** - never split draft bundles
-2. **Planning To Do stays separate** - **Implementing** is the implementation frontier; do not move planning tickets
-3. **Globals inherited** - each task says all `[global]` log rows apply. Never mark constraint-only GMs **`assigned`**
-4. **Draft early** - create task issues while split is still being refined; update in place; always include **## Method** at draft
-5. **No bundle edits** - create-tasks does not change bundle Status or re-scope GM rows
-
-## Quick start
-
-User: "Split bundle #N into tasks on map #M."
-
-Load bundle #N + map #M → propose split → create draft `wf:task` issue(s) → user says **`scope approved`** → sync Implementing + coverage → user says **`tasks approved`** → add `wf:approved` → implement.
-
-See [REFERENCE.md](REFERENCE.md) for task template, approval phrases, and coverage updates.
+1. **Approved bundles only** - a `draft` bundle goes back to define-bundle.
+2. **Implementing is separate** - planning **To Do** tickets stay where they are.
+3. **Globals are inherited** - never mark constraint-only GMs `assigned`.
+4. **Leave the bundle alone** - no Status changes or re-scoping here.

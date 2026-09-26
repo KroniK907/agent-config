@@ -74,7 +74,7 @@ Post as a **new top-level comment** on the research ticket each session.
 
 ### Proposed tracker updates
 
-<!-- Non-binding - human must approve before Reconcile or map edits. -->
+<!-- Non-binding - Reconcile applies these once the user accepts them. -->
 
 - **Map fog:** …
 - **New ticket candidate:** …
@@ -131,24 +131,9 @@ Use **only** for logical/category ticket errors:
 
 ---
 
-## Approval and handoff
+## Handoff
 
-Research sessions are **non-binding fact-gathering**:
-
-| Research may | Research must not |
-|--------------|-------------------|
-| Post findings comment | Append decision-log rows |
-| Propose tracker updates (non-binding) | Post Reconcile approval phrases |
-| Suggest new tickets or fog items | Edit map body without human review |
-| Recommend grill-me on findings | Treat findings as binding decisions |
-
-**Binding path:**
-
-1. Human reviews findings and **Proposed tracker updates**
-2. For decisions → [grill-me](../../ideation/grill-me/SKILL.md) or [strategic-ideation](../../ideation/strategic-ideation/SKILL.md) on findings
-3. For tracker sync, invoke wayfinder **Reconcile** with human **Approved - reconcile and close** (or **keep open**). Reconcile merges research **Proposed tracker updates** into its [Reconcile resolution template](../../references/reconcile.md#reconcile-resolution-template).
-
-**Follow-up research:** New session on same ticket posts a **new comment**; prior runs preserved in thread.
+Findings are fact-gathering, not decisions. Decisions go through [grill-me](../../ideation/grill-me/SKILL.md) or [strategic-ideation](../../ideation/strategic-ideation/SKILL.md); tracker sync goes through wayfinder **Reconcile**, which merges **Proposed tracker updates** into its [resolution comment](../../references/reconcile.md#resolution-comment). Each follow-up session posts a new comment.
 
 ---
 
@@ -164,13 +149,3 @@ Explicit user invoke always valid even when ticket is not frontier.
 
 ---
 
-## Design defaults
-
-| Topic | Default |
-|-------|---------|
-| REFERENCE split | Templates and behavior rules in this file; workflow in SKILL.md |
-| Route trigger | Frontier `wf:research` ticket **or** explicit user invoke |
-| Issue body template file | `wayfinder/utilities/scripts/issue-bodies/research.md` for Materialize scripts |
-| Global re-tag pass | **Deferred** - separate Reconcile pass; not part of research v1 |
-
-Research does **not** close tickets or edit map/decision log - that is wayfinder **Reconcile** after human approval.

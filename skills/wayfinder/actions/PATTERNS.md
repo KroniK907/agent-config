@@ -20,7 +20,7 @@ What must be true before the action runs: loaded ticket + map/bundle context, br
 
 ### 3. Workflow
 
-Step-by-step playbook the agent follows once entry gates pass. Numbered steps; no orchestration duplicated from orchestrators (git push, resolution comment, queue handoff, Reconcile approval phrases stay in the orchestrator or wayfinder hub).
+Step-by-step playbook the agent follows once entry gates pass. Numbered steps; no orchestration duplicated from orchestrators (git push, resolution comment, queue handoff, and Reconcile stay in the orchestrator or wayfinder hub).
 
 ### 4. Done when mapping
 
