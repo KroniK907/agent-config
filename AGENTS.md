@@ -34,7 +34,16 @@ Repo-root skills under `skills/<name>/` are map-free utilities (PRD tools, `comm
 ln -sfn "$(readlink -f ~/.cursor/skills)/<name>" ~/.claude/skills/<name>
 ```
 
-A new skill nested under an existing top-level folder (for example inside `skills/wayfinder/`) needs no new symlink.
+Claude loads a skill only when `SKILL.md` sits directly in `~/.claude/skills/<name>/`. A link to `skills/wayfinder` exposes the hub and hides every skill under `actions/`, `ideation/`, and `orchestrators/`. Link each of those folders by its skill name (same stable clone, skip the hub because `wayfinder` is already linked):
+
+```bash
+src="$(readlink -f ~/.cursor/skills)"
+find "$src/wayfinder" -name SKILL.md -printf '%h\n' | while read -r dir; do
+  name="$(basename "$dir")"
+  [ "$name" = wayfinder ] && continue
+  ln -sfn "$dir" "$HOME/.claude/skills/$name"
+done
+```
 
 **Portable markdown.** Committed `.md` files use placeholders (`#N`, `{MAP-SLUG}-GM-001`, `{FeatureName}:Map`) - not live issue URLs or map-specific GM rows. Concrete tracker links belong in GitHub issue bodies and comments. See `rules/portable-skill-docs.mdc`.
 
