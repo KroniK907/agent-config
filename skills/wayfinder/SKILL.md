@@ -21,7 +21,7 @@ agent-config-sync: true
 | Existing map; need next step | **Route** - frontier + skill suggestion |
 | Child subsystem needs its own planning | **Chart** subfeature map; link from parent **Subfeatures** |
 
-Skip wayfinder when the path is clear - use `grill-me` or implement directly.
+Skip wayfinder when the path is clear - use `sous-vide` for a grilling session, or implement directly.
 
 ## Modes
 
@@ -89,7 +89,8 @@ Large greenfield work may spawn child maps (`SearchPanel:Map`) linked under pare
 | [feature-discovery](ideation/feature-discovery/SKILL.md) | Chart handoff - posts map-discovery comment on map issue |
 | [constrain-fog](ideation/constrain-fog/SKILL.md) | Groom **Not yet specified** fog - **`Constrain:`** ticket + fog-resolution artifact |
 | [strategic-ideation](ideation/strategic-ideation/SKILL.md) | Scope/strategy expand â†’ tension â†’ prune (ticket or pre-PRD) |
-| [grill-me](ideation/grill-me/SKILL.md) | `wf:grilling` tickets â†’ decision log |
+| [sous-vide](orchestrators/sous-vide/SKILL.md) | Orchestrate a plan - settle Proposed, grill-me asks Ask, then the next wave |
+| [grill-me](ideation/grill-me/SKILL.md) | Asks the sous-vide **Ask** list, one question at a time |
 | [design-modules](actions/design-modules/SKILL.md) | Modules shaping (one or more) - bundle step before create-tasks; planning `wf:prototype` interface exploration |
 | [define-bundle](actions/define-bundle/SKILL.md) | GM cluster â†’ draft/approved `wf:bundle` issue |
 | [create-tasks](actions/create-tasks/SKILL.md) | Approved bundle â†’ **Implementing** tasks |

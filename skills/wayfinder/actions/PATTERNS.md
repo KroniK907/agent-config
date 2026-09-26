@@ -2,7 +2,7 @@
 
 Shared scaffold for **`wayfinder/actions/<name>/`** skills - focused playbooks for map-scoped work. Invoked **directly** (Route / user attach), via ticket **## Method** (`create-tasks`, `one-off`, `implement-task`), or **delegated** by [orchestrators](../orchestrators/implement-task/SKILL.md) after startup gates pass.
 
-**Ideation** skills (`grill-me`, `feature-discovery`, …) live under **`wayfinder/ideation/`**. **Orchestrators** (`wayfinder`, `one-off`, `implement-task`) live at the hub root or under **`wayfinder/orchestrators/`**.
+**Ideation** skills (`grill-me`, `feature-discovery`, …) live under **`wayfinder/ideation/`**. **Orchestrators** (`wayfinder`, `one-off`, `implement-task`, `sous-vide`) live at the hub root or under **`wayfinder/orchestrators/`**.
 
 Each action skill is a **`wayfinder/**/<name>/SKILL.md`** entry in the Method pool. Default pool: skills at **`wayfinder/**/<name>/SKILL.md`** in the pinned pack; repo-root one-offs are valid only when task **## Method** explicitly names them. `create-tasks` sets **## Method** to the skill `name` from frontmatter.
 

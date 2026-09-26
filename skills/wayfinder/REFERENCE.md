@@ -347,7 +347,7 @@ In **`KroniK907/agent-config`**, the **wayfinder pack** is rooted at **`skills/w
 | Path | Role |
 |------|------|
 | `skills/wayfinder/SKILL.md` | Hub orchestrator - Chart, Materialize, Reconcile, Route |
-| `skills/wayfinder/orchestrators/<name>/` | Workflow orchestrators - `one-off`, `implement-task` |
+| `skills/wayfinder/orchestrators/<name>/` | Workflow orchestrators - `one-off`, `implement-task`, `sous-vide` |
 | `skills/wayfinder/ideation/<name>/` | Planning interviews - `feature-discovery`, `grill-me`, `strategic-ideation`, `constrain-fog` |
 | `skills/wayfinder/actions/<name>/` | Focused playbooks - build Methods (`write-code`, `prototype`) and direct skills (`research`, `define-bundle`, `create-tasks`, `design-modules`, `code-review`); see [actions/PATTERNS.md](actions/PATTERNS.md) |
 | `skills/wayfinder/utilities/` | Bootstrap, `wf` helper, plans, release notes - not agent skills |
