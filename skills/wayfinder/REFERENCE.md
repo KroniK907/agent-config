@@ -14,7 +14,7 @@
 
 **Decision-log prefix:** `{MAP-SLUG}-GM-` + three-digit sequence: `CMD-PAL-GM-001`.
 
-**Subfeature maps:** Child slug **extends** parent when nested: parent `CMD-PAL`, child search UI â†’ `CMD-PAL-SEARCH-GM-001`. Sibling subfeatures under the same parent share the parent prefix segment but distinct suffix: `CMD-PAL-ICONS`, `CMD-PAL-SEARCH`.
+**Subfeature maps:** Child slug **extends** parent when nested: parent `CMD-PAL`, child search UI → `CMD-PAL-SEARCH-GM-001`. Sibling subfeatures under the same parent share the parent prefix segment but distinct suffix: `CMD-PAL-ICONS`, `CMD-PAL-SEARCH`.
 
 **Rules:**
 
@@ -106,9 +106,9 @@ Use for GitHub issue body or `wayfinder/utilities/plans/{FeatureName}.Map.md`.
 | Label | Mode typical | Resolved by | Produces |
 |-------|--------------|-------------|----------|
 | `wf:research` | HITL (v1) | [research](actions/research/SKILL.md) | Structured findings comment; non-binding Proposed tracker updates |
-| `wf:prototype` | HITL | Stub code, outline, or `design-modules` | Asset link â†’ comment |
+| `wf:prototype` | HITL | Stub code, outline, or `design-modules` | Asset link → comment |
 | `wf:grilling` | HITL | `grill-me` or `strategic-ideation` when Question is scope/strategy | `{MAP-SLUG}-GM-xx` rows in decision log |
-| `wf:task` | HITL or AFK | Agent checklist or human errand | Done-work record â†’ comment |
+| `wf:task` | HITL or AFK | Agent checklist or human errand | Done-work record → comment |
 
 Every To Do ticket is a **child issue** of the map, labelled `wf:todo`.
 
@@ -119,7 +119,7 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 | Prefix | Type label (typical) | Route to skill(s) | Title names |
 |--------|----------------------|-------------------|-------------|
 | **Grill:** | `wf:grilling` | [grill-me](ideation/grill-me/SKILL.md) | The decision or contract to stress-test - depth-first Q&A |
-| **Ideate:** | `wf:grilling` | [strategic-ideation](ideation/strategic-ideation/SKILL.md) - [feature-ideation](feature-ideation/SKILL.md) (stub â†’ strategic-ideation) | Scope/strategy or feature shape to expand â†’ tension â†’ prune |
+| **Ideate:** | `wf:grilling` | [strategic-ideation](ideation/strategic-ideation/SKILL.md) - [feature-ideation](feature-ideation/SKILL.md) (stub → strategic-ideation) | Scope/strategy or feature shape to expand → tension → prune |
 | **Constrain:** | `wf:grilling` | [constrain-fog](ideation/constrain-fog/SKILL.md) | A **Not yet specified** fog line or cluster to sharpen |
 | **Research:** | `wf:research` | [research](actions/research/SKILL.md) | The investigation - facts, prior art, survey |
 | **Prototype:** | `wf:prototype` | [prototype](actions/prototype/SKILL.md) - [design-modules](actions/design-modules/SKILL.md) on planning **To Do** | What to explore - throwaway demo, layout, interface variants |
@@ -130,13 +130,13 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 
 ### Route by prefix (when several skills share a prefix)
 
-| Prefix | Pick skill whenâ€¦ |
+| Prefix | Pick skill when… |
 |--------|------------------|
-| **Constrain:** | Map-scoped fog grooming â†’ **constrain-fog** (auto-creates session ticket; artifact on ticket body). |
-| **Ideate:** | Scope/strategy expand â†’ tension â†’ prune â†’ **strategic-ideation** (default). Legacy **feature-ideation** invoke resolves to the same skill. |
-| **Prototype:** | Planning **To Do** exploration â†’ **design-modules** or inline stub. **`wf:approved`** on **Implementing** â†’ **implement-task** â†’ Method **prototype**. |
-| **Task:** | Map **To Do** repo deliverable â†’ **one-off**. **`wf:approved`** on **Implementing** â†’ **implement-task**. User wants to group GM cluster â†’ **define-bundle**. |
-| **Organize:** | Chart / Materialize / Reconcile / map table or **Not yet specified** edits â†’ **wayfinder**. Trivial checklist only â†’ **one-off**. |
+| **Constrain:** | Map-scoped fog grooming → **constrain-fog** (auto-creates session ticket; artifact on ticket body). |
+| **Ideate:** | Scope/strategy expand → tension → prune → **strategic-ideation** (default). Legacy **feature-ideation** invoke resolves to the same skill. |
+| **Prototype:** | Planning **To Do** exploration → **design-modules** or inline stub. **`wf:approved`** on **Implementing** → **implement-task** → Method **prototype**. |
+| **Task:** | Map **To Do** repo deliverable → **one-off**. **`wf:approved`** on **Implementing** → **implement-task**. User wants to group GM cluster → **define-bundle**. |
+| **Organize:** | Chart / Materialize / Reconcile / map table or **Not yet specified** edits → **wayfinder**. Trivial checklist only → **one-off**. |
 
 **Rules:**
 
@@ -150,16 +150,16 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 
 | Weak title | Strong title | Why |
 |------------|--------------|-----|
-| Design constrain-fog skill for map fog resolution | **Grill:** constrain-fog skill design | "Design â€¦ skill" reads like implementation; `Grill:` signals Q&A first |
+| Design constrain-fog skill for map fog resolution | **Grill:** constrain-fog skill design | "Design … skill" reads like implementation; `Grill:` signals Q&A first |
 | Specify research ticket workflow | **Grill:** research ticket workflow | "Specify" is ambiguous; grilling resolves the contract |
 | Cloud automations for AFK pickup | **Research:** cloud automations for AFK pickup | Names the investigation |
 | Subfeature map worked example in REFERENCE | **Prototype:** subfeature map worked example | Names exploration, not a shipped doc yet |
 | implement create-tasks skill | **Task:** implement create-tasks skill | Deliverable prefix |
-| Group GM-012-015 into first bundle | **Task:** define-bundle for palette shell | Bundling work; Route â†’ define-bundle |
-| Decision coverage backfill | **Organize:** decision coverage backfill | Tracker errand; Route â†’ wayfinder or one-off |
-| Clear routing-table fog lines | **Organize:** routing table fog | Tracker sort; Route â†’ wayfinder |
+| Group GM-012-015 into first bundle | **Task:** define-bundle for palette shell | Bundling work; Route → define-bundle |
+| Decision coverage backfill | **Organize:** decision coverage backfill | Tracker errand; Route → wayfinder or one-off |
+| Clear routing-table fog lines | **Organize:** routing table fog | Tracker sort; Route → wayfinder |
 
-**Agent cue:** When the user cites a map ticket by `#N` or title, read the **prefix** first - it narrows the skill set. When the prefix maps to **one** skill, start there. When it maps to **several**, use **## Question** and map context (To Do vs Implementing, fog vs deliverable vs map sync) per the table above - do not treat body prose as permission to skip the prefix family (e.g. `Grill:` â†’ implement).
+**Agent cue:** When the user cites a map ticket by `#N` or title, read the **prefix** first - it narrows the skill set. When the prefix maps to **one** skill, start there. When it maps to **several**, use **## Question** and map context (To Do vs Implementing, fog vs deliverable vs map sync) per the table above - do not treat body prose as permission to skip the prefix family (e.g. `Grill:` → implement).
 
 ### Ticket body template (grilling, prototype, task)
 
@@ -217,7 +217,7 @@ Load the artifact from [feature-discovery](ideation/feature-discovery/REFERENCE.
 
 After materialize: reply on the map-discovery comment thread with **Status:** `materialized`; add **Completed** gist on map (*Map discovery materialized - N tickets*).
 
-**Create order:** Tickets â†’ wire blockers â†’ link sub-issues â†’ update map body.
+**Create order:** Tickets → wire blockers → link sub-issues → update map body.
 
 **Label each ticket:** `wf:todo` + `wf:research` | `:prototype` | `:grilling` | `:task` + `wf:hitl` | `:afk`.
 
@@ -238,13 +238,13 @@ Resolution template, inference, approval phrases, and the wf apply steps live in
 
 **Frontier** = rows in **To Do** whose linked issues are: **open**, **unblocked** (all blockers closed), **unclaimed** (no assignee) or assigned to current worker per session rules.
 
-Use GitHubâ€™s blocked-by graph for ordering. Open tickets not listed in **To Do** should not exist - the table is the human-facing frontier index.
+Use GitHub’s blocked-by graph for ordering. Open tickets not listed in **To Do** should not exist - the table is the human-facing frontier index.
 
 ---
 
 ## Routing table
 
-Suggest-only - user starts the recommended skill. Map ticket **Type** â†’ default skill:
+Suggest-only - user starts the recommended skill. Map ticket **Type** → default skill:
 
 | Ticket type | Default skill | Notes |
 |-------------|---------------|-------|
@@ -252,13 +252,13 @@ Suggest-only - user starts the recommended skill. Map ticket **Type** â†’ d
 | `grilling` (scope/strategy) | `strategic-ideation` | When **Question** is bundling, roadmap, or scope shape |
 | `research` | `research` | HITL v1; AFK deferred per map Notes |
 | `prototype` (To Do) | `design-modules` or inline stub | Planning frontier; per ticket **Question** |
-| `prototype` (Implementing) | [implement-task](orchestrators/implement-task/SKILL.md) â†’ Method **`prototype`** | [actions/prototype](actions/prototype/SKILL.md); bundle tasks only |
+| `prototype` (Implementing) | [implement-task](orchestrators/implement-task/SKILL.md) → Method **`prototype`** | [actions/prototype](actions/prototype/SKILL.md); bundle tasks only |
 | `task` (Implementing) | [implement-task](orchestrators/implement-task/SKILL.md) | Default Method **`write-code`** for normal build; **`prototype`** for throwaway demos |
 | Approved bundle (post-approval) | [design-modules](actions/design-modules/SKILL.md) | Optional HITL modules shaping (one or more) before [create-tasks](actions/create-tasks/SKILL.md) |
 | `task` (To Do) | [one-off](orchestrators/one-off/SKILL.md) | Map-scoped repo deliverables; trivial checklist-only errands stay *Agent checklist or human* |
 | GM cluster ready to build | `define-bundle` | While planning To Do or fog may stay open; see [define-bundle REFERENCE](actions/define-bundle/REFERENCE.md#route-heuristics-for-wayfinder) |
 | Approved bundle | `create-tasks` | Splits into **Implementing** tasks. Each task later gets a worktree and a pull request |
-| Small scope, no map | `write-a-prd` â†’ `prd-to-issues` | **Not** a map Route handoff |
+| Small scope, no map | `write-a-prd` → `prd-to-issues` | **Not** a map Route handoff |
 | New feature, no map | wayfinder **Chart** | Then `feature-discovery` |
 
 After sibling session: remind user to invoke wayfinder **Reconcile** (explicit invoke - see map fog if auto-reconcile is ever desired).
@@ -278,8 +278,8 @@ When **To Do** has items, Route the planning frontier per [frontier queries](#fr
 
 | Skill | When |
 |-------|------|
-| **feature-discovery** | Post-Chart whole-map breadth-first triage â†’ **`## Map discovery`** â†’ Materialize |
-| **constrain-fog** | Existing map; groom **Not yet specified** â†’ **`## Fog resolution`** on **`Constrain:`** ticket â†’ Reconcile |
+| **feature-discovery** | Post-Chart whole-map breadth-first triage → **`## Map discovery`** → Materialize |
+| **constrain-fog** | Existing map; groom **Not yet specified** → **`## Fog resolution`** on **`Constrain:`** ticket → Reconcile |
 | **grill-me / strategic-ideation / research** | Existing typed tickets on **To Do** |
 
 ---
@@ -295,7 +295,7 @@ When **To Do** has items, Route the planning frontier per [frontier queries](#fr
 3. Add parent **To Do** ticket if needed: *Integration review - align `{Child}-GM-*` with `{Parent}-GM-*`* (grilling, blocked by child frontier empty or milestone).
 4. Child **Notes** must link parent map and list parent `GM-xx` rows that constrain it.
 
-Cross-map conflicts â†’ parent grilling ticket, not silent edits to child logs.
+Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 
 ---
 
@@ -332,9 +332,9 @@ gh issue edit <num> --add-label "wf:needs-review"
 gh issue edit <num> --remove-label "wf:needs-review"
 ```
 
-**Sub-issues:** Link map â†’ decision log and tickets via GitHub sub-issues. **Blocked-by:** Use native issue dependencies for frontier ordering.
+**Sub-issues:** Link map → decision log and tickets via GitHub sub-issues. **Blocked-by:** Use native issue dependencies for frontier ordering.
 
-**Chart create order:** Decision log â†’ map (with log link) â†’ link sub-issues â†’ hand off to feature-discovery.
+**Chart create order:** Decision log → map (with log link) → link sub-issues → hand off to feature-discovery.
 
 **Local fallback:** `wayfinder/utilities/plans/{FeatureName}.Map.md` and `{FeatureName}.Map-Discovery.md` only when GitHub is unavailable, or for export. See [plans/README.md](utilities/plans/README.md). Do not commit local files that duplicate active GitHub issues.
 
@@ -342,61 +342,18 @@ gh issue edit <num> --remove-label "wf:needs-review"
 
 ## Skills repo layout
 
-In **`KroniK907/agent-config`**, the **wayfinder pack** is rooted at **`skills/wayfinder/`**:
-
-| Path | Role |
-|------|------|
-| `skills/wayfinder/SKILL.md` | Hub orchestrator - Chart, Materialize, Reconcile, Route |
-| `skills/wayfinder/orchestrators/<name>/` | Workflow orchestrators - `one-off`, `implement-task`, `sous-vide` |
-| `skills/wayfinder/ideation/<name>/` | Planning interviews - `feature-discovery`, `grill-me`, `strategic-ideation`, `constrain-fog` |
-| `skills/wayfinder/actions/<name>/` | Focused playbooks - build Methods (`write-code`, `prototype`) and direct skills (`research`, `define-bundle`, `create-tasks`, `design-modules`, `code-review`); see [actions/PATTERNS.md](actions/PATTERNS.md) |
-| `skills/wayfinder/utilities/` | Bootstrap, `wf` helper, plans, release notes - not agent skills |
-| `skills/<one-off>/` | Map-free utilities - `commit`, `writing-for-agents`, PRD tools |
-
-**Method path validation:** default pool is skills at **`skills/wayfinder/**/<name>/SKILL.md`** in the pinned pack. Skills under `skills/` are valid only when **## Method** explicitly names them.
-
-Install examples:
-
-```text
-npx skills@latest add KroniK907/agent-config/skills/wayfinder
-npx skills@latest add KroniK907/agent-config/skills/wayfinder/actions/research
-npx skills@latest add KroniK907/agent-config/skills/wayfinder/ideation/grill-me
-```
-
-**AFK app repos:** cross-repo bootstrap checklist - [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md). Pin this repo at a semver tag ([RELEASE.md](utilities/RELEASE.md)); templates under [bootstrap/](utilities/bootstrap/).
+**Method path validation:** default pool is skills at **`skills/wayfinder/**/<name>/SKILL.md`** in the pinned pack. Skills under `skills/` are valid only when **## Method** explicitly names them. AFK app repos: [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md).
 
 ---
 
 ## Ecosystem integration
 
-Skills that **read** wayfinder maps:
+Per-skill roles are in the [SKILL.md Ecosystem table](SKILL.md#ecosystem-related-skills). Extra detail:
 
-| Skill | Reads | Writes |
-|-------|-------|--------|
-| `write-a-prd` | Map Completed + decision log | PRD issue |
-| `prd-to-issues` | PRD | `agent-queue` issues |
-
-Skills that **write** wayfinder state:
-
-| Skill | Writes |
-|-------|--------|
-| `feature-discovery` | Map-discovery comment on map issue |
-| [constrain-fog](ideation/constrain-fog/SKILL.md) | Auto-created **`Constrain:`** ticket; **`## Fog resolution`** artifact; Reconcile materializes ticket candidates |
-| `strategic-ideation` | Scope handoff (chat); Reconcile records on map |
-| `grill-me` | Decision log `{MAP-SLUG}-GM-xx`; resolution comment on grilling ticket; Reconcile proposes full-session tracker delta (tickets, bundle clusters, route) |
-| `define-bundle` | Draft/approved bundle issue; Decision coverage `scoped` on **`bundle approved`** (the coverage row is the claim). Does not create a git branch |
-| `create-tasks` | Implementation task issues; **Implementing** table; coverage `assigned` on scope approval; deferred/serial **`wf:approved`** on **`tasks approved`**; `implemented` on Reconcile close |
-| [one-off](orchestrators/one-off/SKILL.md) | HITL To Do implementation without bundle pipeline; draft/materialize ticket; same task worktree and pull request as implement-task; gate waivers in one-off REFERENCE |
-| [implement-task](orchestrators/implement-task/SKILL.md) | Task worktree; Method dispatch; **code-review** after Method; push and pull request; resolution comment; **Status:** `awaiting-reconcile`; dependent unblock; AFK serial handoff |
-| [code-review](actions/code-review/SKILL.md) | Two-axis Standards + Spec review; auto-fix obvious mistakes when invoked by implement-task; ad-hoc branch/PR/WIP review on request |
-| [actions/prototype](actions/prototype/SKILL.md) | **`wf:prototype`** Method - throwaway LOGIC (HTML demo) or UI (`?variant=` + switcher) in the task worktree |
-| `wayfinder` | Map To Do / Completed / fog / Subfeatures; ticket create/close on approval |
-| [research](actions/research/SKILL.md) | Findings comment on research ticket; non-binding Proposed tracker updates |
-| Cloud AFK automation | Issue comment trigger **`Approved - AFK implement`** (v1); label **`wf:approved`** for reviewer + gates; runs [implement-task](orchestrators/implement-task/SKILL.md) in a task worktree; **push, pull request, resolution comment**; human Reconcile closes task - setup via [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md) |
-
-**Route hint:** When the user asks to review a branch, PR, WIP changes, or diff since a ref outside an implement-task run, suggest [`code-review`](actions/code-review/SKILL.md) in ad-hoc mode. A host bug-only or security review can sit beside it. During **implement-task**, code-review runs automatically after Method. No separate Route handoff.
-
-**Handoff chain:** Chart, feature-discovery, Materialize, sibling skills, Reconcile, **`define-bundle`** (`bundle approved` sets coverage, no feature branch), **`create-tasks`** (`tasks approved` adds **`wf:approved`** and an AFK pickup comment when unblocked), **`implement-task`** (task worktree, Method, **code-review**, push, pull request), Reconcile. Map-free: grill-me, `write-a-prd`, `prd-to-issues`.
+- **Map readers (map-free path):** `write-a-prd` reads Completed + decision log and writes a PRD issue; `prd-to-issues` turns it into `agent-queue` issues.
+- **Coverage transitions:** `define-bundle` sets `scoped` on **`bundle approved`** (no git branch). `create-tasks` sets `assigned` on scope approval, adds **`wf:approved`** on **`tasks approved`**; Reconcile sets `implemented`.
+- **Cloud AFK automation:** comment **`Approved - AFK implement`** plus label **`wf:approved`** runs [implement-task](orchestrators/implement-task/SKILL.md) in a task worktree (push, pull request, resolution comment); a human Reconcile closes the task. Setup: [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md).
+- **Route hint:** a request to review a branch, PR, WIP, or diff outside implement-task goes to [code-review](actions/code-review/SKILL.md) ad-hoc. During implement-task, code-review runs automatically after Method.
 
 ---
 
@@ -409,8 +366,8 @@ Post or narrate after skeleton creation:
 
 **Next:** Run [feature-discovery](ideation/feature-discovery/SKILL.md) with:
 - Map: #N
-- Seed: â€¦
-- Target outcome: â€¦
+- Seed: …
+- Target outcome: …
 
 When the map-discovery comment has **Status:** `ready for materialize`, invoke **wayfinder Materialize** with the map link.
 ```

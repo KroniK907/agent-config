@@ -21,7 +21,7 @@ Turn edits from **this conversation** into one or more **clean commits**: correc
 
 ### 1. Locate the repo and inventory changes
 
-Use `git status` / `git diff` to see the full working tree, but treat that listing as **inventory only**. You will stage **only** the subset that belongs to this chat (next section) - not â€œeverything changed.â€
+Use `git status` / `git diff` to see the full working tree, but treat that listing as **inventory only**. You will stage **only** the subset that belongs to this chat (next section) - not “everything changed.”
 
 From the workspace (or path the user gives), run:
 
@@ -42,7 +42,7 @@ gh repo view --json nameWithOwner,defaultBranchRef,url
 
 1. **Attribution:** Decide which paths were **actually produced or intentionally modified in this chat** (or in a **user-supplied** transcript/session the user asked you to use for this commit). Use the conversation: files touched, tasks completed, explicit user requests, tool edits traceable to this thread.
 2. **`git diff` confirms content**, not inclusion: a file appearing in `git diff` does **not** mean it belongs in this commit if this chat never discussed or changed it.
-3. **Exclude by default:** Leave untouched in the working tree (unstaged) any changed or untracked paths **not** attributable to this chatâ€™s scope - **even if** the user would like a â€œcleanâ€ status. They must **explicitly** ask to commit â€œeverything,â€ â€œall local changes,â€ named paths, or work from another context before you widen what you `git add`.
+3. **Exclude by default:** Leave untouched in the working tree (unstaged) any changed or untracked paths **not** attributable to this chat’s scope - **even if** the user would like a “clean” status. They must **explicitly** ask to commit “everything,” “all local changes,” named paths, or work from another context before you widen what you `git add`.
 4. If it is **unclear** whether a path belongs to this chat, **ask one short question** or commit only the obvious subset and mention what was left out.
 5. If the user points at a transcript or session, use it only to recall *which* files and *what* themes belong to *that* scope; still verify with `git diff`.
 
@@ -69,7 +69,7 @@ Briefly tell the user the plan (e.g. "2 commits: fix X, then docs for Y") before
 
 For each commit:
 
-1. Stage only the paths that belong to that logical change **and** to this chatâ€™s scope: `git add -- path1 path2` (avoid `git add .` unless every dirty path is intentionally in scope for this commit).
+1. Stage only the paths that belong to that logical change **and** to this chat’s scope: `git add -- path1 path2` (avoid `git add .` unless every dirty path is intentionally in scope for this commit).
 2. Re-check: `git diff --staged`
 3. Commit with a message that matches obvious repo conventions; if none, use a short imperative subject and optional body (Conventional Commits is a safe default).
 

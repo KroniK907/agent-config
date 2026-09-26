@@ -14,9 +14,9 @@ Detail: [REFERENCE.md](REFERENCE.md)
 
 | Skill | When instead |
 |-------|----------------|
-| [feature-discovery](../feature-discovery/SKILL.md) | Post-Chart whole-map breadth-first triage â†’ **`## Map discovery`** |
+| [feature-discovery](../feature-discovery/SKILL.md) | Post-Chart whole-map breadth-first triage → **`## Map discovery`** |
 | [grill-me](../grill-me/SKILL.md) | Depth-first Q&A on an existing **`Grill:`** ticket **Question** |
-| [strategic-ideation](../strategic-ideation/SKILL.md) | Scope/strategy expand â†’ tension â†’ prune on **`Ideate:`** tickets |
+| [strategic-ideation](../strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune on **`Ideate:`** tickets |
 | [research](../../actions/research/SKILL.md) | Fact-gathering on existing **`Research:`** tickets |
 | [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
 
@@ -49,11 +49,11 @@ At session start, create child issue:
 - **Body:** **Question** (one line - groom map fog), **Map** parent link, **Status:** `in progress`
 - **Do not** append a **To Do** row on the map
 
-Post initial **`## Fog resolution`** skeleton on the **`Constrain:`** ticket per [REFERENCE Â§ Fog resolution artifact](REFERENCE.md#fog-resolution-artifact).
+Post initial **`## Fog resolution`** skeleton on the **`Constrain:`** ticket per [REFERENCE § Fog resolution artifact](REFERENCE.md#fog-resolution-artifact).
 
 ### 3. Session phases
 
-Every assistant reply: **Recap** + **Session state** per [REFERENCE Â§ Session state](REFERENCE.md#session-state-line).
+Every assistant reply: **Recap** + **Session state** per [REFERENCE § Session state](REFERENCE.md#session-state-line).
 
 | Phase | Purpose |
 |-------|---------|
@@ -63,7 +63,7 @@ Every assistant reply: **Recap** + **Session state** per [REFERENCE Â§ Session
 
 **Cleanup-only** sessions (no CONSTRAIN items selected) are valid - skip to artifact finalize + Reconcile handoff.
 
-See [REFERENCE Â§ Phases](REFERENCE.md#phases) for gates, delete vs out of scope, terminal outcomes, and full-discovery triggers.
+See [REFERENCE § Phases](REFERENCE.md#phases) for gates, delete vs out of scope, terminal outcomes, and full-discovery triggers.
 
 ### 4. Persist artifact
 
@@ -72,7 +72,7 @@ Update **`## Fog resolution`** on the **`Constrain:`** ticket after:
 - CLEANUP lock (deleted / out of scope / remaining list confirmed)
 - Each confirmed CONSTRAIN item (and after optional FULL_DISCOVERY for that item)
 
-**Status:** `in progress` during session â†’ `ready for reconcile` when user confirms session complete.
+**Status:** `in progress` during session → `ready for reconcile` when user confirms session complete.
 
 Replace content by editing the ticket body (or post follow-up comment only when body edit is impractical - prefer body).
 
@@ -99,6 +99,6 @@ When artifact **Status:** `ready for reconcile`:
 
 User: "Constrain fog on map #N."
 
-Load map â†’ auto-create **`Constrain:`** ticket â†’ CLEANUP â†’ CONSTRAIN (mini-discovery per item) â†’ optional FULL_DISCOVERY â†’ **`Status: ready for reconcile`** â†’ Reconcile.
+Load map → auto-create **`Constrain:`** ticket → CLEANUP → CONSTRAIN (mini-discovery per item) → optional FULL_DISCOVERY → **`Status: ready for reconcile`** → Reconcile.
 
 See [REFERENCE.md](REFERENCE.md) for artifact template, mini/full discovery rules, and terminal outcomes.
