@@ -1,6 +1,6 @@
 ---
 name: sous-vide
-description: sous-vide, wayfinder orchestrator, pre-grill a plan, sign off proposed decisions, grill-me the ask list, next wave after grill-me
+description: sous-vide, wayfinder orchestrator, pre-grill a plan, sign off proposed decisions, grill-me the ask list, next wave after grill-me, score handed-back questions
 agent-config-sync: true
 ---
 
@@ -36,7 +36,7 @@ A cell is N/A only with one reason from that zone's **Skip when**. If the plan d
 
 ### 4. Write questions for this wave
 
-A **wave** is every still-open question whose `depends-on` ids are settled. Settled means accepted, replaced, answered in grill-me, or N/A. Leave `depends-on` empty when no earlier answer can change this one.
+A **wave** is every still-open question whose `depends-on` ids are settled. Settled means accepted, replaced, answered in grill-me, or N/A. Handed-back questions from grill-me are open questions; keep their ids and score them here before asking anything new. Leave `depends-on` empty when no earlier answer can change this one.
 
 Write the questions before you score them. Each has two to four answers and a stable id. A layout-bearing surface follows grill-me **UI layout articulation** and is Ask. Use a zone's **Prompts** (already in context) only to invent questions for in-scope cells.
 
@@ -77,12 +77,12 @@ A **cascade** is the changed row plus every row in that slice whose `depends-on`
 
 ### 7. Grill the ask list
 
-When the bag is settled and **Ask** has rows, follow [grill-me](../../ideation/grill-me/SKILL.md) in this same session. Pass the shape as settled and the Ask table as the only open work. Grill-me asks those questions one at a time. When every Ask id from this bag is answered, those answers are settled.
+When the bag is settled and **Ask** has rows, follow [grill-me](../../ideation/grill-me/SKILL.md) in this same session. Pass the shape as settled and the Ask table as the only open work. Grill-me asks those questions one at a time and hands back any new question instead of asking it. When every Ask id from this bag is answered, those answers are settled and the handed-back questions join the open list.
 
 **Done when:** Every Ask id from this bag has an answer, or **Ask** was empty.
 
 ### 8. Next wave or finish
 
-If any open question is now unblocked, go back to step 4 and show a new bag. If none are, the loop is finished. On a `wf:grilling` ticket, tell the user to invoke wayfinder **Reconcile**.
+If any open question is now unblocked, including handed-back ones, go back to step 4 and show a new bag. If none are, the loop is finished. On a `wf:grilling` ticket, tell the user to invoke wayfinder **Reconcile**.
 
 **Done when:** The reply is the next bag, or the loop is finished and Reconcile is named when a grilling ticket is in play.
