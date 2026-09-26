@@ -15,8 +15,8 @@ Load a **`wf:research`** ticket, investigate per [behavior rules](REFERENCE.md#b
 | Skill | When instead |
 |-------|----------------|
 | [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
-| [grill-me](../../ideation/grill-me/SKILL.md) | Depth-first Q&A â†’ binding `{MAP-SLUG}-GM-*` rows |
-| [strategic-ideation](../../ideation/strategic-ideation/SKILL.md) | Scope/strategy expand â†’ tension â†’ prune |
+| [grill-me](../../ideation/grill-me/SKILL.md) | Depth-first Q&A → binding `{MAP-SLUG}-GM-*` rows |
+| [strategic-ideation](../../ideation/strategic-ideation/SKILL.md) | Scope/strategy expand → tension → prune |
 | [feature-discovery](../../ideation/feature-discovery/SKILL.md) | Breadth-first zone triage before tickets exist |
 
 ## Prerequisites
@@ -46,7 +46,7 @@ Follow [behavior rules](REFERENCE.md#behavior-rules):
 
 - **Primary sources first** - docs, specs, code, official APIs
 - **Secondary sources** only when labeled; lower weight in Findings
-- Seek **â‰¥1 alternate viewpoint** for Viewpoints/alternatives
+- Seek **≥1 alternate viewpoint** for Viewpoints/alternatives
 - If Coverage fails on a **valid premise**, run **one scope-expansion pass** then stop
 
 Use web search, codebase exploration, and ticket **Source hints** as appropriate. Do not treat "couldn't find sources" as invalid premise.
@@ -55,7 +55,7 @@ Use web search, codebase exploration, and ticket **Source hints** as appropriate
 
 Build comment per [output template](REFERENCE.md#findings-comment-template):
 
-Summary â†’ Findings â†’ Gaps & follow-ups â†’ Viewpoints/alternatives â†’ Coverage â†’ (optional **Invalid premise**) â†’ Proposed tracker updates.
+Summary → Findings → Gaps & follow-ups → Viewpoints/alternatives → Coverage → (optional **Invalid premise**) → Proposed tracker updates.
 
 **Coverage:** Map each **Done when** bullet to `satisfied` / `partial` / `not satisfied` with brief evidence.
 
@@ -95,6 +95,6 @@ End with: *Review the findings - invoke wayfinder **Reconcile** when ready to sy
 
 User: "Research ticket #N on map #M."
 
-Load ticket #N + map #M â†’ investigate per behavior rules â†’ post structured findings comment â†’ hand off for human review.
+Load ticket #N + map #M → investigate per behavior rules → post structured findings comment → hand off for human review.
 
 See [REFERENCE.md](REFERENCE.md) for ticket template, output sections, behavior rules, and design defaults.

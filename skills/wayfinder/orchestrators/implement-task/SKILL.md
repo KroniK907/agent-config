@@ -23,14 +23,14 @@ Detail: [REFERENCE.md](REFERENCE.md) - resolution templates: [references/resolut
 Run in order. **Stop at first gate failure** - post **Blocked** resolution per [references/resolution-comment.md](references/resolution-comment.md); do not edit the repo.
 
 1. **Load** - task issue + parent bundle (map link, decision IDs). Fetch binding paragraphs with `go run <wayfinder>/utilities/wf/wf.go log <log-num> --ids ...` and `--global`
-2. **Startup gates** - [REFERENCE Â§ Startup gates](REFERENCE.md#startup-gates) (Status, labels, Method, integration branch, AFK serial)
+2. **Startup gates** - [REFERENCE § Startup gates](REFERENCE.md#startup-gates) (Status, labels, Method, integration branch, AFK serial)
 3. **Git** - [task worktree](REFERENCE.md#4-task-worktree) off `integrationBranch`; one worktree per task
 4. **Method dispatch** - record pre-Method `HEAD`; load and follow task **## Method** skill (HITL session override allowed; AFK requires valid Method)
 5. **Build** - action skill owns deliverables; orchestrator does not duplicate build steps
-6. **Code review** - [code-review](../../actions/code-review/SKILL.md) in **implement-task mode** on `<pre-method-sha>...HEAD`; auto-fix obvious mistakes; capture [return artifact](../../actions/code-review/REFERENCE.md#implement-task-return-artifact) ([REFERENCE Â§ Code review](REFERENCE.md#code-review))
+6. **Code review** - [code-review](../../actions/code-review/SKILL.md) in **implement-task mode** on `<pre-method-sha>...HEAD`; auto-fix obvious mistakes; capture [return artifact](../../actions/code-review/REFERENCE.md#implement-task-return-artifact) ([REFERENCE § Code review](REFERENCE.md#code-review))
 7. **Push** - commit Method + auto-fixes in the task worktree; push; open a pull request into `integrationBranch` when files changed; write **PR:** on the task body
 8. **Resolve** - post success resolution comment (include **Code review** section); set body **Status:** `awaiting-reconcile` (keep **`wf:approved`**); add label **`wf:needs-review`**
-9. **Unblock** - scan dependents; for each cleared AFK dependent: add **`wf:approved`** + post AFK pickup comment ([references/afk-pickup-comment.md](references/afk-pickup-comment.md)); HITL dependents: label only ([REFERENCE Â§ Unblock and handoff](REFERENCE.md#unblock-and-handoff))
+9. **Unblock** - scan dependents; for each cleared AFK dependent: add **`wf:approved`** + post AFK pickup comment ([references/afk-pickup-comment.md](references/afk-pickup-comment.md)); HITL dependents: label only ([REFERENCE § Unblock and handoff](REFERENCE.md#unblock-and-handoff))
 10. **AFK only** - remove **`wf:afk-running`**; serial handoff to next eligible AFK task (**`wf:approved`** + pickup comment per [afk-pickup-comment.md](references/afk-pickup-comment.md))
 
 **Invariants:** Keep the task open. Keep **`wf:approved`**. Leave Reconcile approval to the human.

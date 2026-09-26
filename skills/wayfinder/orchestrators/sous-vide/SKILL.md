@@ -10,7 +10,7 @@ Orchestrate a plan into a shape. Score one wave, the user settles **Proposed**, 
 
 Use this when a plan is concrete enough to cut into scenarios, including when the user asks for a grilling session. Use [strategic-ideation](../../ideation/strategic-ideation/SKILL.md) when the scope is still unstable. If the plan is too thin to slice, stop and point them there.
 
-This skill does not edit a map, a decision log, or code. The only reads for triage are the five grill-me zone files. Scoring stays in this session. Wayfinder **Reconcile** runs after the loop finishes, and only on a `wf:grilling` ticket.
+This skill does not edit a map, a decision log, or code. The only read for triage is [grill-me ZONES.md](../../ideation/grill-me/ZONES.md), loaded once per session. Scoring stays in this session. Wayfinder **Reconcile** runs after the loop finishes, and only on a `wf:grilling` ticket.
 
 ## Loop
 
@@ -28,15 +28,9 @@ A **slice** is one scenario or one artifact. Re-score that slice when an answer 
 
 ### 3. Triage cells
 
-A **cell** is one slice crossed with one grill-me zone. On the first wave, read only **Quick triage** in each zone file, for every slice:
+A **cell** is one slice crossed with one grill-me zone. On the first wave, load [ZONES.md](../../ideation/grill-me/ZONES.md) once and triage every slice against each zone's **Skip when** / **In scope if** lines. Do not re-read it on later waves or in grill-me.
 
-- [Surfaces & experience](../../ideation/grill-me/references/surfaces-and-experience.md)
-- [Behavior & correctness](../../ideation/grill-me/references/behavior-and-correctness.md)
-- [Boundaries & integration](../../ideation/grill-me/references/boundaries-and-integration.md)
-- [Persistence & data](../../ideation/grill-me/references/persistence-and-data.md)
-- [Change, risk & evidence](../../ideation/grill-me/references/change-risk-and-evidence.md)
-
-A cell is N/A only with one reason from that file's skip signals. If the plan does not state the absence, the cell stays in scope. Later waves reuse this triage.
+A cell is N/A only with one reason from that zone's **Skip when**. If the plan does not state the absence, the cell stays in scope. Later waves reuse this triage.
 
 **Done when:** Every cell is `in scope` or `N/A` plus that reason.
 
@@ -44,7 +38,7 @@ A cell is N/A only with one reason from that file's skip signals. If the plan do
 
 A **wave** is every still-open question whose `depends-on` ids are settled. Settled means accepted, replaced, answered in grill-me, or N/A. Leave `depends-on` empty when no earlier answer can change this one.
 
-Write the questions before you score them. Each has two to four answers and a stable id. A layout-bearing surface follows grill-me **UI layout articulation** and is Ask. Read a zone's deep prompts only to invent questions for in-scope cells.
+Write the questions before you score them. Each has two to four answers and a stable id. A layout-bearing surface follows grill-me **UI layout articulation** and is Ask. Use a zone's **Prompts** (already in context) only to invent questions for in-scope cells.
 
 **Done when:** Every unblocked in-scope cell has a question, or a one-line note that it has no decision of its own. Questions that still depend on an open row wait for a later wave.
 

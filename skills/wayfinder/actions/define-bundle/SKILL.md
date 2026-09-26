@@ -15,7 +15,7 @@ Runs on a wayfinder map + its decision log. After approval, hand off to [create-
 | Skill | When instead |
 |-------|----------------|
 | [wayfinder](../../SKILL.md) | Chart, Materialize, Reconcile, Route only |
-| [grill-me](../../ideation/grill-me/SKILL.md) | Resolve unknowns â†’ new binding GM rows |
+| [grill-me](../../ideation/grill-me/SKILL.md) | Resolve unknowns → new binding GM rows |
 | [design-modules](../design-modules/SKILL.md) | Shape one or more module interfaces from approved bundle before task split |
 | [create-tasks](../create-tasks/SKILL.md) | Split an **approved** bundle into implementation tasks |
 | [write-a-prd](../../write-a-prd/SKILL.md) | Small map-free scope only |
@@ -102,7 +102,7 @@ Use `gh issue edit --body-file` for full body replacements. Requires `gh` auth.
 
 Tell the user:
 
-- **Next (recommended when module shape is unclear):** [design-modules](../design-modules/SKILL.md) on the approved bundle (HITL; posts module-design artifact comment(s)) â†’ then [create-tasks](../create-tasks/SKILL.md)
+- **Next (recommended when module shape is unclear):** [design-modules](../design-modules/SKILL.md) on the approved bundle (HITL; posts module-design artifact comment(s)) → then [create-tasks](../create-tasks/SKILL.md)
 - **Next (when shape is clear):** [create-tasks](../create-tasks/SKILL.md) with the approved bundle link, **or** implement directly from the bundle when a single session needs no task split
 - Each task opens its own pull request via [implement-task](../../orchestrators/implement-task/SKILL.md). This skill does not create a branch.
 - Planning **To Do** may stay open

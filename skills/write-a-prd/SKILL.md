@@ -29,7 +29,7 @@ A deep module (as opposed to a shallow module) is one which encapsulates a lot o
 
 If the sources are ambiguous on module boundaries, ask **targeted** clarifying questions only where gaps would corrupt the PRD; do **not** restart a full grill-me here.
 
-4. Write the PRD using the template below, consolidating **binding decisions** from the sources into `GM-xx` (see â€œConsolidating decisionsâ€). **Primary consumer:** another agent (often followed by `prd-to-issues`). Optimize for **stable decision IDs**, **explicit pointers**, and **section order** so downstream work does not drift.
+4. Write the PRD using the template below, consolidating **binding decisions** from the sources into `GM-xx` (see “Consolidating decisions”). **Primary consumer:** another agent (often followed by `prd-to-issues`). Optimize for **stable decision IDs**, **explicit pointers**, and **section order** so downstream work does not drift.
 
 5. Submit the PRD as a GitHub issue.
 
@@ -39,8 +39,8 @@ If the sources are ambiguous on module boundaries, ask **targeted** clarifying q
 - If a single exchange locks in **several independent decisions**, use **separate `GM-xx` rows** (better traceability into issues).
 - Each `GM-xx` entry is **one paragraph** (freeform) that states the decision and any non-negotiable constraints. Include a **one-line context prefix** only if the decision would be cryptic without it.
 - **No numeric word cap.** Aim for the **shortest paragraph that preserves every constraint** someone would regret losing if it were omitted.
-- **Spawning rows from one batch:** you may start daughter rows with **Same decision batch as `GM-012`** (or repeat a one-line scope phrase) to avoid noise, then give that rowâ€™s decision paragraph.
-- **Bulky artifacts** (big tables, directory trees, mermaid): put them in **appendices** with **stable headings** (e.g. `## Appendix A - Target layout`). Each `GM-xx` that depends on that artifact must **name the appendix in prose** (e.g. â€œsee Appendix Aâ€). **Markdown anchor links** are optional - useful for long PRDs humans will navigate; plain pointers are enough for agents.
+- **Spawning rows from one batch:** you may start daughter rows with **Same decision batch as `GM-012`** (or repeat a one-line scope phrase) to avoid noise, then give that row’s decision paragraph.
+- **Bulky artifacts** (big tables, directory trees, mermaid): put them in **appendices** with **stable headings** (e.g. `## Appendix A - Target layout`). Each `GM-xx` that depends on that artifact must **name the appendix in prose** (e.g. “see Appendix A”). **Markdown anchor links** are optional - useful for long PRDs humans will navigate; plain pointers are enough for agents.
 - **Repo paths and filenames** are allowed wherever they are part of the **agreed outcome** (refactors, ownership, routing). Use **full repo links only sparingly** - when the name alone would be ambiguous (many `handlers.go`, similarly named packages). Prefer searchable paths in prose otherwise.
 - If the work genuinely has **no binding engineering decisions**, write a single line under the decision log: **`No binding engineering decisions`** (rare for PRDs created through this skill).
 
@@ -58,7 +58,7 @@ The solution to the problem, from the user's perspective. Keep it tight.
 
 ## Decision log (`GM-xx`)
 
-Numbered, stable identifiers: **`GM-001`**, **`GM-002`**, â€¦
+Numbered, stable identifiers: **`GM-001`**, **`GM-002`**, …
 
 For each id, **one paragraph** per the rules above. This section is the **authoritative** record of architecture and implementation commitments for downstream issues.
 

@@ -22,14 +22,14 @@ Adapted from [mattpocock/skills - engineering/codebase-design](https://github.co
 | [define-bundle](../define-bundle/SKILL.md) | Group GM rows into draft/approved bundles |
 | [create-tasks](../create-tasks/SKILL.md) | Split approved bundle into implementation tasks |
 | [prototype](../prototype/SKILL.md) | Throwaway code in the task worktree when **## Method:** `prototype` |
-| [improve-codebase-architecture](../../improve-codebase-architecture/SKILL.md) | Codebase-wide exploration â†’ GitHub RFC issues |
-| [grill-me](../../ideation/grill-me/SKILL.md) | Binding decisions via Q&A â†’ GM rows |
+| [improve-codebase-architecture](../../improve-codebase-architecture/SKILL.md) | Codebase-wide exploration → GitHub RFC issues |
+| [grill-me](../../ideation/grill-me/SKILL.md) | Binding decisions via Q&A → GM rows |
 
 ## Entry paths
 
 | Entry | Input | Output |
 |-------|-------|--------|
-| **Bundle** (primary) | Approved `wf:bundle` + **Decisions** / **Constraints** | Comment(s) on bundle issue - one artifact per module â†’ hand off to create-tasks |
+| **Bundle** (primary) | Approved `wf:bundle` + **Decisions** / **Constraints** | Comment(s) on bundle issue - one artifact per module → hand off to create-tasks |
 | **Planning** | Map **To Do** `wf:prototype` or ad-hoc module question | Comment on ticket or map issue - one artifact per module when multiple apply |
 
 ## Module count
@@ -50,10 +50,10 @@ Multiple modules is an **option**, not a requirement. Split only when seams impr
 
 **Bundle:** User says "design modules for bundle #N" after **`bundle approved`**.
 
-Load bundle + map â†’ discover module seams from **Decisions** â†’ frame one or more modules â†’ [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md) per module when shape is open â†’ post artifact comment(s) â†’ suggest [create-tasks](../create-tasks/SKILL.md).
+Load bundle + map → discover module seams from **Decisions** → frame one or more modules → [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md) per module when shape is open → post artifact comment(s) → suggest [create-tasks](../create-tasks/SKILL.md).
 
 **Planning:** User invokes on a prototype or interface ticket on map **To Do**.
 
-Load ticket â†’ gather requirements â†’ discover modules â†’ design-it-twice as needed â†’ post comment(s) â†’ human Reconcile when ticket complete.
+Load ticket → gather requirements → discover modules → design-it-twice as needed → post comment(s) → human Reconcile when ticket complete.
 
 See [REFERENCE.md](REFERENCE.md) for workflow, artifact templates, and bundle vs planning deltas.

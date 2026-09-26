@@ -47,11 +47,11 @@ Slices may be `HITL` or `AFK`. `HITL` slices require human interaction (e.g. des
 
 **`Blocked by` / prerequisites**
 
-- Use **`Blocked by` only** in issue bodies. **No separate â€œserialize withâ€ field.**
+- Use **`Blocked by` only** in issue bodies. **No separate “serialize with” field.**
 - Add **`Blocked by` links only for true prerequisites**: later work would be wrong, non-building, or violate a `GM-xx` / ladder commitment if earlier work is missing.
-- **Do not** add blockers â€œto be safeâ€ if **splitting the slice** (different integration seams) could preserve parallelism instead.
+- **Do not** add blockers “to be safe” if **splitting the slice** (different integration seams) could preserve parallelism instead.
 
-If the PRDâ€™s **`GM-xx` log or implementation ladder** implies an order, the **blocker graph should respect that order** unless the user explicitly opted for more parallelism in step 3.
+If the PRD’s **`GM-xx` log or implementation ladder** implies an order, the **blocker graph should respect that order** unless the user explicitly opted for more parallelism in step 3.
 
 ### 5. Quiz the user
 
@@ -83,7 +83,7 @@ Create issues in dependency order (blockers first) so you can reference real iss
 **Quoting from the PRD**
 
 - For every **`GM-xx`** that applies to the slice, copy the **`GM-xx` paragraph verbatim** from the parent PRD into the issue (no paraphrase). If the PRD uses appendix pointers, keep those pointer phrases intact.
-- For every **user story** the slice addresses, copy the **full story line(s) verbatim** from the parent PRD (the numbered `As aâ€¦` text), not only the numbers.
+- For every **user story** the slice addresses, copy the **full story line(s) verbatim** from the parent PRD (the numbered `As a…` text), not only the numbers.
 
 <issue-template>
 ## Parent PRD
@@ -98,9 +98,9 @@ A concise description of this vertical slice. End-to-end behavior and boundaries
 
 Paste the full text from the parent PRD for each relevant row:
 
-**GM-00x** - â€¦verbatim paragraph from PRDâ€¦
+**GM-00x** - …verbatim paragraph from PRD…
 
-**GM-00y** - â€¦
+**GM-00y** - …
 
 (Add rows as needed.)
 
@@ -108,8 +108,8 @@ Paste the full text from the parent PRD for each relevant row:
 
 Paste the full numbered story lines this slice implements:
 
-1. â€¦
-2. â€¦
+1. …
+2. …
 
 ## Acceptance criteria
 

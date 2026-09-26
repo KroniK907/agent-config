@@ -51,7 +51,7 @@ Spec: [lookup order](REFERENCE.md#spec-lookup-order). Standards: repo docs + [Fo
 
 ### 3. Spawn parallel sub-agents
 
-One message, two Task calls (`generalPurpose`). Prompts: [REFERENCE Â§ Sub-agent prompts](REFERENCE.md#sub-agent-prompts).
+One message, two Task calls (`generalPurpose`). Prompts: [REFERENCE § Sub-agent prompts](REFERENCE.md#sub-agent-prompts).
 
 ### 4. Aggregate
 
