@@ -90,7 +90,7 @@ Omit when none.
 |--------|------|
 | `in progress` | Session active; partial updates after CLEANUP lock and each confirmed item |
 | `ready for reconcile` | User confirms session complete; invoke wayfinder **Reconcile** |
-| `reconciled` | Set by Reconcile after approval (optional; may rely on closed ticket instead) |
+| `reconciled` | Set by Reconcile (optional; a closed ticket also signals it) |
 
 ---
 
@@ -170,14 +170,13 @@ Owned by [wayfinder](../../SKILL.md) **Reconcile**, not constrain-fog.
 
 | Topic | constrain-fog behavior |
 |-------|------------------------|
-| Ticket materialize | **New ticket candidates** → child issues + **To Do** rows on approval |
+| Ticket materialize | **New ticket candidates** → child issues + **To Do** rows |
 | Fog edits | **Remaining fog**, rewrites, splits, removals from artifact |
 | **Out of scope** | From CLEANUP **out of scope** rows |
 | Decision log | **No GM rows** unless user explicitly requested during session |
 | **Materialize** | **Not used** - constrain-fog output is not **`## Map discovery`** |
-| Close **`Constrain:`** ticket | Human **`Approved - reconcile and close`** |
 
-Resolution comment structure follows [wayfinder Reconcile template](../../references/reconcile.md#reconcile-resolution-template) - infer sections from **`## Fog resolution`** artifact.
+Resolution comment structure follows [wayfinder Reconcile template](../../references/reconcile.md#resolution-comment) - infer sections from **`## Fog resolution`** artifact.
 
 ---
 

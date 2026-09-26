@@ -74,7 +74,7 @@ Use for GitHub issue body or `wayfinder/utilities/plans/{FeatureName}.Map.md`.
 
 ## Completed
 
-<!-- Row moves here after approved reconcile closes the ticket. One-line gist each. -->
+<!-- Row moves here when Reconcile closes the ticket. One-line gist each. -->
 
 - [Title](link) - gist of outcome
 
@@ -146,20 +146,9 @@ Issue **titles** are the first signal agents and humans see in map **To Do** row
 4. **Materialize and Reconcile apply prefixes** - when creating issues from **Ticket candidates**, set the title from the Type column using this table (do not copy the Question verbatim as the title).
 5. **Noun after prefix is short** - topic or subsystem name; details live in the issue body.
 
-**Examples:**
+**Examples:** "Design constrain-fog skill" → **Grill:** constrain-fog skill design. "Cloud automations for AFK pickup" → **Research:** cloud automations for AFK pickup. "Decision coverage backfill" → **Organize:** decision coverage backfill.
 
-| Weak title | Strong title | Why |
-|------------|--------------|-----|
-| Design constrain-fog skill for map fog resolution | **Grill:** constrain-fog skill design | "Design … skill" reads like implementation; `Grill:` signals Q&A first |
-| Specify research ticket workflow | **Grill:** research ticket workflow | "Specify" is ambiguous; grilling resolves the contract |
-| Cloud automations for AFK pickup | **Research:** cloud automations for AFK pickup | Names the investigation |
-| Subfeature map worked example in REFERENCE | **Prototype:** subfeature map worked example | Names exploration, not a shipped doc yet |
-| implement create-tasks skill | **Task:** implement create-tasks skill | Deliverable prefix |
-| Group GM-012-015 into first bundle | **Task:** define-bundle for palette shell | Bundling work; Route → define-bundle |
-| Decision coverage backfill | **Organize:** decision coverage backfill | Tracker errand; Route → wayfinder or one-off |
-| Clear routing-table fog lines | **Organize:** routing table fog | Tracker sort; Route → wayfinder |
-
-**Agent cue:** When the user cites a map ticket by `#N` or title, read the **prefix** first - it narrows the skill set. When the prefix maps to **one** skill, start there. When it maps to **several**, use **## Question** and map context (To Do vs Implementing, fog vs deliverable vs map sync) per the table above - do not treat body prose as permission to skip the prefix family (e.g. `Grill:` → implement).
+**Agent cue:** When the user cites a ticket, read its prefix first - it narrows the skill set. When several skills share a prefix, choose with **## Question** and map context (To Do vs Implementing, fog vs deliverable). The prefix family holds even when body prose suggests otherwise (a `Grill:` ticket is grilled, not implemented).
 
 ### Ticket body template (grilling, prototype, task)
 
@@ -225,12 +214,7 @@ After materialize: reply on the map-discovery comment thread with **Status:** `m
 
 ## Reconcile
 
-Resolution template, inference, approval phrases, and the wf apply steps live in [references/reconcile.md](references/reconcile.md).
-
-- [Resolution template](references/reconcile.md#reconcile-resolution-template)
-- [Inference](references/reconcile.md#reconcile-inference)
-- [Approval phrases](references/reconcile.md#approval-phrases)
-- [Map and issue body edits](references/reconcile.md#map-and-issue-body-edits-reconcile)
+Resolution template, inference, and the `wf` apply steps live in [references/reconcile.md](references/reconcile.md).
 
 ---
 
@@ -261,18 +245,11 @@ Suggest-only - user starts the recommended skill. Map ticket **Type** → defaul
 | Small scope, no map | `write-a-prd` → `prd-to-issues` | **Not** a map Route handoff |
 | New feature, no map | wayfinder **Chart** | Then `feature-discovery` |
 
-After sibling session: remind user to invoke wayfinder **Reconcile** (explicit invoke - see map fog if auto-reconcile is ever desired).
+After a sibling session, point the user to wayfinder **Reconcile**.
 
 ### Route heuristics - constrain-fog
 
-Suggest [constrain-fog](ideation/constrain-fog/SKILL.md) when **all** of:
-
-1. Map **To Do** table is **empty** (no open frontier rows)
-2. **Not yet specified** is **non-empty**
-
-**Never** auto-suggest constrain-fog when open **To Do** items exist - user may **explicitly invoke** constrain-fog anytime.
-
-When **To Do** has items, Route the planning frontier per [frontier queries](#frontier-queries) instead.
+Suggest [constrain-fog](ideation/constrain-fog/SKILL.md) when **To Do** is empty and **Not yet specified** is not. While **To Do** has items, route the planning frontier instead. The user may invoke constrain-fog any time.
 
 **Contrast:**
 
@@ -312,25 +289,13 @@ Cross-map conflicts → parent grilling ticket, not silent edits to child logs.
 | Implementation task (draft) | `wf:task` or `:prototype` + `:hitl` or `:afk` |
 | Approved implementation task | above + **`wf:approved`**; body **Status:** `ready` \| `awaiting-reconcile` |
 | AFK run lock | **`wf:afk-running`** on current AFK task |
-| Awaiting approval | **`wf:needs-review`** - add when agent posts draft awaiting human gate phrase; remove when phrase received |
+| Waiting on the human | **`wf:needs-review`** |
 
 Map-discovery artifact = **comment on map issue** (no label).
 
 ### `wf:needs-review`
 
-Bright-red queue signal: an agent finished a draft step and a **human approval phrase** is required before tracker writes or close.
-
-| Add label | When | Remove label |
-|-----------|------|--------------|
-| [define-bundle](actions/define-bundle/SKILL.md) | Draft bundle issue posted | **`bundle approved`** |
-| [create-tasks](actions/create-tasks/SKILL.md) | Draft task issue(s) posted | **`tasks approved`** (or **`scope approved`** if no further task promotion pending) |
-| [wayfinder](SKILL.md) **Reconcile** | Resolution draft comment posted on session ticket | **`Approved - reconcile and close`** or **`Approved - reconcile, keep open`** |
-| [implement-task](orchestrators/implement-task/SKILL.md) | Success end-of-run (**Status:** `awaiting-reconcile`) | wayfinder **Reconcile** on **`Approved - reconcile and close`** |
-
-```powershell
-gh issue edit <num> --add-label "wf:needs-review"
-gh issue edit <num> --remove-label "wf:needs-review"
-```
+Queue signal: an agent posted something the human should look at before the next tracker write or close - a draft bundle, draft tasks, a resolution comment, or a finished implementation PR. Add it when you hand the draft over; remove it when the user has signed off and you've applied the result. Skip it when the user accepted in the same conversation and you applied straight away.
 
 **Sub-issues:** Link map → decision log and tickets via GitHub sub-issues. **Blocked-by:** Use native issue dependencies for frontier ordering.
 
@@ -348,11 +313,11 @@ gh issue edit <num> --remove-label "wf:needs-review"
 
 ## Ecosystem integration
 
-Per-skill roles are in the [SKILL.md Ecosystem table](SKILL.md#ecosystem-related-skills). Extra detail:
+Per-skill roles are in the [SKILL.md Ecosystem table](SKILL.md#ecosystem). Extra detail:
 
 - **Map readers (map-free path):** `write-a-prd` reads Completed + decision log and writes a PRD issue; `prd-to-issues` turns it into `agent-queue` issues.
-- **Coverage transitions:** `define-bundle` sets `scoped` on **`bundle approved`** (no git branch). `create-tasks` sets `assigned` on scope approval, adds **`wf:approved`** on **`tasks approved`**; Reconcile sets `implemented`.
-- **Cloud AFK automation:** comment **`Approved - AFK implement`** plus label **`wf:approved`** runs [implement-task](orchestrators/implement-task/SKILL.md) in a task worktree (push, pull request, resolution comment); a human Reconcile closes the task. Setup: [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md).
+- **Coverage transitions:** define-bundle sets `scoped` when the bundle is approved; create-tasks sets `assigned` and adds **`wf:approved`** when the split is accepted; Reconcile sets `implemented`.
+- **Cloud AFK automation:** the agent-posted pickup comment (trigger line **`Approved - AFK implement`**) plus label **`wf:approved`** runs [implement-task](orchestrators/implement-task/SKILL.md) in a task worktree; Reconcile closes the task once the PR is reviewed. Setup: [AFK-BOOTSTRAP.md](utilities/AFK-BOOTSTRAP.md).
 - **Route hint:** a request to review a branch, PR, WIP, or diff outside implement-task goes to [code-review](actions/code-review/SKILL.md) ad-hoc. During implement-task, code-review runs automatically after Method.
 
 ---

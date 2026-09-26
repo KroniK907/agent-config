@@ -45,7 +45,7 @@ GH_TOKEN: use the host secret store by default. Optional per-repo override via `
 
 1. Review the **Implementation resolution** comment on the task issue.
 2. Review the pull request linked from the task **PR:** line.
-3. Invoke wayfinder **Reconcile** with **`Approved - reconcile and close`** when accepted.
+3. Invoke wayfinder **Reconcile** once the PR is accepted.
 
 ## PR creation
 

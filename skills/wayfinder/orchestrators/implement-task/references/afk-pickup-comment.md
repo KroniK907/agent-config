@@ -1,20 +1,14 @@
 # AFK pickup comment
 
-Post when an AFK implementation task becomes eligible for **implement-task** pickup. Used by [create-tasks](../../../actions/create-tasks/SKILL.md) on **`tasks approved`** and by **implement-task** when unblocking dependents or serial handoff to the next AFK task.
+Post when an AFK implementation task becomes eligible for **implement-task** pickup - by [create-tasks](../../../actions/create-tasks/SKILL.md) on promote, and by **implement-task** when unblocking dependents or handing off to the next AFK task.
 
-## Trigger phrase (canonical)
+This is a machine trigger the agent posts, not a human sign-off. Repo automation filters issue comments on this exact line (case-sensitive):
 
 ```text
 Approved - AFK implement
 ```
 
-| Role | Detail |
-|------|--------|
-| **Automation trigger (v1)** | Repo automation: **issue comment** containing this exact phrase (case-sensitive) |
-| **Human signal** | Label **`wf:approved`** on the task - reviewer visibility; implement-task startup gate |
-| **Future** | When the automation host can trigger on **issue label added** for **`wf:approved`**, switch to label-only. Keep posting this comment until every app repo has migrated |
-
-Do **not** use **`tasks approved`**, bare **`approved`**, or Reconcile phrases (**`Approved - reconcile and close`**) as the AFK pickup trigger - those gate different skills.
+Label **`wf:approved`** is the implement-task startup gate. If the automation host gains a label-added trigger, the comment can go away once every app repo migrates.
 
 ## When to post
 
@@ -27,11 +21,11 @@ Post **only** when **all** of the following hold:
 
 | Owner | Moment |
 |-------|--------|
-| **create-tasks** | On **`tasks approved`** when adding **`wf:approved`** to the one eligible AFK task |
+| **create-tasks** | On promote, when adding **`wf:approved`** to the one eligible AFK task |
 | **implement-task** | After success resolution when a dependent becomes unblocked |
 | **implement-task** | AFK serial handoff - next eligible task in queue after removing **`wf:afk-running`** from the finished task |
 
-**One comment per pickup decision** - do not repost on re-runs unless human explicitly resets pickup.
+Post once per pickup decision; repost only when the user resets pickup.
 
 ## Comment template
 

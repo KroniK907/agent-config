@@ -1,6 +1,6 @@
 ---
 name: design-modules
-description: design-modules, module interface design, module design, design an interface, after bundle approved, before create-tasks, wf:prototype interface exploration, wayfinder Route design-modules, deep module shaping
+description: design-modules, module interface design, module design, design an interface, approved bundle, before create-tasks, wf:prototype interface exploration, wayfinder Route design-modules, deep module shaping
 agent-config-sync: true
 ---
 
@@ -48,7 +48,7 @@ Multiple modules is an **option**, not a requirement. Split only when seams impr
 
 ## Quick start
 
-**Bundle:** User says "design modules for bundle #N" after **`bundle approved`**.
+**Bundle:** User says "design modules for bundle #N" once the bundle is approved.
 
 Load bundle + map → discover module seams from **Decisions** → frame one or more modules → [DESIGN-IT-TWICE.md](DESIGN-IT-TWICE.md) per module when shape is open → post artifact comment(s) → suggest [create-tasks](../create-tasks/SKILL.md).
 

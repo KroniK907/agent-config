@@ -38,18 +38,11 @@ Post as a **new top-level comment** on the implementation task at end-of-run. Co
 
 ### Next
 
-- Human: review this comment and the pull request **{pr-url}**
-- Invoke wayfinder **Reconcile** with **`Approved - reconcile and close`** when accepted
+- Review the pull request **{pr-url}**; wayfinder **Reconcile** closes the task once you're happy with it
 - <optional follow-up - blocked dependents, doc gaps, etc.>
-
-### Reconcile
-
-<!-- Orchestrator does NOT post approval phrases. Human only. -->
-
-Pending **`Approved - reconcile and close`** - agent must not close this task or remove **`wf:approved`**.
 ```
 
-After posting, set task body **Status:** `awaiting-reconcile`. Add label **`wf:needs-review`**. Do **not** remove **`wf:approved`**.
+After posting, set **Status:** `awaiting-reconcile` and add **`wf:needs-review`**; keep **`wf:approved`**.
 
 ---
 
@@ -88,10 +81,6 @@ None this run.
 
 - <Human action - fix label, set Method, release lock, merge blocker, etc.>
 - Re-run **implement-task** when gates pass
-
-### Reconcile
-
-Not ready - resolve blocker first. Do not post **`Approved - reconcile and close`** for a blocked run.
 ```
 
-Do **not** set **`awaiting-reconcile`** on blocked runs. Leave **Status:** `ready` (or prior state).
+Blocked runs leave **Status** as it was.

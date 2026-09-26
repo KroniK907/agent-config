@@ -32,7 +32,7 @@ Run once per app repo from any checkout that includes this skills pack:
 bash wayfinder/utilities/bootstrap/bootstrap-labels.sh
 ```
 
-Manifest: [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) - includes **`wf:afk-running`** (serial queue lock) and **`wf:needs-review`** (approval gate pending).
+Manifest: [bootstrap/labels-manifest.json](bootstrap/labels-manifest.json) - includes **`wf:afk-running`** (serial queue lock) and **`wf:needs-review`** (waiting on the human).
 
 Verify:
 
@@ -123,11 +123,11 @@ Run at least **one** implementation task manually before enabling AFK on product
 1. Chart / define-bundle / create-tasks through to a **`wf:approved`** HITL task with **Status:** `ready`.
 2. In chat: `/implement-task` on that task (or invoke implement-task skill with issue `#N`).
 3. Confirm: task worktree, Method build, code-review, push, pull request into `integrationBranch`, resolution comment, **Status:** `awaiting-reconcile`.
-4. Reconcile with **`Approved - reconcile and close`**.
+4. Review the PR, then run wayfinder Reconcile to close the task.
 
 Only after HITL smoke passes:
 
-- [ ] Add **`wf:afk`** label to AFK-mode tasks at create-tasks approval time
+- [ ] Add **`wf:afk`** label to AFK-mode tasks in create-tasks
 - [ ] Enable the comment automation from step 4 (phrase **`Approved - AFK implement`**)
 - [ ] Confirm serial queue: only one open issue should hold **`wf:afk-running`** at a time
 - [ ] Confirm first AFK pickup posts **`wf:approved`** + pickup comment (create-tasks or implement-task handoff)
@@ -141,7 +141,7 @@ Only after HITL smoke passes:
 | Skills pack update | Cut new semver tag in skills repo ([RELEASE.md](RELEASE.md)); bump **`source.ref`** in app `.cursor/agent-manifest.json`; update tag in `.cursor/environment.json` **install** curl URL; rebuild the cloud environment |
 | New wayfinder label | Add to [labels-manifest.json](bootstrap/labels-manifest.json) in skills repo; re-run bootstrap script in app repos |
 | Task shipped | Review the pull request implement-task opened. Base is `integrationBranch` |
-| Task shipped | Human Reconcile **`Approved - reconcile and close`** per task resolution comment |
+| Task shipped | Wayfinder Reconcile after the user reviews the PR |
 
 ---
 

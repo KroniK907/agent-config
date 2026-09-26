@@ -64,7 +64,9 @@ Reply in this order, then wait.
 
 **N/A.** A table with `id`, `question`, and `why`.
 
-| Reply | Effect |
+Read the user's reply for intent, however it's worded:
+
+| Intent | Effect |
 | --- | --- |
 | Accept | Proposed rows join the shape |
 | Accept except `<id>` | Those ids move to Ask. The rest join the shape |
