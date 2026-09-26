@@ -1,0 +1,22 @@
+---
+description: Host web servers for the user with hatch and share a tailnet URL. Use when the user wants to see, test, or share a running web app.
+agent-config-sync: true
+alwaysApply: true
+---
+
+# Preview servers with hatch
+
+When the user asks to host, preview, or share anything web-based (dev server, test build, static site), run it under hatch. Anyone on the tailnet can open the URL. Skip this if `command -v hatch` finds nothing.
+
+```sh
+hatch up -- <dev command>                # assigns a free port in $PORT; route lives as long as the command
+hatch up --port 5173                     # route to a server that is already running
+hatch up --name <label> -- <command>     # second service in the same worktree, or a name collision
+```
+
+- The server must listen on `127.0.0.1` or `localhost` at `$PORT`. Pass the port through when the tool ignores `PORT` (e.g. `vite --port $PORT`).
+- The first stdout line is the URL. Give it to the user as-is.
+- `hatch up` blocks. Run it in the background and keep it alive while the user tests.
+- `hatch ls` lists live routes; `hatch down <name>` removes one.
+
+For anything else (`--preserve-host`, JSON output, HTTPS limits, troubleshooting), read `~/projects/hatch/README.md`.
