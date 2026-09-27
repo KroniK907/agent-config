@@ -10,6 +10,7 @@ When the user asks to host, preview, or share anything web-based (dev server, te
 
 ```sh
 hatch up -- <dev command>                         # assigns a free port in $PORT; stops after 30 minutes
+hatch up --minutes 90 -- <dev command>            # stay up longer; 0 keeps it until the command exits
 hatch up --port 5173                              # route to a server that is already running
 hatch up --name <label> -- <command>              # second service in the same worktree, or a name collision
 hatch up -- sh -c 'exec <app> -port "$PORT"'      # the app takes a port flag
@@ -18,7 +19,7 @@ hatch up -- sh -c 'exec <app> -port "$PORT"'      # the app takes a port flag
 - Hatch owns the tailnet address on `$PORT` for TLS, then starts the command. The app owns `127.0.0.1:$PORT` only. A bind of `0.0.0.0:$PORT` fails with "address already in use" because hatch already holds the tailnet address on that port. If the app cannot bind loopback only, stop and say so. Do not add a proxy on another port.
 - Hatch execs the command. It does not run a shell, so `$PORT` in the argument list is not expanded. When the app takes the port as a flag, use `hatch up -- sh -c 'exec <app> -port "$PORT"'`.
 - The first stdout line is the URL. Give it to the user as-is.
-- `hatch up` blocks, then exits after 30 minutes and stops the command. Run it in the background. Start it again if the user still needs the preview. `hatch up --help` does not list `--minutes`. Do not pass that flag.
+- `hatch up` blocks, then exits after 30 minutes and stops the command. Run it in the background. Pass `--minutes N` for a longer run, or `--minutes 0` to keep it until the command exits.
 - `hatch ls` lists live routes; `hatch down <name>` removes one.
 
 For anything else (`--preserve-host`, JSON output, HTTPS limits, troubleshooting), read `~/projects/hatch/README.md`.
