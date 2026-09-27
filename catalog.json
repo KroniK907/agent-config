@@ -31,6 +31,10 @@
       "path": "skills/wayfinder/orchestrators/sous-vide",
       "label": "Sous-vide"
     },
+    "taste-skill-v2": {
+      "path": "skills/taste-skill-v2",
+      "label": "Taste skill v2"
+    },
     "triage-issue": {
       "path": "skills/triage-issue",
       "label": "Triage issue"
