@@ -18,6 +18,7 @@ hatch up -- sh -c 'exec <app> -port "$PORT"'      # the app takes a port flag
 
 - Hatch owns the tailnet address on `$PORT` for TLS, then starts the command. The app owns `127.0.0.1:$PORT` only. A bind of `0.0.0.0:$PORT` fails with "address already in use" because hatch already holds the tailnet address on that port. If the app cannot bind loopback only, stop and say so. Do not add a proxy on another port.
 - Hatch execs the command. It does not run a shell, so `$PORT` in the argument list is not expanded. When the app takes the port as a flag, use `hatch up -- sh -c 'exec <app> -port "$PORT"'`.
+- Ports: without `--port`, hatch assigns one from 20000-29999. With `--port`, pick from that same range. Never use the daemon's own ports: router 80, 8080, 8880, 8008; DNS 53; control API 7080; loopback router 7081.
 - The first stdout line is the URL. Give it to the user as-is.
 - `hatch up` blocks, then exits after 30 minutes and stops the command. Run it in the background. Pass `--minutes N` for a longer run, or `--minutes 0` to keep it until the command exits.
 - `hatch ls` lists live routes; `hatch down <name>` removes one.
