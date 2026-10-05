@@ -114,6 +114,14 @@
     "wayfinder-one-off": {
       "path": "skills/wayfinder/orchestrators/one-off",
       "label": "One-off"
+    },
+    "pr": {
+      "path": "skills/pr",
+      "label": "PR"
+    },
+    "retro": {
+      "path": "skills/retro",
+      "label": "Retro"
     }
   },
   "rules": {
