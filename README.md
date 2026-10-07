@@ -86,6 +86,7 @@ Skills for shaping work without a wayfinder map - small scope, PRDs, or standalo
 
 - **triage-issue** - Investigate a bug by exploring the codebase, identify root cause, and file a GitHub issue with a TDD-based fix plan.
 - **improve-codebase-architecture** - Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and testability.
+- **backlog-sweep** - Sweep open GitHub issues against merged work: close shipped and stale issues, narrow half-done ones, and label small quick work `priority: high`. User-invoked; schedule it for a weekly run.
 - **commit** - Stage and commit only changes attributable to the current agent chat, then open a pull request into `integrationBranch` unless the user says not to.
 
 ## Writing and knowledge

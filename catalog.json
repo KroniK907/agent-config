@@ -122,6 +122,10 @@
     "retro": {
       "path": "skills/retro",
       "label": "Retro"
+    },
+    "backlog-sweep": {
+      "path": "skills/backlog-sweep",
+      "label": "Backlog sweep"
     }
   },
   "rules": {
