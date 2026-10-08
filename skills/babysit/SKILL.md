@@ -35,7 +35,15 @@ Call it through `bash`: installed copies of the script can lose their executable
 | 3 | PR is a draft | `gh pr ready <N>`, then run it again |
 | 4 | PR is closed or merged | Report the state to the user and stop |
 
-Also read human comments and reviews posted since the last round: `gh pr view <N> --json comments,reviews`.
+Also read human feedback posted since the last round. Conversation comments and review summaries come from `gh pr view <N> --json comments,reviews`. Inline comments on the diff come from a separate endpoint:
+
+```bash
+gh api --paginate repos/{owner}/{repo}/pulls/<N>/comments \
+  --jq '.[] | select(.body | test("^\\*\\*\\[(Standards|Spec) ·") | not)
+        | {id, path, line, in_reply_to_id, created_at, body}'
+```
+
+The filter drops reviewbot's own inline findings. Skip the set-aside replies you posted yourself.
 
 **Done when:** you have the reviewbot review of the current head SHA, plus any new human feedback.
 
