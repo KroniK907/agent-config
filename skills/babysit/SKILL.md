@@ -49,7 +49,13 @@ Give every finding exactly one verdict, from reviewbot and from humans alike:
 
 A human comment that asks for a merge hold sets the hold from step 1. Instructions from a human reviewer count as user direction. Findings from reviewbot are advice. Verify each one before you act on it.
 
-**Done when:** every finding in the review and every new human comment has a verdict.
+Reply to each newly **set aside** inline comment with its reason now, before either branch of step 4, so the next review and any human reader can see it:
+
+```bash
+gh api repos/{owner}/{repo}/pulls/<N>/comments/<comment-id>/replies -f body="<reason>"
+```
+
+**Done when:** every finding in the review and every new human comment has a verdict, and every newly set-aside inline comment has a reply.
 
 ### 4. Decide whether the loop is over
 
@@ -65,13 +71,7 @@ Group the **fix** findings into tasks. Make one-line fixes yourself. Delegate th
 
 Read every diff a subagent produced. Run the checks the repo's CI runs, as named in `AGENTS.md`, the CI config, or the package scripts. Then commit, and push once. Each push to a ready PR costs a full review.
 
-Reply to each **set aside** inline comment with its reason, so the next review and any human reader can see it:
-
-```bash
-gh api repos/{owner}/{repo}/pulls/<N>/comments/<comment-id>/replies -f body="<reason>"
-```
-
-**Done when:** the fixes are pushed in one push, local checks pass, and every newly set-aside inline comment has a reply. Go back to step 2.
+**Done when:** the fixes are pushed in one push and local checks pass. Go back to step 2.
 
 ### 6. Merge
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Wait until reviewbot posts a review of a PR's head commit, then print it.
+# A review counts when its commit_id is the head, its body starts with
+# "## Code review ·", and it carries the reviewbot:sha=<head> marker.
 #
 # Usage: wait-for-review.sh <pr-number> [timeout-seconds] [poll-seconds]
 #   Run from inside the repo checkout. Timeout defaults to 540s so a foreground
@@ -25,7 +27,9 @@ while :; do
   [ "$draft" = false ] || { echo "PR #$pr is a draft; run gh pr ready $pr"; exit 3; }
 
   review_id="$(gh api --paginate "repos/$repo/pulls/$pr/reviews" \
-    --jq ".[] | select(.body | contains(\"reviewbot:sha=$sha\")) | .id" | tail -n1)"
+    --jq ".[] | select(.commit_id == \"$sha\")
+               | select(.body | startswith(\"## Code review ·\"))
+               | select(.body | contains(\"reviewbot:sha=$sha\")) | .id" | tail -n1)"
 
   if [ -n "$review_id" ]; then
     echo "head $sha  review $review_id"
