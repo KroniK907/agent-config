@@ -152,6 +152,10 @@
     "hatch-preview": {
       "path": "rules/hatch-preview.mdc",
       "label": "Preview servers with hatch"
+    },
+    "reviewbot": {
+      "path": "rules/reviewbot.mdc",
+      "label": "Expect reviewbot reviews on PRs"
     }
   },
   "scripts": {
