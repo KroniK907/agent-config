@@ -17,6 +17,8 @@ Each zone has **Skip when** (a cell is N/A only with one of these reasons, state
 - **Skip when:** behavior is literally unchanged (pure rename/move) or the work only documents existing behavior.
 - **In scope if:** any branch, validation, state machine, retry, ordering, or consistency rule is added or altered.
 - **Prompts:** happy paths trigger to outcome; edge cases (duplicates, conflicts, partial input, double-submit, stale data, idempotency); invariants; interaction with existing features and flags; concurrency (locking vs last-write-wins); failure behavior (compensation, partial commits, visible vs silent).
+- **Permissions:** list every action a user can take. Mark the ones that reach outside the system, destroy or merge data, change who has access, or need a version limited to records assigned to the user. Name each permission with the catalog's verbs and say which roles get it.
+- **Settings:** list each value someone might want to change without a deploy. Decide whether each is deploy wiring (it must differ between environments), a secret, a record, view state, or a setting; most are not settings. For each setting, settle org or user level, the permission that gates it, fail-closed if it moves money, whether the browser needs it, and any inline shortcut that also edits it.
 - **Web:** client vs server truth, optimistic UI, multi-tab sessions. **Non-web:** at-least-once delivery, poison messages; library API contracts and error types.
 
 ## Boundaries & integration
