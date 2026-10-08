@@ -65,7 +65,7 @@ Checked 2026-10-08. Prices are first-party API list prices per million tokens, w
 
 - **scout:** Haiku 5.5 `low` and Luna `medium` both land near index 30 for about $0.02 a task. Lookups and summaries do not need more.
 - **edit:** Haiku 5.5 `high` (38, $0.08) is the last cheap step before latency climbs: `xhigh` adds three points but triples the time. Luna `high` is the starting effort OpenAI's Codex docs suggest for Luna.
-- **build:** Sonnet 5.5 `high` (47, $0.88, 18s). Opus 5.5 `medium` scores four points more for half again the cost and runs slower. Sonnet 5.5 also leads the Artificial Analysis Coding Agent Index in Claude Code. On the GPT side, Sol `medium` (48, $0.21) is the step where Sol's gains flatten.
+- **build:** Opus 5.5 `medium` (51, $1.34, 29s). Sonnet 5.5 `high` (47, $0.88, 18s) is cheaper and faster, but the team chose Opus here: four index points and a visible jump in output quality are worth about $0.46 more per task. On the GPT side, Sol `medium` (48, $0.21) is the step where Sol's gains flatten.
 - **hard:** Opus 5.5 `high` (54, $1.82) beats Sonnet 5.5 `xhigh` (52, $2.01) on both score and cost. Sol `high` (50, $0.32) is GPT's best value before `xhigh` doubles the time for one point.
 - **Dominated models:** Fable 5.1 never beats Opus 5.5 on cost per point. Astra trails Sol at equal scores. Terra at `max` scores what Sol scores at `low`, for ten times the cost.
 

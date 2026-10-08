@@ -35,7 +35,7 @@ Use the family your host runs: Claude models under Claude Code, GPT models under
 |------|--------|-----|
 | scout | Haiku 5.5, `low` (`medium` for wide searches) | GPT-6 Luna, `medium` (`low` for single lookups) |
 | edit | Haiku 5.5, `high` | GPT-6 Luna, `high` |
-| build | Sonnet 5.5, `high` (`medium` for small slices) | GPT-6.1 Sol, `medium` |
+| build | Opus 5.5, `medium` | GPT-6.1 Sol, `medium` |
 | hard | Opus 5.5, `high` | GPT-6.1 Sol, `high` |
 
 Effort rules:
