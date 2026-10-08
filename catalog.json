@@ -126,6 +126,14 @@
     "backlog-sweep": {
       "path": "skills/backlog-sweep",
       "label": "Backlog sweep"
+    },
+    "babysit": {
+      "path": "skills/babysit",
+      "label": "Babysit PR"
+    },
+    "subagent": {
+      "path": "skills/subagent",
+      "label": "Subagent model selection"
     }
   },
   "rules": {
