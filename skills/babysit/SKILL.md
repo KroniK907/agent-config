@@ -23,10 +23,10 @@ Record a **merge hold** if the user said anything like "wait for me before mergi
 Resolve this skill's folder with `readlink -f`, then run the bundled script from the repo checkout:
 
 ```bash
-<skill-dir>/scripts/wait-for-review.sh <N>
+bash <skill-dir>/scripts/wait-for-review.sh <N>
 ```
 
-It polls until reviewbot posts a review of the PR's current head commit. It then prints the summary and every inline comment with its comment id. It gives up after 540 seconds so a foreground call fits under a 10-minute tool limit. Run it in the background if your host notifies you when a background command exits. Otherwise run it in the foreground with a timeout above 540 seconds.
+Call it through `bash`: installed copies of the script can lose their executable bit. It polls until reviewbot posts a review of the PR's current head commit. It then prints the head SHA, the summary, and every inline comment with its comment id. Keep that SHA as the **reviewed SHA**. It gives up after 540 seconds so a foreground call fits under a 10-minute tool limit. Run it in the background if your host notifies you when a background command exits. Otherwise run it in the foreground with a timeout above 540 seconds.
 
 | Exit | Meaning | Next |
 |------|---------|------|
@@ -81,9 +81,10 @@ Without one:
 
 1. Wait for CI: `gh pr checks <N> --watch`. If a check fails, fix it as a step 5 round and go back to step 2.
 2. Check `gh pr view <N> --json mergeable,mergeStateStatus`. If the base branch has moved and conflicts, merge the base branch in and push. That push starts a new round at step 2.
-3. Merge with the method the repo uses for its recent PRs. Squash is the default when it is allowed: `gh pr merge <N> --squash`. Leave out `--delete-branch` inside a worktree, because it tries to check out the base branch and fails.
+3. Re-check right before merging, because people act while you wait. Run `gh pr view <N> --json headRefOid,body,labels,comments,reviews`. If `headRefOid` is not the reviewed SHA, someone pushed: go back to step 2. If the body, a label, or a new comment or review now asks for a hold, set the merge hold and go to step 7.
+4. Merge with the method the repo uses for its recent PRs. Squash is the default when it is allowed: `gh pr merge <N> --squash --match-head-commit <reviewed-sha>`. The flag makes GitHub refuse the merge if the head moved after your check. Leave out `--delete-branch` inside a worktree, because it tries to check out the base branch and fails.
 
-**Done when:** `gh pr view <N> --json state` reports `MERGED`, or a merge hold or failing check has stopped the merge.
+**Done when:** `gh pr view <N> --json state` reports `MERGED`, or a merge hold, a moved head, or a failing check has stopped the merge.
 
 ### 7. Report
 
