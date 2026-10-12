@@ -134,6 +134,10 @@
     "subagent": {
       "path": "skills/subagent",
       "label": "Subagent model selection"
+    },
+    "hatch": {
+      "path": "skills/hatch",
+      "label": "Open a hatch (tailnet preview)"
     }
   },
   "rules": {
@@ -148,10 +152,6 @@
     "pull-request": {
       "path": "rules/pull-request.mdc",
       "label": "Pull request as soon as you edit"
-    },
-    "hatch-preview": {
-      "path": "rules/hatch-preview.mdc",
-      "label": "Preview servers with hatch"
     },
     "reviewbot": {
       "path": "rules/reviewbot.mdc",
