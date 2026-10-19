@@ -1,6 +1,6 @@
 # Agent config hub
 
-Team skills, project rules, and scripts for NUS agent tooling. v1 layout per **AgentConfigHub** map. Claude CLI and Cursor CLI both load this pack.
+Team skills, project rules, and scripts for NUS agent tooling. v1 layout per **AgentConfigHub** map. Claude Code and Codex load this pack, usually through T3 Code.
 
 **Repo:** [`KroniK907/agent-config`](https://github.com/KroniK907/agent-config). **Catalog:** [`catalog.json`](catalog.json) lists every installable skill, rule, and script with paths and labels.
 
@@ -9,38 +9,14 @@ Team skills, project rules, and scripts for NUS agent tooling. v1 layout per **A
 | Path | Purpose |
 |------|---------|
 | `skills/` | Agent skills - flat folders + `skills/wayfinder/` tree |
-| `rules/` | Team rules pack (`*.mdc`) |
-| `scripts/` | Bootstrap, validation, and [agent-config-wizard](scripts/wizard/README.md) apply TUI |
+| `rules/` | Team rules pack (`*.md`) |
+| `scripts/` | `validate-catalog`, run in CI |
 | `skills/wayfinder/utilities/wf/` | `wf` helper for decision-log comments and surgical map edits (`go run wf.go`) |
 | `AGENTS.md` | What agents should know about this repo |
-| `.cursor/` | Example project templates only |
 
-## Apply to a project (primary)
+## Install on a machine (primary)
 
-1. Clone this repo to a stable path on your machine (team root).
-2. From your **project** repo root, run the wizard binary or `go run`.
-
-```powershell
-# Windows - built binary from project cwd
-C:\path\to\agent-config\scripts\wizard\bin\agent-config-wizard.exe
-```
-
-```bash
-# Linux
-/path/to/agent-config/scripts/wizard/bin/agent-config-wizard
-```
-
-Dev without a binary:
-
-```powershell
-go run -C C:\path\to\agent-config\scripts\wizard\src . -project C:\path\to\your-project
-```
-
-The team clone does **not** need to live inside the project repo. Full run/build/test docs: [scripts/wizard/README.md](scripts/wizard/README.md).
-
-**First run:** opt in to skills and rules in the TUI, press **a** to apply. Creates `.cursor/agent-config.local.json` (gitignore) and copies selected items into `.cursor/skills/` and `.cursor/rules/`. See [.cursor/README.md](.cursor/README.md) for manifest, gitignore, and re-run behavior.
-
-**Cloud agents:** commit `.cursor/agent-manifest.json` (subset of desktop opt-in) and add a Build `install` hook. Templates: [`.cursor/examples/agent-manifest.json.example`](.cursor/examples/agent-manifest.json.example), [`.cursor/examples/environment.json.example`](.cursor/examples/environment.json.example). The hook runs [`scripts/bootstrap-agent.sh`](scripts/bootstrap-agent.sh), which reads the manifest, clones the pinned tag, validates paths against `catalog.json`, copies skills to `~/.cursor/skills/`, and copies rules into the project `.cursor/rules/`. See [.cursor/README.md](.cursor/README.md#cloud-agents) for smoke steps.
+Clone this repo to a stable path. Symlink each skill into `~/.claude/skills/` and each rule into `~/.claude/rules/`. [AGENTS.md](AGENTS.md#working-in-this-repo) has the commands and the rule-loading rules Claude applies.
 
 ## One-off skill install (secondary)
 
@@ -48,11 +24,7 @@ The team clone does **not** need to live inside the project repo. Full run/build
 npx skills@latest add KroniK907/agent-config/skills/<skill-path>
 ```
 
-Use for a single skill without full project apply. Substitute your fork if needed. Paths are in [`catalog.json`](catalog.json).
-
-## Legacy global install (deprecated)
-
-[`skills/wayfinder/utilities/bootstrap/install-skills.ps1`](skills/wayfinder/utilities/bootstrap/install-skills.ps1) and [`install-skills.sh`](skills/wayfinder/utilities/bootstrap/install-skills.sh) copy a fixed wayfinder skill set to `~/.cursor/skills/` via `WAYFINDER_SKILLS_TAG`. Prefer **manifest-driven** [`scripts/bootstrap-agent.sh`](scripts/bootstrap-agent.sh) for cloud agents. Use legacy scripts only for pre-apply smoke tests.
+Use for a single skill without cloning the repo. Substitute your fork if needed. Paths are in [`catalog.json`](catalog.json).
 
 ## Wayfinder ecosystem
 

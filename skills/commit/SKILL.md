@@ -83,7 +83,7 @@ Repeat until **chat-attributed** work is committed. **Expect** other local chang
 
 `gh` does not replace `git` for staging and commits.
 
-**Done when:** the commits from this chat are on a branch other than `integrationBranch`, and `gh pr view --json url,baseRefName` shows a pull request into that branch. Read `integrationBranch` from `.cursor/agent-manifest.json`. If it is missing, ask once and stop.
+**Done when:** the commits from this chat are on a branch other than `integrationBranch`, and `gh pr view --json url,baseRefName` shows a pull request into that branch. `integrationBranch` is `dev` if it exists on the remote, then `staging`, then `main`.
 
 Push with `git push -u origin HEAD`. Run `gh pr create --base <integrationBranch>` when no open pull request exists for this head. If the diff against `origin/<integrationBranch>` is empty, stop. Do not open a pull request when the user says not to.
 

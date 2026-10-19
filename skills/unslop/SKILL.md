@@ -16,10 +16,10 @@ Apply this skill to **every text you send** before you send it: chat replies, is
 
 Write clean as you draft. Do not generate slop and run a cleanup pass afterward.
 
-For global enforcement across all projects, install [`rules/unslop.mdc`](../../rules/unslop.mdc) as an always-on user rule on each CLI.
+For global enforcement across all projects, install [`rules/unslop.md`](../../rules/unslop.md) as an always-on user rule on each CLI.
 
-- Cursor CLI reads `~/.cursor/rules/unslop.mdc`.
-- Claude CLI reads user instructions in `~/.claude/CLAUDE.md`. Put the rule body there.
+- Claude CLI loads `~/.claude/rules/unslop.md`. A symlink works when its target ends in `.md`.
+- Codex CLI reads `~/.codex/AGENTS.md`. Put the rule body there.
 
 ## Process
 

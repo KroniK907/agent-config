@@ -116,7 +116,7 @@ func main() {
 		catalogRulePaths[filepath.ToSlash(e.Path)] = true
 	}
 
-	ruleFiles, err := filepath.Glob(filepath.Join(root, "rules", "*.mdc"))
+	ruleFiles, err := filepath.Glob(filepath.Join(root, "rules", "*.md"))
 	if err != nil {
 		fail("glob rules: %v", err)
 	}
