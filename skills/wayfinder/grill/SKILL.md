@@ -66,9 +66,11 @@ The last decision is always **build order and evidence**. It covers the slices i
 Write after a zone completes, when the user pauses, and at the end:
 
 1. Post one comment per decision (`**{MAP-SLUG}-GM-NNN: ...**`, see MAP.md). Put layouts and rationale inside it.
-2. Update the body: tick the Open questions with their links, fill the Decisions table, and write **Slices** from the build order. Set **Phase** to `shaped` and **Next** to `/build #N`. Without a map, create one now with the body template.
+2. Update the body: tick the settled Open questions with their links and fill the Decisions table. Without a map, create one now with the body template.
+   - **At a checkpoint:** leave **Phase** at `shaping` and **Next** at `/grill #N`, and note where the next session resumes.
+   - **At the end** (every question settled, build order accepted): write **Slices** from the build order, set **Phase** to `shaped` and **Next** to `/build #N`.
 3. Comment on each related map whose decisions this session affects. Name both sides' GM ids.
 
 Close with a short summary of what was settled, what was parked and what is still open.
 
-**Done when:** every settled decision has a GM comment linked from the body, and the map says `Next: /build #N`.
+**Done when:** every settled decision has a GM comment linked from the body. At the end, the map also says `Next: /build #N`; at a checkpoint, it says `Next: /grill #N`.

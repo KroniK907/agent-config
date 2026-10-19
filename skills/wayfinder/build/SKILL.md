@@ -47,7 +47,9 @@ Each layer gets a **builder**. It builds, runs the checks, and opens a ready (no
 
 ## 4. Review the whole stack
 
-Run a read-only review of the full stack by a model from another family (GPT-6.1 Sol on T3 Code). In parallel, run an independent Claude pass. Each round's brief comes from the review template and lists every earlier finding and how it was resolved. Send verified findings to fix delegates. A fix goes on the layer that owns the code, or into a small follow-up PR on top. Repeat until both reviewers return `NO FINDINGS`. After 5 rounds, stop and bring what's left to the user.
+**Sync first.** A lower layer can change after the layers above it stopped pushing. Before each review round, walk the stack bottom-up. Merge each branch's base into it with a merge commit, rerun its checks, and push it if the merge brought anything in. Each of those pushes gets a babysit round. The reviewers then check out the top branch's head, which now contains every layer.
+
+Run a read-only review of the full stack by a model from another family (GPT-6.1 Sol on T3 Code). In parallel, run an independent Claude pass. Each round's brief comes from the review template and lists every earlier finding and how it was resolved. Send verified findings to fix delegates. A fix goes on the layer that owns the code, or into a small follow-up PR on top. Sync again after every fix round, then repeat the review until both reviewers return `NO FINDINGS` on the synced top head. After 5 rounds, stop and bring what's left to the user.
 
 **Done when:** both reviewers report `NO FINDINGS` on the same head, or the user has the remaining findings.
 
