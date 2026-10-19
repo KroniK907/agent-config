@@ -11,7 +11,7 @@ Team skills, project rules, and scripts for NUS agent tooling. v1 layout per **A
 | `skills/` | Agent skills - flat folders + `skills/wayfinder/` tree |
 | `rules/` | Team rules pack (`*.md`) |
 | `scripts/` | `validate-catalog`, run in CI |
-| `skills/wayfinder/utilities/wf/` | `wf` helper for decision-log comments and surgical map edits (`go run wf.go`) |
+| `skills/wayfinder/utilities/wf/` | `wf` helper that reads map sections and uploads map bodies (`go run wf.go`) |
 | `AGENTS.md` | What agents should know about this repo |
 
 ## Install on a machine (primary)
@@ -26,36 +26,20 @@ npx skills@latest add KroniK907/agent-config/skills/<skill-path>
 
 Use for a single skill without cloning the repo. Substitute your fork if needed. Paths are in [`catalog.json`](catalog.json).
 
-## Wayfinder ecosystem
+## Wayfinder
 
-Skills for large-feature planning and incremental implementation via GitHub map trackers. Hub skill: `skills/wayfinder/SKILL.md`.
+Large features live in one GitHub map issue: the plan, its decisions and its build order. Hub: `skills/wayfinder/SKILL.md`; map format: `skills/wayfinder/MAP.md`.
 
-- **wayfinder** - Bootstrap and maintain `FeatureName:Map` GitHub trackers: map skeleton, materialize tickets from map-discovery comment, reconcile after approval, suggest next skill. Use when a feature is too big for one session.
-- **define-bundle** (action) - Group decision-log clusters into draft `wf:bundle` issues; approve them while planning To Do or fog stay open.
-- **feature-discovery** (ideation) - Breadth-first five-zone interview; posts a map-discovery artifact as a comment on the map issue for wayfinder Materialize.
-- **strategic-ideation** (ideation) - Expand/tension/prune at idea level for scope and strategy; hand off to grill-me or PRD.
-- **grill-me** (ideation) - Stress-test a plan or design through sequential Q&A until open branches are resolved.
-- **design-modules** (action) - Shape one or more deep modules from bundle decisions; seam discovery and design-it-twice exploration; HITL only.
-- **write-code** (action) - Default bundle **`wf:task`** Method: TDD at pre-agreed seams via implement-task.
-- **create-tasks** (action) - Split an approved bundle into implementation tasks on the map **Implementing** frontier.
-- **research** (action) - Investigate `wf:research` tickets; post structured findings and non-binding tracker updates.
-- **implement-task** (orchestrator) - Pick up **`wf:approved`** tasks in a worktree; code review, push, pull request, resolution comment.
-- **one-off** (orchestrator) - Map **To Do** tickets that ship repo work without the define-bundle pipeline.
-- **prototype** (action) - Throwaway demos when **## Method:** `prototype`.
-- **code-review** (action) - Standards + spec review; auto-fix obvious issues in implement-task mode.
-- **constrain-fog** (ideation) - Groom **Not yet specified** fog on a map into reconcile-ready tickets.
-
-## Planning utilities (map-free)
-
-Skills for shaping work without a wayfinder map - small scope, PRDs, or standalone design.
-
-- **write-a-prd** - Turn an existing long design discussion or decision artifact into a PRD, with codebase exploration and module sketching, then submit as a GitHub issue.
-- **prd-to-plan** - Turn a PRD into a multi-phase implementation plan using tracer-bullet vertical slices (saved under `./plans/`).
-- **prd-to-issues** - Break a PRD into independently-grabbable GitHub issues using vertical slices.
-- **request-refactor-plan** - Create a detailed refactor plan with tiny commits via user interview, then file it as a GitHub issue.
+- **map** - Research a feature and file its `{FeatureName}:Map` issue, or post a research or cross-map note on one.
+- **grill** - Settle a map in waves: a Proposed/Ask bag, then one question at a time. Writes GM decision comments and the build order (**Slices**).
+- **build** - Orchestrate a map's slices as a stack of PRs: planner contract, one builder and one babysitter per layer, a cross-model stack review, merge, and an HTML report.
+- **release** - Ship `dev` to `main` with a version bump and user-facing changelog, then back-merge.
+- **research** - Answer a map question from primary sources and post the findings on the map.
+- **design-modules** - Shape deep-module interfaces and seams before a build.
 
 ## Development
 
+- **code-review** - Two-axis review (standards and spec) of a PR, branch or diff; can post findings on the PR.
 - **triage-issue** - Investigate a bug by exploring the codebase, identify root cause, and file a GitHub issue with a TDD-based fix plan.
 - **improve-codebase-architecture** - Explore a codebase for architectural improvement opportunities, focusing on deepening shallow modules and testability.
 - **backlog-sweep** - Sweep open GitHub issues against merged work: close shipped and stale issues, narrow half-done ones, and label small quick work `priority: high`. User-invoked; schedule it for a weekly run.
