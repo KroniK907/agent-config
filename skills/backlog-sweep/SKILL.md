@@ -85,11 +85,7 @@ Security fixes, cost savings, and version pins that drift from production deserv
 
 ## Planning trackers
 
-Some repos track features through map issues that list child tickets (wayfinder `{FeatureName}:Map` issues with **To Do**, **Implementing**, and **Completed** sections, plus decision logs). When you close a ticket that a map lists:
-
-- Move its row from **To Do** or **Implementing** to **Completed**, with a one-line gist and the PR that delivered it.
-- Update its decision rows in the coverage table if the map tracks status there (for example `open` → `implemented`).
-- Update the map's **Phase** line when the feature it tracks has shipped.
+Some repos track features through wayfinder map issues (`{FeatureName}:Map`, label `wf:map`). Each one holds the plan, its decisions as GM comments, and its build **Slices**. Leave maps open while their slices are unbuilt. A map's PRs say "Part of #N", and the release PR closes it. When every slice of a map has merged, update its **Phase** line. If a map's work has shipped to `main` and the map is still open, list it as a close candidate.
 
 Edit the body surgically: download it (`gh issue view N --json body -q .body > map.md`), change only those lines, `diff` against the live body, then `gh issue edit N --body-file map.md`. Close a map only when the user approves it explicitly. When a research or checklist issue has items a recent PR finished, comment which items are now done rather than rewriting the checklist.
 

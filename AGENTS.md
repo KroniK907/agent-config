@@ -13,15 +13,13 @@ Northern Utility Services team source for agent skills and rules. Claude Code an
 
 ## Wayfinder tree
 
-`skills/wayfinder/` is the hierarchical opt-in example:
+`skills/wayfinder/` holds the map lifecycle:
 
-- `SKILL.md` - hub (Chart, Materialize, Reconcile, Route)
-- `actions/` - build playbooks (`write-code`, `create-tasks`, `research`, …)
-- `ideation/` - planning interviews (`grill-me`, `feature-discovery`, …)
-- `orchestrators/` - `implement-task`, `one-off`
-- `utilities/` - bootstrap scripts and the `wf` helper (`go run utilities/wf/wf.go`) - not installable skills
+- `SKILL.md` - hub overview; `MAP.md` - the map issue format every wayfinder skill shares
+- `map/`, `grill/`, `build/`, `release/` - one skill per lifecycle step; `research/` and `design-modules/` are helpers
+- `utilities/` - the `wf` helper (`go run utilities/wf/wf.go`) and the label bootstrap - not installable skills
 
-Repo-root skills under `skills/<name>/` are map-free utilities (PRD tools, `commit`, `unslop`, etc.).
+Wayfinder skills reach `MAP.md` as `../MAP.md`, so resolve a skill's folder with `readlink -f` first. Repo-root skills under `skills/<name>/` are map-free utilities (`code-review`, `commit`, `unslop`, etc.).
 
 ## Working in this repo
 
@@ -33,7 +31,7 @@ Repo-root skills under `skills/<name>/` are map-free utilities (PRD tools, `comm
 ln -sfn /path/to/agent-config/skills/<name> ~/.claude/skills/<name>
 ```
 
-Claude loads a skill only when `SKILL.md` sits directly in `~/.claude/skills/<name>/`. A link to `skills/wayfinder` exposes the hub and hides every skill under `actions/`, `ideation/`, and `orchestrators/`. Link each of those folders by its skill name, and skip the hub because `wayfinder` is already linked:
+Claude loads a skill only when `SKILL.md` sits directly in `~/.claude/skills/<name>/`. A link to `skills/wayfinder` exposes only the hub. Link each skill folder under it by its skill name, and skip the hub because `wayfinder` is already linked:
 
 ```bash
 src=/path/to/agent-config/skills
