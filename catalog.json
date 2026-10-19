@@ -142,19 +142,19 @@
   },
   "rules": {
     "unslop": {
-      "path": "rules/unslop.mdc",
+      "path": "rules/unslop.md",
       "label": "Unslop (always on)"
     },
     "portable-skill-docs": {
-      "path": "rules/portable-skill-docs.mdc",
+      "path": "rules/portable-skill-docs.md",
       "label": "Portable skill docs"
     },
     "pull-request": {
-      "path": "rules/pull-request.mdc",
+      "path": "rules/pull-request.md",
       "label": "Pull request as soon as you edit"
     },
     "reviewbot": {
-      "path": "rules/reviewbot.mdc",
+      "path": "rules/reviewbot.md",
       "label": "Expect reviewbot reviews on PRs"
     }
   },
@@ -163,16 +163,6 @@
       "path": "scripts/validate-catalog",
       "label": "Validate catalog.json paths",
       "role": "bootstrap"
-    },
-    "bootstrap-agent": {
-      "path": "scripts/bootstrap-agent.sh",
-      "label": "Cloud agent bootstrap",
-      "role": "bootstrap"
-    },
-    "agent-config-wizard": {
-      "path": "scripts/wizard",
-      "label": "Agent config wizard",
-      "role": "apply"
     },
     "wayfinder-wf": {
       "path": "skills/wayfinder/utilities/wf",

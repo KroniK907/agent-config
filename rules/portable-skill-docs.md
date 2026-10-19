@@ -1,8 +1,8 @@
 ---
 description: Keep skill and reference markdown portable - no repo-specific issue or map decision-log anchors
 agent-config-sync: true
-globs: "**/*.md"
-alwaysApply: false
+paths:
+  - "**/*.md"
 ---
 
 # Portable skill docs - tracker stays in issues

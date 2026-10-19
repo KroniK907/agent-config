@@ -1,7 +1,6 @@
 ---
 description: As soon as this session starts changing files in a git repo, open a pull request to track the work.
 agent-config-sync: true
-alwaysApply: true
 ---
 
 # Pull request as soon as you edit
@@ -10,7 +9,7 @@ When this session starts changing files in a git repo, open a pull request right
 
 **Done when:** `gh pr view --json url,baseRefName` returns a URL whose `baseRefName` is the target branch, or the session changed no files.
 
-1. Pick the target branch. Use `integrationBranch` from `.cursor/agent-manifest.json` if that file sets it. Otherwise use `dev` if it exists on the remote, then `staging`, then `main`. Do not ask. The user will correct the target if needed.
+1. Pick the target branch. Use `dev` if it exists on the remote, then `staging`, then `main`. Do not ask. The user will correct the target if needed.
 2. Stay in the current worktree when its branch is not the target branch. A host worktree counts. Create a new worktree only when the checkout is the target branch itself. Do not commit on the target branch.
 3. After the first edit, commit the files this session changed and push. Open the pull request with `gh pr create --draft --base <target>` when `gh pr view` does not already show one. Commit and push again after each further round of edits.
 4. If `git diff origin/<target>...HEAD` is empty, stop. There is nothing to review.

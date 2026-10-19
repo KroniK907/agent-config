@@ -1,7 +1,6 @@
 ---
 description: An automated Codex reviewer comments on pull requests after pushes. Use when pushing to a PR, marking one ready, or reading PR reviews.
 agent-config-sync: true
-alwaysApply: true
 ---
 
 # reviewbot reviews pull requests
