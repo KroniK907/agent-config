@@ -123,10 +123,6 @@
       "path": "skills/takeover",
       "label": "Takeover (tstack)"
     },
-    "babysit-pr": {
-      "path": "skills/babysit-pr",
-      "label": "Babysit PR with pr-wait (tstack)"
-    },
     "modernize": {
       "path": "skills/modernize",
       "label": "Modernize (tstack)"
@@ -148,10 +144,6 @@
     "pull-request": {
       "path": "rules/pull-request.md",
       "label": "Pull request as soon as you edit"
-    },
-    "reviewbot": {
-      "path": "rules/reviewbot.md",
-      "label": "Expect reviewbot reviews on PRs"
     }
   },
   "scripts": {

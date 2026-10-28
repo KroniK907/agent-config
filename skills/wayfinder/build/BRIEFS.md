@@ -39,7 +39,7 @@ and whether questions.md is empty.
 
 ## common.md outline
 
-- **Context:** one paragraph on the feature and the stack, plus a pointer to `contract.md` and `map.md`. The decisions are binding; the contract beats reviewbot.
+- **Context:** one paragraph on the feature and the stack, plus a pointer to `contract.md` and `map.md`. The decisions are binding; the contract beats Sol findings.
 - **Read first:** AGENTS.md, every repo rules file, the architecture doc.
 - **Git:**
   - Work only in the given worktree, and leave `git stash` alone.
@@ -53,7 +53,7 @@ and whether questions.md is empty.
 - **Checks:** the exact commands for build, vet, format, unit tests, integration tests and asset builds. Split them three ways so each push runs the full suite once, in CI:
   - **Fast, before every push:** build, vet, format, and unit tests for the packages the layer touches.
   - **Own tests:** only the layer's new or changed integration tests, narrowed with the runner's filter (for example `-run`). Prove each new one runs by making it fail once.
-  - **Full suites:** left to the PR's CI checks, read with `gh pr checks`. Run one locally only when CI doesn't run it, or to reproduce a red check.
+  - **Full suites:** left to the PR's CI checks. Wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill, never a polling loop of your own. Run one locally only when CI doesn't run it, or to reproduce a red check.
   - **Foreground only:** run every check in the foreground and read its result before you stop. If a lock or queue makes a check wait, wait in the foreground with a long timeout. Never end your turn with a check still running in the background.
   - **Flakes:** the machine is shared. Rerun a timeout, or a failing test the layer doesn't touch, once and alone before you call it a failure. Report it either way.
   - For UI layers: run the app against a disposable database and look at every new state at desktop and phone widths.
@@ -85,17 +85,18 @@ You build ONE layer of the {slug} stack. Your layer, branch, base and worktree a
 ```markdown
 You babysit ONE PR of the {slug} stack. PR number, branch and worktree are in your task.
 Read common.md, then follow the babysit skill with these overrides:
-- MERGE HOLD: never merge. Stop at "review clean + checks green".
-- Fix findings yourself. Spawn no subagents.
-- Read every reviewbot review on the PR, not just the latest. An older review can hold an open major finding.
-- No review after about 27 minutes: push one empty commit (`git commit --allow-empty -m "Request review"`) and
-  wait again. If there is still nothing, report and stop.
-- contract.md and map.md beat reviewbot. Set aside findings that contradict them, and reply on the comment.
+- MERGE HOLD: never merge. Stop at "Sol approved + checks green".
+- Fix findings yourself. Start only the one Sol reviewer per round that sol-loop calls for, and nothing else.
+- sol-loop base: the merge-base with origin/{your base}. Scope: this layer's commits only. Intent: your
+  contract.md row. Add to the brief: "Behavior that matches a GM decision in map.md or contract.md is not a bug.
+  Out of scope: {other layers}."
+- contract.md and map.md beat Sol. Decline findings that contradict them, citing the decision.
 - A finding that needs a change in a LOWER layer: report it rather than fixing it here.
+- No route reaches Sol: report `SOL UNAVAILABLE` with what you tried. Do not swap in another model.
 - Merge the base branch before every push, so one push carries both. Rerun the fast checks in common.md first.
-  Leave full suites to CI and read them with `gh pr checks`.
-- At most 5 rounds. Log each round (finding -> fixed or set aside, and why) in notes-NN.md.
-Report in 8 lines or fewer: rounds, final head SHA, review state, check state, anything for a lower layer.
+  Leave full suites to CI and wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill.
+- Log each sol-loop round (id -> fixed, disagreed or declined, and why) in notes-NN.md.
+Report in 8 lines or fewer: Sol rounds and verdict, final head SHA, check state, anything for a lower layer.
 ```
 
 ## Group review brief (round 1, one file per group and reviewer)
@@ -137,7 +138,7 @@ Plan: `/tmp/{slug}-plan/` on {machine}. Merge: {pre-approved | hold}.
 
 | # | Branch | PR | Model | State | Head | Notes |
 |---|---|---|---|---|---|---|
-| 01 | {area}/01-slug | #N | sonnet | review clean / babysitting / building / merged | abc1234 | deviation |
+| 01 | {area}/01-slug | #N | sonnet | Sol approved / babysitting / building / merged | abc1234 | deviation |
 
 Stack review: round N, {open findings | NO FINDINGS}. Human steps owed: {list}. Report: {hatch URL}.
 ```
@@ -146,6 +147,6 @@ Stack review: round N, {open findings | NO FINDINGS}. Human steps owed: {list}. 
 
 ```markdown
 A previous agent on this layer stopped mid-work ({reason}, {time}). First establish the state:
-`git fetch`, your branch and its open PR, the latest reviewbot review and checks, and notes-NN.md.
+`git fetch`, your branch and its open PR, its checks, and notes-NN.md (including the sol-loop ledger).
 Don't redo finished work. Check out the existing branch, then continue your brief.
 ```

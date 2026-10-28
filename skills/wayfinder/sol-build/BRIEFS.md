@@ -60,7 +60,7 @@ Run the sol-loop skill on your layer's PR, with these overrides:
 - No route reaches Sol: report `SOL UNAVAILABLE` with what you tried. Sol is over its usage limit: report
   `SOL LIMIT <reset time>`. Do not swap in another model in either case.
 - Push agreed fixes to your PR after the loop ends, merging your base first and rerunning the fast checks.
-  Then read `gh pr checks` until CI finishes, and fix a red check before you report.
+  Then wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill until CI finishes, and fix a red check before you report.
 - Log each round (id -> fixed, disagreed or declined, and why) in notes-NN.md.
 ```
 
@@ -84,7 +84,7 @@ Read common.md and contract.md. For each layer in order: merge its base (and any
 with a merge commit, resolve conflicts, fix builds broken by changes below (signatures, nullability, renames)
 without changing behavior, and run build, format and the short tests of the packages the merge touched.
 Run every check in the foreground. Push each branch that changed; CI runs the full suites on each push.
-Don't run full suites locally. Once all pushes are done, read `gh pr checks` on each pushed branch, and
+Don't run full suites locally. Once all pushes are done, wait on each pushed PR with `pr-wait --until green --no-reviewers` from the `babysit` skill, and
 reproduce a red check locally only to fix it. Never rebase or force-push. At the end, confirm every layer's head is in the top head
 (`git merge-base --is-ancestor`). Log each layer (merged, conflicts, fixes, checks) in sync-rN-log.md, and
 mark conflicts resolved by hand in behavior code.

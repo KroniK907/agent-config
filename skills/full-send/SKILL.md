@@ -56,15 +56,15 @@ one appears.
 4. **File the PR** with the `file-pr` skill. Rebase onto the latest default
    branch first. Add one short line to the description that says how you proved
    the change.
-5. **Babysit the PR** with the `babysit-pr` skill. Fix real findings and CI
+5. **Babysit the PR** with the `babysit` skill. Fix real findings and CI
    failures. Get proof for each fix before you push it.
 6. **Merge** when the merge gate passes.
 7. **Report** in your final message: the PR link, the merge commit, your proof,
    and each decision you made for the user.
 
-Stay active from step 1 to step 7. If you end your turn while checks or bots are
+Stay active from step 1 to step 7. If you end your turn while checks are
 pending, the work stops, because nobody will prompt you again. Wait with the
-watcher from `babysit-pr`, so something wakes you when the PR changes. In T3
+watcher from `babysit`, so something wakes you when the PR changes. In T3
 Code that is `watch_pull_request`. If you stop before the merge, call
 `unwatch_pull_request` first.
 
@@ -91,7 +91,7 @@ Full confidence means all of these are true on the latest commit:
 
 - Your proof covers every change in the diff.
 - Required checks are green.
-- Review bots have finished, and each finding is fixed or dismissed with a
+- Sol approved the current diff, and each finding is fixed or declined with a
   written reason.
 - No human review still requests changes.
 - The branch is up to date with the default branch, and GitHub reports it as

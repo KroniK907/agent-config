@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """pr-wait: watch one GitHub pull request and print one line per real event.
 
-  pr-wait <pr> [--repo owner/name] [--until green|ready|any-change] [--interval 20]
+  pr-wait <pr> [--repo owner/name] [--until green|ready|any-change] [--interval 20] [--no-reviewers]
 
 <pr> is a PR number or PR URL. Without --repo, the repo comes from the URL or
 from the current checkout. Stdout carries only events, one line each, so a
@@ -11,9 +11,14 @@ Progress and errors that do not end the run go to stderr.
 --until
   green       required checks passed on the current head (every CI check when
               the base branch requires none)
-  ready      green, Greptile or Macroscope reviewed the current head, and no
+  ready       green, Greptile or Macroscope reviewed the current head, and no
               review thread is unresolved (default)
   any-change  stop after the first poll that prints an event
+
+--no-reviewers
+  the repo runs no review bot, so `ready` does not wait for Greptile or
+  Macroscope. It still needs green, no unresolved thread, and a branch that is
+  not BEHIND.
 
 Exit codes
   0  the --until condition is met, or the PR merged
@@ -246,8 +251,9 @@ def required_checks(repo: str, base: str) -> set[str]:
 
 
 class Watcher:
-    def __init__(self, repo: str, pr: int, until: str, interval: int) -> None:
+    def __init__(self, repo: str, pr: int, until: str, interval: int, no_reviewers: bool) -> None:
         self.repo, self.pr, self.until, self.interval = repo, pr, until, interval
+        self.no_reviewers = no_reviewers
         self.owner, self.name = repo.split("/")
         self.path = STATE_DIR / f"{repo.replace('/', '__')}__{pr}.json"
         state = self.load()
@@ -503,8 +509,9 @@ class Watcher:
             if green and self.until == "green":
                 self.reported.add(checks_key)
                 self.finish(0, [f"green on {short}: {summary}{self.behind(base, base_oid, head)}"])
-            # ready waits for Greptile or Macroscope, never for CodeRabbit.
-            if green and reviewed:
+            # ready waits for Greptile or Macroscope, never for CodeRabbit, and
+            # for neither with --no-reviewers.
+            if green and (reviewed or self.no_reviewers):
                 if unresolved:
                     self.finish(1, [f"blocked by {len(unresolved)} unresolved threads on {short}: {' '.join(unresolved)}"])
                 if merge_state == "BEHIND":
@@ -542,11 +549,12 @@ def main() -> None:
     parser.add_argument("pr", nargs="?", help="PR number or URL")
     parser.add_argument("--repo", help="owner/name (default: from the URL or the current checkout)")
     parser.add_argument("--until", choices=("green", "ready", "any-change"), default="ready")
+    parser.add_argument("--no-reviewers", action="store_true", help="ready does not wait for a review bot")
     parser.add_argument("--interval", type=int, default=20, help="seconds between polls (default 20, min 5)")
     args = parser.parse_args()
     repo, pr = parse_target(args.pr, args.repo)
     _lock = lock(repo, pr)
-    Watcher(repo, pr, args.until, max(args.interval, 5)).run()
+    Watcher(repo, pr, args.until, max(args.interval, 5), args.no_reviewers).run()
 
 
 if __name__ == "__main__":
