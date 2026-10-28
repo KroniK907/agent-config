@@ -77,9 +77,9 @@ Stop and report to the user without merging if this would start a sixth round. F
 
 Group the **fix** findings into tasks. Make one-line fixes yourself. Delegate the rest by the **subagent** skill's tiers: a nit or rename is an **edit**, a finding you had to trace through call paths is **build**, and security or design findings are **hard**. Launch independent tasks together.
 
-Read every diff a subagent produced. Run the checks the repo's CI runs, as named in `AGENTS.md`, the CI config, or the package scripts. Then commit, and push once. Each push to a ready PR costs a full review.
+Read every diff a subagent produced. Run the repo's fast checks, as named in `AGENTS.md`, the CI config, or the package scripts: build, lint, format, and unit tests for the code you changed, plus any test you added. Leave slow suites, such as integration or browser tests, to CI unless CI doesn't run them. CI runs them on the push anyway, and running them twice doubles the load when CI shares the machine. Run every check in the foreground and read its result. Then commit, and push once. Each push to a ready PR costs a full review.
 
-**Done when:** the fixes are pushed in one push and local checks pass. Go back to step 2.
+**Done when:** the fixes are pushed in one push and the fast checks pass. Go back to step 2.
 
 ### 6. Merge
 
