@@ -103,7 +103,7 @@ Budget: sol-loop's 3 rounds per group, extended to 5 when a group's seams involv
 
 ## 5. Merge and report
 
-Merge into root bottom-up, as `build` merges into `dev`. Then dispatch any follow-up layers from `deferred.md`, through steps 3 and 4.
+Merge into root in one merge of the top PR, as `build` merges into `dev`. Don't merge the PRs one at a time. Then dispatch any follow-up layers from `deferred.md`, through steps 3 and 4.
 
 The report adds:
 - a **Seams** section with each group, its seams, and what its review found and changed;
