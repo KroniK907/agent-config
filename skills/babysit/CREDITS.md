@@ -1,6 +1,6 @@
 # Credits
 
-`babysit-pr` is copied from [Theo Browne](https://github.com/t3dotgg)'s [tstack](https://github.com/t3dotgg/tstack) (commit `1085050`) under the MIT License, reproduced below.
+The Waiting and GitHub rate limits sections, parts of the feedback and merge steps, and `scripts/pr-wait` come from the `babysit-pr` skill in [Theo Browne](https://github.com/t3dotgg)'s [tstack](https://github.com/t3dotgg/tstack) (commit `1085050`), under the MIT License reproduced below. `pr-wait` adds a `--no-reviewers` flag.
 
 ```text
 MIT License

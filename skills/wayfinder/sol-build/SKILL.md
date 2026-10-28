@@ -64,7 +64,7 @@ A builder above can start once the PR below it is open. There are no babysitters
 - **Lower-layer findings:** a builder reports a finding in a lower layer's code; it does not fix it. If the finding is a blocker, send a fix delegate to the owning layer now, then sync the layers above it. Otherwise, add it to `deferred.md` with its id, the owning layer and the evidence.
 - **Sol unreachable:** if a builder reports `SOL UNAVAILABLE`, run that layer's sol-loop from this thread instead. You start the reviewer, check its findings, and send agreed fixes to a fix delegate. Never swap in another model.
 - **Usage limits:** if Sol, or this thread, is close to a usage limit, use `schedule_task` to wake this thread 5 minutes after the reset. Record the wake-up in Stack status. Layers that need no Sol keep building. A builder that hits the limit opens its PR without the sol-loop line, reports `SOL LIMIT <reset time>`, and the layer's loop runs after the wake-up.
-- **CI:** after each push, check `gh pr checks <N>`. Send a red check back to the layer as a fix delegate.
+- **CI:** after each push, wait on CI with the `babysit` skill's watcher, never a polling loop. Send a red check back to the layer as a fix delegate.
 - **Amendments mid-build:** a decision that lands on a map during the build does not change an in-flight layer. Add it to `deferred.md`, and add a follow-up layer to `contract.md` that starts after the stack merges.
 - **Tracking:** record each layer's Sol rounds and verdict in Stack status, with its PR, head SHA and checks.
 

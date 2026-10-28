@@ -53,7 +53,7 @@ and whether questions.md is empty.
 - **Checks:** the exact commands for build, vet, format, unit tests, integration tests and asset builds. Split them three ways so each push runs the full suite once, in CI:
   - **Fast, before every push:** build, vet, format, and unit tests for the packages the layer touches.
   - **Own tests:** only the layer's new or changed integration tests, narrowed with the runner's filter (for example `-run`). Prove each new one runs by making it fail once.
-  - **Full suites:** left to the PR's CI checks, read with `gh pr checks`. Run one locally only when CI doesn't run it, or to reproduce a red check.
+  - **Full suites:** left to the PR's CI checks. Wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill, never a polling loop of your own. Run one locally only when CI doesn't run it, or to reproduce a red check.
   - **Foreground only:** run every check in the foreground and read its result before you stop. If a lock or queue makes a check wait, wait in the foreground with a long timeout. Never end your turn with a check still running in the background.
   - **Flakes:** the machine is shared. Rerun a timeout, or a failing test the layer doesn't touch, once and alone before you call it a failure. Report it either way.
   - For UI layers: run the app against a disposable database and look at every new state at desktop and phone widths.
@@ -94,7 +94,7 @@ Read common.md, then follow the babysit skill with these overrides:
 - A finding that needs a change in a LOWER layer: report it rather than fixing it here.
 - No route reaches Sol: report `SOL UNAVAILABLE` with what you tried. Do not swap in another model.
 - Merge the base branch before every push, so one push carries both. Rerun the fast checks in common.md first.
-  Leave full suites to CI and read them with `gh pr checks`.
+  Leave full suites to CI and wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill.
 - Log each sol-loop round (id -> fixed, disagreed or declined, and why) in notes-NN.md.
 Report in 8 lines or fewer: Sol rounds and verdict, final head SHA, check state, anything for a lower layer.
 ```
