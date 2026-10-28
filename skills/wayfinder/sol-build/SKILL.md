@@ -11,7 +11,7 @@ You are the **orchestrator**. This is the `build` skill with four changes:
 1. **Several maps in one stack.** The input is one or more grilled maps. Their slices are merged into a single build order, on a root branch you choose.
 2. **Sol reviews each PR.** Each builder opens its PR, then runs the `sol-loop` skill on its own layer. Reviewbot does not gate anything.
 3. **Deferred findings.** A finding that belongs to a lower layer goes into `deferred.md`, unless it is a blocker. Those findings are fixed together in the seam fix round.
-4. **Seam review.** The stack review is several Sol loops run in parallel, one per **seam group**. Each loop looks at code that links layers to each other, or to the existing repo. Each later round checks only the fixes.
+4. **Seam review.** The stack review is one Sol loop per **seam group**, started as soon as that group's layers are done. Each loop looks at code that links layers to each other, or to the existing repo. Each later round checks only the fixes.
 
 Resolve this skill's folder with `readlink -f`. Then read `../build/SKILL.md` and `../build/BRIEFS.md`. Everything there applies unless this file says otherwise, including keeping the orchestrator lean, the model choices, concurrency, human gates and the report. This skill's own templates are in [BRIEFS.md](BRIEFS.md). Read the `sol-loop` skill once, because builders and seam reviewers both follow it.
 
@@ -72,7 +72,9 @@ A builder above can start once the PR below it is open. There are no babysitters
 
 ## 4. Seam review
 
-**Sync.** Hand the sync to one delegate on the sync brief in BRIEFS.md. Do not run it in this thread. The delegate:
+Review each seam group as soon as every layer in it has its PR open with a Sol verdict of `approved`. Don't wait for the full stack. Later groups keep building meanwhile. A fix found early lands in a low layer before many layers sit on top of it, so the sync after it stays short.
+
+**Sync.** Hand the sync to one delegate on the sync brief in BRIEFS.md. It syncs up to the group's top layer. Do not run it in this thread. The delegate:
 1. merges each branch into the layer above it, bottom-up;
 2. fixes builds that the merges broke;
 3. reruns the checks;
@@ -81,8 +83,8 @@ A builder above can start once the PR below it is open. There are no babysitters
 
 After a sync, run a new per-layer sol-loop only where a merge conflict was resolved by hand in behavior code. That loop covers only the conflict files.
 
-**Round 1.** Start one Sol reviewer per seam group, all at once, on the seam brief in BRIEFS.md. Each reviewer:
-- reads the full diff from root to the synced top head;
+**Round 1.** Start one Sol reviewer for the group on the seam brief in BRIEFS.md. Groups that close together start together. Each reviewer:
+- reads the full diff from root to the group's synced top head;
 - reviews the seams in its group;
 - is given the per-layer ledgers, so it doesn't re-review the middle of a module;
 - rules on the `deferred.md` items in its group: confirmed or not a bug.
@@ -93,9 +95,11 @@ Each group keeps its own sol-loop ledger. Running several loops at once override
 
 **Later rounds.** Sync again. Then each group's reviewer checks only what changed since the head it last approved, plus its open ids. It does not review the full stack again. A group that approved, and whose seams the fix round did not touch, is done.
 
+**Cross-group pass.** When every group has approved, sync the full stack. One Sol reviewer checks only the seams that join groups, with the round 1 brief, then delta rounds as above.
+
 Budget: sol-loop's 3 rounds per group, extended to 5 when a group's seams involve money, auth, permissions, migrations or concurrency. When the budget runs out, or a finding is still disputed after two replies, stop that group. Bring both sides to the user.
 
-**Done when:** every group's Sol returns `APPROVE` on the synced top head with no blocker or should open, or the user has the open findings. Every `deferred.md` item is fixed, cleared, or moved to a follow-up layer.
+**Done when:** every group's Sol, and the cross-group pass, returns `APPROVE` on the synced top head with no blocker or should open, or the user has the open findings. Every `deferred.md` item is fixed, cleared, or moved to a follow-up layer.
 
 ## 5. Merge and report
 

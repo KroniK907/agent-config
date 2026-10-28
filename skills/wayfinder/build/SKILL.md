@@ -1,6 +1,6 @@
 ---
 name: build
-description: Orchestrate building a shaped map as a stack of PRs, with cheaper subagents per slice, reviewbot babysitting, a cross-model stack review and an HTML report. Use when the user says to implement or build a map, or makes you the orchestrator.
+description: Orchestrate building a shaped map as a stack of PRs, with cheaper subagents per slice, reviewbot babysitting, cross-model reviews per group of layers and an HTML report. Use when the user says to implement or build a map, or makes you the orchestrator.
 agent-config-sync: true
 ---
 
@@ -39,19 +39,29 @@ Each layer gets a **builder**. It builds, runs the checks, and opens a ready (no
   - Use Opus 5.5 at high only for a layer that already failed once.
   - Babysitters run on Sonnet 5.5.
 - **How to delegate:** on T3 Code, use `delegate_task`, which can also reach other providers (see `orchestrator_capabilities`). Elsewhere, use native subagents. Each delegate starts cold, never as a fork of this thread.
-- **Concurrency:** up to about three Opus delegates or six Sonnet delegates at once. Wait for completion notifications in the background instead of polling.
+- **Concurrency:** model work runs remotely, but builds and tests run on this machine. Run up to about three Opus delegates or six Sonnet delegates at once. Start fewer when `uptime` shows a load average above twice `nproc`, and start no new builder until it drops. An overloaded machine slows every check and turns timing tests into flakes. Wait for completion notifications in the background instead of polling.
+- **One full run per push:** builders run fast checks and their own tests, as common.md says. The PR's CI runs the full suites. Read them with `gh pr checks <N>`, and send a red check back to the layer.
+- **Stalled delegates:** a delegate that reports back without its push or PR usually left a check running in the background. Send it straight back to read that output, or to rerun the check in the foreground, then finish its brief.
 - **Tracking:** after each report, update Stack status with the PR number, head SHA, check state and any deviation. If a delegate dies on a rate or session limit, write `resume.md` (template in BRIEFS.md) and relaunch it.
 - **Long builds:** when this thread grows heavy, start a fresh orchestrator thread per wave. Point it at the plan directory and the Stack status comment.
 
+Step 4 runs alongside this step. Start each group's review as soon as its layers are ready.
+
 **Done when:** every layer's PR is open, babysat clean (or held with a reported reason), and checks are green.
 
-## 4. Review the whole stack
+## 4. Review each group of layers
 
-**Sync first.** A lower layer can change after the layers above it stopped pushing. Before each review round, walk the stack bottom-up. Merge each branch's base into it with a merge commit, rerun its checks, and push it if the merge brought anything in. Each of those pushes gets a babysit round. The reviewers then check out the top branch's head, which now contains every layer.
+Don't wait for the whole stack. A cross-PR bug found at the end is usually in a low layer. Its fix then merges up through every layer above, and each sync of a long stack takes hours. The contract splits the layers into **review groups**. Review each group as soon as its layers' PRs are open and babysat clean, while later groups keep building.
 
-Run a read-only review of the full stack by a model from another family (GPT-6.1 Sol on T3 Code). In parallel, run an independent Claude pass. Each round's brief comes from the review template and lists every earlier finding and how it was resolved. Send verified findings to fix delegates. A fix goes on the layer that owns the code, or into a small follow-up PR on top. Sync again after every fix round, then repeat the review until both reviewers return `NO FINDINGS` on the synced top head. After 5 rounds, stop and bring what's left to the user.
+**Sync first.** A lower layer can change after the layers above it stopped pushing. Before each review round, walk the stack bottom-up to the group's top layer. Merge each branch's base into it with a merge commit, rerun its fast checks, and push it if the merge brought anything in. A push that only merges the base needs no babysit round. Reviewbot may still review it. Skim that review for a blocker and leave the rest. Hand a sync of more than a few layers to one delegate rather than running it in this thread.
 
-**Done when:** both reviewers report `NO FINDINGS` on the same head, or the user has the remaining findings.
+**Round 1.** Run a read-only review of the group by a model from another family (GPT-6.1 Sol on T3 Code). In parallel, run an independent Claude pass. Both use the group review brief in BRIEFS.md on the group's synced top head. Send verified findings to fix delegates, one per owning layer. A fix goes on the layer that owns the code, or into a small follow-up PR on top.
+
+**Later rounds.** Sync again. Each reviewer then checks only the change since the head it last reviewed, plus its open findings, with the re-review brief. It never reviews the full group again. After 5 rounds, stop and bring what's left to the user.
+
+**Final pass.** When every group is clean, sync the full stack. One reviewer checks only the seams that join groups, then delta rounds as above.
+
+**Done when:** both reviewers report `NO FINDINGS` on every group and on the final pass, or the user has the remaining findings.
 
 ## 5. Merge, if pre-approved
 
@@ -74,7 +84,8 @@ Build a self-contained HTML report covering:
 - what changed from the spec, and why;
 - problems hit and how they were solved;
 - human steps still owed;
-- screenshots of every UI state in the layers' notes files, at desktop and phone widths.
+- screenshots of every UI state in the layers' notes files, at desktop and phone widths;
+- where the time went: when each phase started and ended, and the longest waits (checks queued, reviews late, stalled delegates). Take the times from the thread and Stack status.
 
 Serve it with `hatch`, link it from Stack status, and set **Phase** to `built`.
 

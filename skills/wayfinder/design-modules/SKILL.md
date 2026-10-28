@@ -40,6 +40,6 @@ Apply the deletion test. If deleting a module makes the complexity vanish, it wa
 
 ## 3. Post
 
-Post one comment on the map, `## Module design`. Open with an overview of how the modules relate, then give one block per module. End with the build order the seams imply. Get the user's approval before the build starts. A design choice that changes a decision goes back through `grill`.
+Post one comment on the map, `## Module design`. Open with an overview of how the modules relate, then give one block per module. End with the build order the seams imply. Keep each seam's producer and its consumers close together in that order, so the build can review each group of layers as soon as it closes. Get the user's approval before the build starts. A design choice that changes a decision goes back through `grill`.
 
 **Done when:** the comment is posted and the user has approved it or asked for changes.
