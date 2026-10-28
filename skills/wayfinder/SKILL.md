@@ -14,6 +14,7 @@ A feature lives in one GitHub **map** issue ([MAP.md](MAP.md)): the plan, its de
 | Shape | `map` | Research done and a map issue filed (Phase `shaping`) |
 | Decide | `grill` | Every open question settled as a GM comment, **Slices** written (Phase `shaped`) |
 | Build | `build` | A stack of reviewed PRs on `dev` and an HTML report (Phase `built`) |
+| Build (Sol) | `sol-build` | The same, for one or more maps, with sol-loop reviews on each PR and across the seams instead of reviewbot |
 | Ship | `release` | `dev` merged to `main`, tagged, back-merged; finished maps closed |
 
 Helpers along the way: `research` (findings comment on the map), `design-modules` (interface shapes before a build), `babysit` and `pr` (each PR), `subagent` (model tiers), `hatch` (serve mocks and reports).

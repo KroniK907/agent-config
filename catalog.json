@@ -87,6 +87,10 @@
       "path": "skills/wayfinder/release",
       "label": "Release"
     },
+    "sol-build": {
+      "path": "skills/wayfinder/sol-build",
+      "label": "Sol build (multi-map, sol-loop reviewed)"
+    },
     "research": {
       "path": "skills/wayfinder/research",
       "label": "Research"
@@ -94,6 +98,42 @@
     "design-modules": {
       "path": "skills/wayfinder/design-modules",
       "label": "Design modules"
+    },
+    "full-send": {
+      "path": "skills/full-send",
+      "label": "Full send (tstack)"
+    },
+    "full-stop": {
+      "path": "skills/full-stop",
+      "label": "Full stop (tstack)"
+    },
+    "council": {
+      "path": "skills/council",
+      "label": "Council (tstack)"
+    },
+    "sol-loop": {
+      "path": "skills/sol-loop",
+      "label": "Sol loop (tstack)"
+    },
+    "file-pr": {
+      "path": "skills/file-pr",
+      "label": "File PR (tstack)"
+    },
+    "takeover": {
+      "path": "skills/takeover",
+      "label": "Takeover (tstack)"
+    },
+    "babysit-pr": {
+      "path": "skills/babysit-pr",
+      "label": "Babysit PR with pr-wait (tstack)"
+    },
+    "modernize": {
+      "path": "skills/modernize",
+      "label": "Modernize (tstack)"
+    },
+    "leaving-pr-comments": {
+      "path": "skills/leaving-pr-comments",
+      "label": "Leaving PR comments (tstack)"
     }
   },
   "rules": {
