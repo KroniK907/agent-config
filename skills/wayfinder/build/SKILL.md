@@ -66,13 +66,14 @@ Don't wait for the whole stack. A cross-PR bug found at the end is usually in a 
 
 ## 5. Merge, if pre-approved
 
-Merge bottom-up with merge commits:
-1. Merge the lowest PR into `dev`.
-2. Retarget the next PR to `dev` (`gh api -X PATCH repos/{owner}/{repo}/pulls/<N> -f base=dev`).
-3. Wait for its checks, then merge it.
-4. Repeat for each PR up the stack.
+The synced top head already holds every layer. It passed the seam reviews and has green CI. Don't merge the PRs one at a time. Each merge moves `dev`, the next branch has to merge it back in, and CI runs again on a head nobody will review. On a long stack that adds hours and checks nothing new. Merge the stack once:
 
-Don't rebase or force-push branches that have PRs open.
+1. **Confirm the stack.** CI is green on the top PR's head. Every layer's head is in the top head: `git merge-base --is-ancestor <layer head> <top head>` for each one. If a layer's head is missing, sync first.
+2. **Retarget every PR to `dev`** (`gh api -X PATCH repos/{owner}/{repo}/pulls/<N> -f base=dev`). Push nothing to the layer branches.
+3. **Merge the top PR** with a merge commit: `gh pr merge <top> --merge --match-head-commit <top head>`. If it conflicts with `dev`, merge `dev` into the top branch, wait for CI on that one push, then merge.
+4. **Check the rest.** GitHub marks a PR merged once its head commit is in its base branch, so every lower PR closes as merged with the top one. Confirm each with `gh pr view <N> --json state`. A PR still open means its head isn't in `dev`. Report it; don't merge it on its own.
+
+Don't rebase or force-push branches that have PRs open. Squash would break step 4, so always merge with a merge commit.
 
 **Human gates:** stop and ask before any infra apply, any write to production data, merging to `dev` without approval, and anything in `release`. List the exact commands the human must run.
 
