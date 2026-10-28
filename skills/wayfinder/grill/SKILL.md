@@ -37,13 +37,12 @@ Read the reply for intent. "Accept" settles every Proposed row. "Accept except P
 Work depth-first: finish one zone's Ask rows before moving to the next. Every reply uses exactly this format:
 
 - **Follow Up:** the decision from the last answer, in concrete terms. Answer any question the user asked. List new questions under **Handed back** as `H#`, each with a one-line question and the id it depends on.
-- **Branches:** the five zone labels from ZONES.md, each `not started`, `in-progress` or `complete`. Only one is `in-progress`.
 - **Question (id):** exactly one question.
 - **Recommendation:** your answer and why. Say what the alternatives cost.
 
 New questions an answer raises are handed back rather than asked. Ask a clarifying follow-up only when the answer leaves the current id unsettled.
 
-**Layouts.** Every new or changed page, modal, drawer, sheet or panel needs a rough layout before **Surfaces & experience** is `complete`. Use an ASCII layout for desktop and for phone, one surface at a time. When the user wants to see it, or two layouts are close, have a design subagent build a static HTML mock in a temp directory and serve it with `hatch`. Iterate until the user picks one. When they do, record the layout in the decision, and commit the mock if the repo keeps design mocks.
+**Layouts.** Every new or changed page, modal, drawer, sheet or panel needs a rough layout before the **Surfaces & experience** zone is complete. Use an ASCII layout for desktop and for phone, one surface at a time. When the user wants to see it, or two layouts are close, have a design subagent build a static HTML mock in a temp directory and serve it with `hatch`. Iterate until the user picks one. When they do, record the layout in the decision, and commit the mock if the repo keeps design mocks.
 
 **Done when:** every Ask id in this bag is answered. Then go back to step 2 with the handed-back and newly unblocked questions. When a wave has nothing left to ask, go to step 4.
 
