@@ -1,6 +1,6 @@
 ---
 name: sol-build
-description: Orchestrate building one or more grilled maps as a single stack of PRs, with a sol-loop review on every PR instead of reviewbot and parallel Sol seam reviews across the stack. Use when the user says sol build, wants several maps or grill sessions combined into one build, or wants Sol to review the PRs.
+description: Orchestrate building one or more grilled maps as a single stack of PRs, with a sol-loop review on every PR by its builder and parallel Sol seam reviews across the stack. Use when the user says sol build, wants several maps or grill sessions combined into one build, or wants Sol to review the PRs.
 agent-config-sync: true
 ---
 
@@ -9,7 +9,7 @@ agent-config-sync: true
 You are the **orchestrator**. This is the `build` skill with four changes:
 
 1. **Several maps in one stack.** The input is one or more grilled maps. Their slices are merged into a single build order, on a root branch you choose.
-2. **Sol reviews each PR.** Each builder opens its PR, then runs the `sol-loop` skill on its own layer. Reviewbot does not gate anything.
+2. **Sol reviews each PR.** Each builder opens its PR, then runs the `sol-loop` skill on its own layer. There are no separate babysitters.
 3. **Deferred findings.** A finding that belongs to a lower layer goes into `deferred.md`, unless it is a blocker. Those findings are fixed together in the seam fix round.
 4. **Seam review.** The stack review is one Sol loop per **seam group**, started as soon as that group's layers are done. Each loop looks at code that links layers to each other, or to the existing repo. Each later round checks only the fixes.
 
@@ -64,7 +64,7 @@ A builder above can start once the PR below it is open. There are no babysitters
 - **Lower-layer findings:** a builder reports a finding in a lower layer's code; it does not fix it. If the finding is a blocker, send a fix delegate to the owning layer now, then sync the layers above it. Otherwise, add it to `deferred.md` with its id, the owning layer and the evidence.
 - **Sol unreachable:** if a builder reports `SOL UNAVAILABLE`, run that layer's sol-loop from this thread instead. You start the reviewer, check its findings, and send agreed fixes to a fix delegate. Never swap in another model.
 - **Usage limits:** if Sol, or this thread, is close to a usage limit, use `schedule_task` to wake this thread 5 minutes after the reset. Record the wake-up in Stack status. Layers that need no Sol keep building. A builder that hits the limit opens its PR without the sol-loop line, reports `SOL LIMIT <reset time>`, and the layer's loop runs after the wake-up.
-- **CI:** after each push, check `gh pr checks <N>`. Send a red check back to the layer as a fix delegate. Reviewbot comments, if any arrive, are not a gate. Skim them for a blocker the Sol loop missed. Send that blocker to a fix delegate, and anything smaller to `deferred.md`.
+- **CI:** after each push, check `gh pr checks <N>`. Send a red check back to the layer as a fix delegate.
 - **Amendments mid-build:** a decision that lands on a map during the build does not change an in-flight layer. Add it to `deferred.md`, and add a follow-up layer to `contract.md` that starts after the stack merges.
 - **Tracking:** record each layer's Sol rounds and verdict in Stack status, with its PR, head SHA and checks.
 
