@@ -16,7 +16,7 @@ Northern Utility Services team source for agent skills and rules. Claude Code an
 `skills/wayfinder/` holds the map lifecycle:
 
 - `SKILL.md` - hub overview; `MAP.md` - the map issue format every wayfinder skill shares
-- `map/`, `grill/`, `build/`, `release/` - one skill per lifecycle step; `research/` and `design-modules/` are helpers
+- `map/`, `grill/`, `build/`, `release/` - one skill per lifecycle step (`sol-build/` is the sol-loop variant of `build/`); `research/` and `design-modules/` are helpers
 - `utilities/` - the `wf` helper (`go run utilities/wf/wf.go`) and the label bootstrap - not installable skills
 
 Wayfinder skills reach `MAP.md` as `../MAP.md`, so resolve a skill's folder with `readlink -f` first. Repo-root skills under `skills/<name>/` are map-free utilities (`code-review`, `commit`, `unslop`, etc.).

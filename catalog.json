@@ -87,6 +87,10 @@
       "path": "skills/wayfinder/release",
       "label": "Release"
     },
+    "sol-build": {
+      "path": "skills/wayfinder/sol-build",
+      "label": "Sol build (multi-map, sol-loop reviewed)"
+    },
     "research": {
       "path": "skills/wayfinder/research",
       "label": "Research"
