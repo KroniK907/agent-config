@@ -6,7 +6,7 @@ agent-config-sync: true
 
 # Build
 
-You are the **orchestrator**. Delegates write the code; you plan, dispatch, track and merge. Your thread is usually the most expensive part of a build, so keep it **lean**: delegates read their briefs from files, report back in 8 lines or fewer, and you only make one-line fixes yourself.
+You are the **orchestrator**. Delegates write the code; you plan, dispatch, track and merge. Your thread is usually the most expensive part of a build, so keep it **lean**: delegates read their briefs from files, report back in 8 lines or fewer, and you only make one-line fixes yourself. When the thread still grows long, hand the build to a fresh thread (see **Thread handoff**).
 
 Usage: `/build #N [slices] [merge]`. `merge` (or "merged into dev" in the request) pre-approves merging the stack into `dev`. Without it, stop when the stack is reviewed and clean.
 
@@ -43,8 +43,8 @@ Each layer gets a **builder**. It builds, runs the checks, and opens a ready (no
 - **One full run per push:** builders run fast checks and their own tests, as common.md says. The PR's CI runs the full suites. Wait on them with the `babysit` skill's watcher, never a polling loop, and send a red check back to the layer.
 - **Stalled delegates:** a delegate that reports back without its push or PR usually left a check running in the background. Send it straight back to read that output, or to rerun the check in the foreground, then finish its brief.
 - **Sol unreachable:** if a babysitter reports `SOL UNAVAILABLE`, run that layer's sol-loop from this thread instead. You start the reviewer, check its findings, and send agreed fixes to a fix delegate. Never swap in another model.
-- **Tracking:** after each report, update Stack status with the PR number, head SHA, check state and any deviation. If a delegate dies on a rate or session limit, write `resume.md` (template in BRIEFS.md) and relaunch it.
-- **Long builds:** when this thread grows heavy, start a fresh orchestrator thread per wave. Point it at the plan directory and the Stack status comment.
+- **Tracking:** after each report, update Stack status with the PR number, head SHA, check state and any deviation. Keep `/tmp/{slug}-plan/tasks.md` current too: each running delegate (task ID, layer, role, model, start time), each `schedule_task` bound to this thread with its prompt, and each PR this thread watches. If a delegate dies on a rate or session limit, write `resume.md` (template in BRIEFS.md) and relaunch it.
+- **Long builds:** check the handoff triggers in **Thread handoff** after each report.
 
 Step 4 runs alongside this step. Start each group's review as soon as its layers are ready.
 
@@ -92,3 +92,27 @@ Build a self-contained HTML report covering:
 Serve it with `hatch`, link it from Stack status, and set **Phase** to `built`.
 
 **Done when:** the user has the hatch URL and Stack status shows the final state of every PR.
+
+## Thread handoff
+
+Every turn re-reads the whole thread. A thread that has run for hours gets slow and expensive, and its early instructions fade. Hand off at the next break (a group merged, a wave dispatched, a sync done) once any of these is true:
+- the harness has compacted this thread's context;
+- this thread has taken about 20 delegate reports;
+- this thread has run about 4 hours.
+
+Never fork this thread with `t3_thread_transfer`. A fork copies the context you are trying to drop. The successor starts cold and learns the build from files.
+
+1. **Settle.** Start no new delegates. Bring Stack status and `tasks.md` up to date.
+2. **Collect scripts.** Move every script and helper file this thread wrote outside the plan dir into `/tmp/{slug}-plan/`: status pushers, check wrappers, lock files, brief drafts. Fix the paths inside them and in the briefs that call them. The successor finds only what the plan dir holds.
+3. **Write `HANDOFF.md`** in the plan dir from the template in BRIEFS.md. Copy the original command and every standing instruction the user gave since, word for word. A paraphrase drops merge approvals and gates.
+4. **Release this thread's bindings.** Delete each `schedule_task` bound to this thread (`list_scheduled_tasks`, then `delete_scheduled_task`). Call `unwatch_pull_request` on each PR it watches. HANDOFF.md lists both so the successor recreates them. Leave running delegates alone, because cancelling one throws away its work.
+5. **Launch the successor** with `t3_thread_launch`: this project, no `workspaceStrategy`, your model and runtime mode, title `{FeatureName} build orchestrator (wave N+1)`. Start the message with the original command, so the skill loads again:
+   ```text
+   /build #N [slices] [merge] Take over as orchestrator of the {FeatureName} build, wave N+1. Read /tmp/{slug}-plan/HANDOFF.md first. Recreate the schedules and PR watches it lists, bound to your thread. Layers it marks "old thread" stay with their delegates until the old thread relays their reports. Carry on until the build is done.
+   ```
+6. **Record it.** Put the successor's thread link in Stack status and at the top of HANDOFF.md.
+7. **Relay.** A delegate reports to the thread that started it, so its result still lands here. From now on this thread only relays. When a delegate reports, send it to the successor with `t3_thread_send` in 3 lines or fewer: layer, PR, head, verdict, checks, notes file. Start nothing, fix nothing, and leave Stack status alone. If the successor asks you to cancel a delegate, `task_cancel` it. After the last report, send a final line saying so, and stop.
+
+**As the successor,** check before you act. Read HANDOFF.md, Stack status, the open PRs and the notes files, and confirm each claim. A layer marked "old thread" belongs to its delegate. Don't sync, fix or push to its branch until the relay reports it done. If its PR and notes show it finished and its worktree has sat idle, ask the old thread to cancel the delegate first. Two agents pushing to one branch collide. Start your own `tasks.md` section, and hand off again at the same triggers.
+
+Outside T3 Code, do steps 1 to 3, then give the user the launch message to paste into a new session.

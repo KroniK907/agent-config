@@ -130,6 +130,26 @@ evidence}. Mark each open id resolved or still open, with the reason. Raise a ne
 caused it. Do not review the full stack again.
 ```
 
+## HANDOFF.md additions
+
+Add these sections to build's HANDOFF.md template:
+
+```markdown
+## Maps and root
+Maps: {#N, #M}, each with its Stack status comment ID. Root: `{root}`. Cross-map answers: cross-map.md.
+
+## Seam review
+| Group | Round | Last reviewed head | Verdict | Open ids | Reviewer task ID, if running | Reply file |
+|---|---|---|---|---|---|---|
+
+Deferred: N open in deferred.md. Design choices made in fix rounds: {list}.
+
+## Sol limits
+Usage-limit state, and the reset time of any pending wake-up.
+```
+
+In the in-flight table, say for each builder whether its own sol-loop is running, and which round.
+
 ## Stack status comment
 
 ```markdown
