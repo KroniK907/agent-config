@@ -150,3 +150,43 @@ A previous agent on this layer stopped mid-work ({reason}, {time}). First establ
 `git fetch`, your branch and its open PR, its checks, and notes-NN.md (including the sol-loop ledger).
 Don't redo finished work. Check out the existing branch, then continue your brief.
 ```
+
+## HANDOFF.md
+
+Write it fresh at each handoff. Fill every section, or write `none`.
+
+```markdown
+# {FeatureName} build: orchestrator handoff, wave N+1 ({date, time, zone})
+
+Previous orchestrator: {old thread link}. Successor: {new thread link, added after launch}.
+You take over as orchestrator. Follow the `{build | sol-build}` skill. This file, the plan dir and the
+Stack status comments hold the state. Check each claim against GitHub before you act on it.
+
+## Original command
+{the command that started the build, word for word}
+
+## Standing instructions
+{everything the user has said since, word for word, each with its date: merge approvals, gates,
+what to ask before, what never to do, recurring checks}
+
+## Setup that works
+- Plan dir: /tmp/{slug}-plan/, with what each file holds when the name doesn't say.
+- Scripts: `path` - what it does - how to call it. One line each.
+- Delegates: the one-line prompt, the model and effort per kind of layer, the reviewer model and options.
+- Merge steps as they actually ran, with workarounds.
+- Traps: failures that came back more than once, and their fixes.
+
+## Done
+Layers, PRs and follow-ups merged. Reports served.
+
+## In flight (old thread)
+| Layer | Role | Task ID | PR | Last known state | How to tell it finished |
+|---|---|---|---|---|---|
+
+## Recreate in your thread
+- Schedule: every {interval}. Prompt: {word for word}
+- Watch: PR #N
+
+## Next
+What to start, in order, with the condition each waits on. Open questions for the user. Human steps owed.
+```

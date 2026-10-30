@@ -101,6 +101,10 @@ Budget: sol-loop's 3 rounds per group, extended to 5 when a group's seams involv
 
 **Done when:** every group's Sol, and the cross-group pass, returns `APPROVE` on the synced top head with no blocker or should open, or the user has the open findings. Every `deferred.md` item is fixed, cleared, or moved to a follow-up layer.
 
+## Thread handoff
+
+Hand off as `build` does, at the same triggers. Launch the successor with `/sol-build` and the original arguments. HANDOFF.md also needs the sol-build additions in this skill's BRIEFS.md. A usage-limit wake-up is a schedule like any other. Delete it here and list it in HANDOFF.md, so the successor creates it again.
+
 ## 5. Merge and report
 
 Merge into root in one merge of the top PR, as `build` merges into `dev`. Don't merge the PRs one at a time. Then dispatch any follow-up layers from `deferred.md`, through steps 3 and 4.
