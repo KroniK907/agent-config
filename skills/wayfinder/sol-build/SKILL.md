@@ -9,7 +9,7 @@ agent-config-sync: true
 You are the **orchestrator**. This is the `build` skill with four changes:
 
 1. **Several maps in one stack.** The input is one or more grilled maps. Their slices are merged into a single build order, on a root branch you choose.
-2. **Sol reviews each PR.** Each builder opens its PR, then runs the `sol-loop` skill on its own layer. There are no separate babysitters.
+2. **Sol reviews each layer before its PR.** Each builder pushes its branch, runs the `sol-loop` skill on its own layer, and opens its PR only after Sol approves. There are no separate babysitters.
 3. **Deferred findings.** A finding that belongs to a lower layer goes into `deferred.md`, unless it is a blocker. Those findings are fixed together in the seam fix round.
 4. **Seam review.** The stack review is one Sol loop per **seam group**, started as soon as that group's layers are done. Each loop looks at code that links layers to each other, or to the existing repo. Each later round checks only the fixes.
 
@@ -55,15 +55,16 @@ Ask the user the questions in `questions.md`, as in `build`. Post a **Stack stat
 Use one-line builder prompts that point at this skill's `build.md`. Each builder:
 1. builds;
 2. runs the checks in the foreground;
-3. pushes and opens a ready PR;
+3. pushes its branch, with no PR;
 4. runs a sol-loop on its layer against its base, and pushes the agreed fixes;
-5. reports back.
+5. once Sol approves and the fast checks and its own tests pass, opens a ready PR, with the merge train's opt-out label on a merge-train repo (see `build`), and waits for CI;
+6. reports back.
 
-A builder above can start once the PR below it is open. There are no babysitters. A builder may start the one Sol reviewer per round that sol-loop calls for, and nothing else.
+No layer gets a PR before Sol approves it, not even a draft. A builder above can start once the branch below it is pushed. There are no babysitters. A builder may start the one Sol reviewer per round that sol-loop calls for, and nothing else.
 
 - **Lower-layer findings:** a builder reports a finding in a lower layer's code; it does not fix it. If the finding is a blocker, send a fix delegate to the owning layer now, then sync the layers above it. Otherwise, add it to `deferred.md` with its id, the owning layer and the evidence.
 - **Sol unreachable:** if a builder reports `SOL UNAVAILABLE`, run that layer's sol-loop from this thread instead. You start the reviewer, check its findings, and send agreed fixes to a fix delegate. Never swap in another model.
-- **Usage limits:** if Sol, or this thread, is close to a usage limit, use `schedule_task` to wake this thread 5 minutes after the reset. Record the wake-up in Stack status. Layers that need no Sol keep building. A builder that hits the limit opens its PR without the sol-loop line, reports `SOL LIMIT <reset time>`, and the layer's loop runs after the wake-up.
+- **Usage limits:** if Sol, or this thread, is close to a usage limit, use `schedule_task` to wake this thread 5 minutes after the reset. Record the wake-up in Stack status. Layers that need no Sol keep building. A builder that hits the limit pushes its branch with no PR and reports `SOL LIMIT <reset time>`. The layer's loop runs after the wake-up, and its PR opens when Sol approves.
 - **CI:** after each push, wait on CI with the `babysit` skill's watcher, never a polling loop. Send a red check back to the layer as a fix delegate.
 - **Amendments mid-build:** a decision that lands on a map during the build does not change an in-flight layer. Add it to `deferred.md`, and add a follow-up layer to `contract.md` that starts after the stack merges.
 - **Tracking:** record each layer's Sol rounds and verdict in Stack status, with its PR, head SHA and checks.
@@ -72,7 +73,7 @@ A builder above can start once the PR below it is open. There are no babysitters
 
 ## 4. Seam review
 
-Review each seam group as soon as every layer in it has its PR open with a Sol verdict of `approved`. Don't wait for the full stack. Later groups keep building meanwhile. A fix found early lands in a low layer before many layers sit on top of it, so the sync after it stays short.
+Review each seam group as soon as every layer in it has its PR open, which means Sol approved it. Don't wait for the full stack. Later groups keep building meanwhile. A fix found early lands in a low layer before many layers sit on top of it, so the sync after it stays short.
 
 **Sync.** Hand the sync to one delegate on the sync brief in BRIEFS.md. It syncs up to the group's top layer. Do not run it in this thread. The delegate:
 1. merges each branch into the layer above it, bottom-up;

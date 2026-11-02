@@ -23,7 +23,7 @@ These replace build's Review groups. Order the layers so each group's layers com
 group closes as early as the dependencies allow, because each group is reviewed as soon as it closes.
 
 Write review.md (from the template), not babysit.md. In common.md:
-- PR section: add the sol-loop line to the PR body.
+- PR section: open the PR only after the layer's sol-loop approves, and add the sol-loop line to the PR body.
 - Hard limits: allow one Sol reviewer per sol-loop round.
 - Checks: follow build's three-way split. Before a sol-loop round, run the fast checks and the layer's own
   tests. Leave full suites to CI.
@@ -40,8 +40,8 @@ You build ONE layer of the {slug} stack. Your layer, branch, base and worktree a
 2. Create your worktree: `git -C {repo} fetch origin && git -C {repo} worktree add {worktree} -b {branch} origin/{base}`
    (reuse it if it exists). Parallel-group layers merge their sibling branch before opening the PR.
 3. Build, run every check in common.md, and commit.
-4. Merge the base branch, rerun the fast checks, push, and open the PR. CI runs the full suites.
-5. Follow review.md.
+4. Merge the base branch, rerun the fast checks, and push the branch. Open no PR yet.
+5. Follow review.md. It opens the PR once Sol approves.
 6. Write notes-NN.md and report per common.md, plus: Sol rounds, verdict, and any finding for a lower layer.
 Do not merge.
 ```
@@ -49,7 +49,7 @@ Do not merge.
 ## review.md
 
 ```markdown
-Run the sol-loop skill on your layer's PR, with these overrides:
+Run the sol-loop skill on your layer's pushed branch, with these overrides:
 - Starting the one Sol reviewer it calls for is part of your task. Start nothing else.
 - Base: the merge-base with origin/{your base}, not the default branch. Scope: your layer's commits only.
 - Intent: your contract.md row. Binding: the maps' GM decisions and cross-map.md. Add to the brief:
@@ -59,8 +59,10 @@ Run the sol-loop skill on your layer's PR, with these overrides:
 - A finding in a lower layer's code: do not fix it. Report it with its evidence and say if it is a blocker.
 - No route reaches Sol: report `SOL UNAVAILABLE` with what you tried. Sol is over its usage limit: report
   `SOL LIMIT <reset time>`. Do not swap in another model in either case.
-- Push agreed fixes to your PR after the loop ends, merging your base first and rerunning the fast checks.
-  Then wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill until CI finishes, and fix a red check before you report.
+- Push agreed fixes to your branch after the loop ends, merging your base first and rerunning the fast checks
+  and your own tests. Once Sol approved and they pass, open the PR as common.md says. CI runs the full suites.
+  Wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill, and fix a red check before you report.
+- Sol limit or stuck loop: report with the branch pushed and no PR.
 - Log each round (id -> fixed, disagreed or declined, and why) in notes-NN.md.
 ```
 

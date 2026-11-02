@@ -27,7 +27,8 @@ Write:
    Each group lists its layers and the layers below it that it calls. 250 lines or fewer.
 2. common.md - the rules every layer follows (outline below). Take every rule and check from the repo's
    own files, and run each check command once to confirm it exists. Find out which checks the PR's CI
-   runs, and whether it runs on this machine. Check whether worktrees and the CI runner share the
+   runs, and whether it runs on this machine. Find out whether the repo runs a merge train (a bot that
+   merges every open, non-draft PR once its checks pass) and which label keeps a PR off it. Check whether worktrees and the CI runner share the
    build cache (for example `go env GOCACHE`). Write both into common.md.
 3. build.md and babysit.md - from the templates below.
 4. questions.md - only blockers where the decisions are silent and a wrong guess would be costly.
@@ -61,10 +62,12 @@ and whether questions.md is empty.
   - Leave production data, infra applies and DNS to a human. Write what they must run into the PR body.
   - Never merge.
 - **PR:**
-  - Open it ready, not draft, against the contract's base.
+  - Open no PR, not even a draft, until Sol approved the layer and the fast checks and own tests pass on the pushed head. This overrides the `pull-request` rule's draft-on-first-edit step.
+  - Then open it ready, not draft, against the contract's base.
+  - On a merge-train repo, open it with the train's opt-out label (`gh pr create --label <label>`), and say so here with the label's name.
   - Write the body with the `pr` skill. It includes the line `Part of #N; base: <base>`, with no closing keywords.
 - **Report:**
-  - Report back in 10 lines or fewer: PR URL, head SHA, check results on one line, and one line per deviation from the contract.
+  - Report back in 10 lines or fewer: branch, PR URL once one exists, head SHA, check results on one line, and one line per deviation from the contract.
   - Append `notes-NN.md` with the details, the names later layers need, and **Screenshot states**. List those one per line as `URL - how to reach it (role, seed data, clicks) - desktop/phone`, or write `none`.
 - **Known quirks:** environment workarounds the repo or earlier builds hit, including known flaky tests and whether the build cache is shared.
 
@@ -76,16 +79,19 @@ You build ONE layer of the {slug} stack. Your layer, branch, base and worktree a
    Read earlier layers' notes-*.md for names and deviations.
 2. Create your worktree: `git -C {repo} fetch origin && git -C {repo} worktree add {worktree} -b {branch} origin/{base}`
    (reuse it if it exists). Parallel-group layers merge their sibling branch before opening the PR.
-3. Build, run every check in common.md, commit, push, and open the PR. Do not babysit or merge.
+3. Build, run every check in common.md, commit, and push the branch. Open no PR; the babysitter opens it
+   after Sol approves. Do not babysit or merge.
 4. Write notes-NN.md and report per common.md.
 ```
 
 ## babysit.md
 
 ```markdown
-You babysit ONE PR of the {slug} stack. PR number, branch and worktree are in your task.
-Read common.md, then follow the babysit skill with these overrides:
-- MERGE HOLD: never merge. Stop at "Sol approved + checks green".
+You babysit ONE layer of the {slug} stack. Branch, base and worktree are in your task. The branch is pushed
+and has no PR yet. Read common.md, then follow the babysit skill with these overrides:
+- MERGE HOLD: never merge. Stop at "Sol approved + PR open + checks green".
+- Run the sol-loop on the pushed branch. Open the PR as common.md says only after Sol approves and the fast
+  checks and own tests pass on the pushed head.
 - Fix findings yourself. Start only the one Sol reviewer per round that sol-loop calls for, and nothing else.
 - sol-loop base: the merge-base with origin/{your base}. Scope: this layer's commits only. Intent: your
   contract.md row. Add to the brief: "Behavior that matches a GM decision in map.md or contract.md is not a bug.
@@ -96,7 +102,7 @@ Read common.md, then follow the babysit skill with these overrides:
 - Merge the base branch before every push, so one push carries both. Rerun the fast checks in common.md first.
   Leave full suites to CI and wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill.
 - Log each sol-loop round (id -> fixed, disagreed or declined, and why) in notes-NN.md.
-Report in 8 lines or fewer: Sol rounds and verdict, final head SHA, check state, anything for a lower layer.
+Report in 8 lines or fewer: PR URL, Sol rounds and verdict, final head SHA, check state, anything for a lower layer.
 ```
 
 ## Group review brief (round 1, one file per group and reviewer)

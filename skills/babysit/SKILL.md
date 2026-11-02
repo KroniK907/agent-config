@@ -56,22 +56,24 @@ With either watcher: when an event needs no action, end your turn without a mess
 
 ### 1. Set up
 
-Find the PR with `gh pr view --json number,url,isDraft,state,headRefOid,baseRefName`. If there is none, open one as the `pull-request` rule describes. If it is a draft, run `gh pr ready <N>`.
+Find the PR with `gh pr view --json number,url,isDraft,state,headRefOid,baseRefName`. If there is none, don't open one yet. Step 2 opens it after Sol approves. If it is a draft, leave it a draft until then.
+
+Find out whether the repo runs a **merge train**: a bot that merges every open, non-draft PR once its checks pass. The repo's AGENTS.md or CI docs say so, and name the label that keeps a PR off it. On such a repo, a ready PR can merge before Sol has seen it. If the PR is already open and ready, add the opt-out label now and remove it once step 2 approves.
 
 Record a **merge hold** if the user said anything like "wait for me before merging", "don't merge", or "let me look first". Also check the PR body, its labels, and its comments for one. Labels such as `do not merge`, `hold`, or `wip` count, and so does a human comment asking to hold.
 
-**Done when:** you have the PR number, the PR is open and ready for review, and you know whether a merge hold applies.
+**Done when:** you have the PR number or know there is none, a ready PR on a merge-train repo carries the opt-out label, and you know whether a merge hold applies and whether the repo runs a merge train.
 
 ### 2. Run the sol-loop
 
-Run the `sol-loop` skill on the PR, with its base as the PR's `baseRefName`. If a sol-loop in this session already approved the PR's current diff, as `full-send` does before it files, push anything unpushed and go to step 3. Make one-line fixes yourself. Delegate the rest by the **subagent** skill's tiers: a nit or rename is an **edit**, a finding you had to trace through call paths is **build**, and security or design findings are **hard**. Read every diff a subagent produced before the next round.
+Run the `sol-loop` skill on the PR, with its base as the PR's `baseRefName`. With no PR yet, run it on the branch against the base it will target. If a sol-loop in this session already approved the PR's current diff, as `full-send` does before it files, push anything unpushed and go to step 3. Make one-line fixes yourself. Delegate the rest by the **subagent** skill's tiers: a nit or rename is an **edit**, a finding you had to trace through call paths is **build**, and security or design findings are **hard**. Read every diff a subagent produced before the next round.
 
 Babysitting counts as the user asking to update the PR. When the loop stops:
 
-- **Agreed:** run the repo's fast checks, as named in `AGENTS.md`, the CI config, or the package scripts: build, lint, format, and unit tests for the code you changed, plus any test you added. Leave slow suites, such as integration or browser tests, to CI unless CI doesn't run them. Run every check in the foreground and read its result. Commit, push once, and add the sol-loop line to the PR body. Keep the pushed head as the **reviewed SHA**, and update it after each later push you make.
+- **Agreed:** run the repo's fast checks, as named in `AGENTS.md`, the CI config, or the package scripts: build, lint, format, and unit tests for the code you changed, plus any test you added. Leave slow suites, such as integration or browser tests, to CI unless CI doesn't run them. Run every check in the foreground and read its result. Commit and push once. Only now make the PR merge-ready. With no PR, open a ready one with the `pr` skill (`gh pr create --base <target>`). With a draft, run `gh pr ready <N>`. With an opt-out label you added in step 1, remove it. Add the sol-loop line to the PR body. Under a merge hold on a merge-train repo, add the opt-out label instead. Keep the pushed head as the **reviewed SHA**, and update it after each later push you make.
 - **Stuck:** a finding is still disputed or the budget ran out. Report both sides to the user and stop without merging.
 
-**Done when:** Sol approved the current diff and the fixes are pushed, or you have stopped and reported a stuck loop.
+**Done when:** Sol approved the current diff, the fixes are pushed, and the PR is open and ready, or you have stopped and reported a stuck loop with no PR opened or readied.
 
 ### 3. Wait and handle feedback
 
@@ -88,7 +90,7 @@ A human comment that asks for a merge hold sets the hold from step 1. Instructio
 
 Keep the PR at the size the user's goal needs. Feedback loops tend to grow a PR one cheap-looking fix at a time. Fix real bugs in the intended case. Decline the rest with a written reason, and list them as follow-ups: unneeded tests, guards for edge cases that do not matter, extra integration or compatibility, and small performance costs. Prefer the fix that deletes or narrows code.
 
-A change to behavior code after Sol approved goes through a step 2 delta round before you push: Sol reviews only the change since the reviewed SHA. That covers human fixes, CI fixes, conflicts resolved by hand, and pushes from someone else. Comment, doc, or format-only fixes need no new round.
+A change to behavior code after Sol approved goes through a step 2 delta round before you push: Sol reviews only the change since the reviewed SHA. That covers human fixes, CI fixes, conflicts resolved by hand, and pushes from someone else. On a merge-train repo, add the opt-out label while the delta round runs, and remove it once Sol approves. Comment, doc, or format-only fixes need no new round.
 
 **Done when:** `pr-wait --until ready` exits 0, or in T3 Code the merge gate passes on the latest head: required checks green, no unresolved threads, not BEHIND or DIRTY.
 
@@ -103,7 +105,9 @@ Without one, re-check right before merging, because people act while you wait. R
 - The body, a label, or a new comment asks for a hold: set the merge hold and go to step 5.
 - A new finding: triage it as in step 3.
 
-Merge with the method the repo uses for its recent PRs. Squash is the default when it is allowed: `gh pr merge <N> --squash --match-head-commit <reviewed-sha>`. The flag makes GitHub refuse the merge if the head moved after your check. Leave out `--delete-branch` inside a worktree, because it tries to check out the base branch and fails.
+On a merge-train repo, the train merges the PR. Don't merge it yourself. Keep the watcher running until the PR merges, and handle each event as in step 3.
+
+Otherwise, merge with the method the repo uses for its recent PRs. Squash is the default when it is allowed: `gh pr merge <N> --squash --match-head-commit <reviewed-sha>`. The flag makes GitHub refuse the merge if the head moved after your check. Leave out `--delete-branch` inside a worktree, because it tries to check out the base branch and fails.
 
 **Done when:** `gh pr view <N> --json state` reports `MERGED`, or a merge hold, a moved head, a stuck loop, or a failing check has stopped the merge.
 

@@ -30,7 +30,9 @@ Read `questions.md`. Ask the user only those questions, then record the answers 
 
 ## 3. Dispatch
 
-Each layer gets a **builder**. It builds, runs the checks, and opens a ready (not draft) PR against its base, then stops. Once the PR is open, a **babysitter** takes it through a sol-loop without merging. A builder can start as soon as the PR below it is open; it merges the base branch again right before it pushes.
+Each layer gets a **builder**. It builds, runs the checks, and pushes its branch, then stops. It opens no PR. A **babysitter** then runs a sol-loop on the pushed branch. Once Sol approves and the fast checks and the layer's own tests pass, the babysitter opens a ready PR against its base and waits for CI, without merging. No layer gets a PR before that, not even a draft. A builder can start as soon as the branch below it is pushed; it merges the base branch again right before it pushes.
+
+**Merge train.** Some repos run a merge train: a bot that merges every open, non-draft PR into the integration branch once its checks pass. The repo's AGENTS.md or CI docs say so, and name the label that keeps a PR off it. On such a repo, open every layer's PR with that label. Layer 01 targets `dev`, and without the label the train would merge it before the stack is reviewed.
 
 - **Prompts are one line:** `Follow /tmp/{slug}-plan/build.md exactly. Your layer: NN-slug, branch {area}/NN-slug, base <base>, worktree /tmp/{slug}-wt/NN-slug.`
 - **Models:**
@@ -41,7 +43,7 @@ Each layer gets a **builder**. It builds, runs the checks, and opens a ready (no
 - **How to delegate:** on T3 Code, use `delegate_task`, which can also reach other providers (see `orchestrator_capabilities`). Elsewhere, use native subagents. Each delegate starts cold, never as a fork of this thread.
 - **Concurrency:** model work runs remotely, but builds and tests run on this machine. Run up to about three Opus delegates or six Sonnet delegates at once. Start fewer when `uptime` shows a load average above twice `nproc`, and start no new builder until it drops. An overloaded machine slows every check and turns timing tests into flakes. Wait for completion notifications in the background instead of polling.
 - **One full run per push:** builders run fast checks and their own tests, as common.md says. The PR's CI runs the full suites. Wait on them with the `babysit` skill's watcher, never a polling loop, and send a red check back to the layer.
-- **Stalled delegates:** a delegate that reports back without its push or PR usually left a check running in the background. Send it straight back to read that output, or to rerun the check in the foreground, then finish its brief.
+- **Stalled delegates:** a delegate that reports back without its push, or a babysitter without its PR, usually left a check running in the background. Send it straight back to read that output, or to rerun the check in the foreground, then finish its brief.
 - **Sol unreachable:** if a babysitter reports `SOL UNAVAILABLE`, run that layer's sol-loop from this thread instead. You start the reviewer, check its findings, and send agreed fixes to a fix delegate. Never swap in another model.
 - **Tracking:** after each report, update Stack status with the PR number, head SHA, check state and any deviation. Keep `/tmp/{slug}-plan/tasks.md` current too: each running delegate (task ID, layer, role, model, start time), each `schedule_task` bound to this thread with its prompt, and each PR this thread watches. If a delegate dies on a rate or session limit, write `resume.md` (template in BRIEFS.md) and relaunch it.
 - **Long builds:** check the `handoff` skill's triggers after each report.
@@ -69,8 +71,8 @@ Don't wait for the whole stack. A cross-PR bug found at the end is usually in a 
 The synced top head already holds every layer. It passed the seam reviews and has green CI. Don't merge the PRs one at a time. Each merge moves `dev`, the next branch has to merge it back in, and CI runs again on a head nobody will review. On a long stack that adds hours and checks nothing new. Merge the stack once:
 
 1. **Confirm the stack.** CI is green on the top PR's head. Every layer's head is in the top head: `git merge-base --is-ancestor <layer head> <top head>` for each one. If a layer's head is missing, sync first.
-2. **Retarget every PR to `dev`** (`gh api -X PATCH repos/{owner}/{repo}/pulls/<N> -f base=dev`). Push nothing to the layer branches.
-3. **Merge the top PR** with a merge commit: `gh pr merge <top> --merge --match-head-commit <top head>`. If it conflicts with `dev`, merge `dev` into the top branch, wait for CI on that one push, then merge.
+2. **Retarget every PR to `dev`** (`gh api -X PATCH repos/{owner}/{repo}/pulls/<N> -f base=dev`). Push nothing to the layer branches. On a merge-train repo, first confirm every layer PR still has the train's opt-out label. Otherwise the train merges them one at a time, lowest number first.
+3. **Merge the top PR** with a merge commit: `gh pr merge <top> --merge --match-head-commit <top head>`. If it conflicts with `dev`, merge `dev` into the top branch, wait for CI on that one push, then merge. On a merge-train repo, remove the opt-out label from the top PR instead, and wait with the `babysit` skill's watcher until it merges. The train merges `dev` in when the branch is behind, checks the new head, and merges with a merge commit.
 4. **Check the rest.** GitHub marks a PR merged once its head commit is in its base branch, so every lower PR closes as merged with the top one. Confirm each with `gh pr view <N> --json state`. A PR still open means its head isn't in `dev`. Report it; don't merge it on its own.
 
 Don't rebase or force-push branches that have PRs open. Squash would break step 4, so always merge with a merge commit.
