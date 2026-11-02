@@ -132,7 +132,7 @@ caused it. Do not review the full stack again.
 
 ## HANDOFF.md additions
 
-Add these sections to build's HANDOFF.md template:
+Add these sections to the `handoff` skill's HANDOFF.md template:
 
 ```markdown
 ## Maps and root

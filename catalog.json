@@ -130,6 +130,10 @@
     "leaving-pr-comments": {
       "path": "skills/leaving-pr-comments",
       "label": "Leaving PR comments (tstack)"
+    },
+    "handoff": {
+      "path": "skills/handoff",
+      "label": "Handoff"
     }
   },
   "rules": {
