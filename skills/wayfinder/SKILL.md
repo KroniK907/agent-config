@@ -19,4 +19,4 @@ A feature lives in one GitHub **map** issue ([MAP.md](MAP.md)): the plan, its de
 
 Helpers along the way: `research` (findings comment on the map), `design-modules` (interface shapes before a build), `babysit` and `pr` (each PR), `subagent` (model tiers), `hatch` (serve mocks and reports).
 
-Small changes skip the map: build them directly, open a PR and babysit it.
+Small changes skip the map: build them directly and babysit them. `babysit` opens the PR once Sol approves.
