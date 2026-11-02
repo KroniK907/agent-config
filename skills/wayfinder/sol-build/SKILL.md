@@ -103,7 +103,7 @@ Budget: sol-loop's 3 rounds per group, extended to 5 when a group's seams involv
 
 ## Thread handoff
 
-Hand off as `build` does, at the same triggers. Launch the successor with `/sol-build` and the original arguments. HANDOFF.md also needs the sol-build additions in this skill's BRIEFS.md. A usage-limit wake-up is a schedule like any other. Delete it here and list it in HANDOFF.md, so the successor creates it again.
+Hand off with the `handoff` skill, as `build` does. Launch the successor with `/sol-build` and the original arguments. Add the HANDOFF.md sections in this skill's BRIEFS.md. A usage-limit wake-up is a schedule like any other, so the successor creates it again.
 
 ## 5. Merge and report
 
