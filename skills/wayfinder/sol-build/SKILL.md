@@ -55,13 +55,16 @@ Ask the user the questions in `questions.md`, as in `build`. Post a **Stack stat
 Use one-line builder prompts that point at this skill's `build.md`. Each builder:
 1. builds;
 2. runs the checks in the foreground;
-3. pushes its branch, with no PR;
-4. runs a sol-loop on its layer against its base, and pushes the agreed fixes;
+3. pushes its branch, with no PR, and posts `PUSHED <branch> <sha>`;
+4. runs a sol-loop on its layer against its base, waiting for each Sol round in its own turn, and pushes the agreed fixes;
 5. once Sol approves and the fast checks and its own tests pass, opens a ready PR, with the merge train's opt-out label on a merge-train repo (see `build`), and waits for CI;
 6. reports back.
 
 No layer gets a PR before Sol approves it, not even a draft. A builder above can start once the branch below it is pushed. There are no babysitters. A builder may start the one Sol reviewer per round that sol-loop calls for, and nothing else.
 
+`build`'s rules on brief files, silent delegates and the pushed signal apply here. A builder that ends its turn to wait for Sol loses its final report. When a layer goes quiet after "waiting for Sol", check its branch, PR and thread tail before you count it as working.
+
+- **Parallel groups:** you own the restart. A layer whose sibling isn't pushed with Sol approval yet runs its own loop, then reports `PUSHED <sha>, Sol approved, WAITING ON NN` as its final report. When the sibling's PR opens, write `finish-NN.md` from `build`'s finisher template and dispatch the finisher.
 - **Lower-layer findings:** a builder reports a finding in a lower layer's code; it does not fix it. If the finding is a blocker, send a fix delegate to the owning layer now, then sync the layers above it. Otherwise, add it to `deferred.md` with its id, the owning layer and the evidence.
 - **Sol unreachable:** if a builder reports `SOL UNAVAILABLE`, run that layer's sol-loop from this thread instead. You start the reviewer, check its findings, and send agreed fixes to a fix delegate. Never swap in another model.
 - **Usage limits:** if Sol, or this thread, is close to a usage limit, use `schedule_task` to wake this thread 5 minutes after the reset. Record the wake-up in Stack status. Layers that need no Sol keep building. A builder that hits the limit pushes its branch with no PR and reports `SOL LIMIT <reset time>`. The layer's loop runs after the wake-up, and its PR opens when Sol approves.

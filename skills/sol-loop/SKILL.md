@@ -58,6 +58,13 @@ only if exposed. Use `delegate_task` every round (`role: "review"`,
 `childThreadId` is storage, not the next target. Do not use
 `t3_thread_send`, `create_threads`, or `t3_thread_launch` for review.
 
+Delegated run: if an orchestrator started you and no human reads your
+thread, use `mode: "wait"` with `timeoutMs: 1800000` instead. A timeout
+does not stop Sol. Wait again with `t3_thread_wait` on the saved
+`childThreadId`. Never end your turn before your final report. Sol's reply
+would wake you in a new run, and the orchestrator never sees that run's
+report.
+
 If T3 tools are not listed, try one direct capability call. Outside T3, use
 a native Sol subagent and keep its ID. In Claude Code, use a custom subagent
 only if it is set up to run Sol. If no route runs Sol, report the blocker. Do
