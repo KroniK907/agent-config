@@ -35,13 +35,18 @@ Write review.md (from the template), not babysit.md. In common.md:
 
 ```markdown
 You build ONE layer of the {slug} stack. Your layer, branch, base and worktree are in your task.
+**Never end your turn while a command runs.** Run every check in the foreground with a long timeout and read
+its result. Don't run the full suite ({full suite command}) before the PR. CI runs it.
+**Never end your turn before your final report.** Each Sol round waits in your turn (review.md).
 1. Read common.md and contract.md (build only your row and its section; keep the shared names, and keep every
    seam your layer produces or consumes exactly as the Seams table states). Read earlier layers' notes-*.md.
 2. Create your worktree: `git -C {repo} fetch origin && git -C {repo} worktree add {worktree} -b {branch} origin/{base}`
-   (reuse it if it exists). Parallel-group layers merge their sibling branch before opening the PR.
+   (reuse it if it exists).
 3. Build, run every check in common.md, and commit.
-4. Merge the base branch, rerun the fast checks, and push the branch. Open no PR yet.
-5. Follow review.md. It opens the PR once Sol approves.
+4. Merge the base branch, rerun the fast checks, and push the branch. Open no PR yet. Post `PUSHED <branch> <sha>`.
+5. Follow review.md. It opens the PR once Sol approves. A parallel-group layer merges its sibling branch first.
+   If the sibling isn't pushed with Sol approval yet, report `PUSHED <sha>, Sol approved, WAITING ON NN` as
+   your final report and stop. The orchestrator sends a finisher.
 6. Write notes-NN.md and report per common.md, plus: Sol rounds, verdict, and any finding for a lower layer.
 Do not merge.
 ```
@@ -51,6 +56,9 @@ Do not merge.
 ```markdown
 Run the sol-loop skill on your layer's pushed branch, with these overrides:
 - Starting the one Sol reviewer it calls for is part of your task. Start nothing else.
+- Start each round with `delegate_task` `mode: "wait"` and `timeoutMs: 1800000`. On a timeout, wait again with
+  `t3_thread_wait` on its `childThreadId`; start no new reviewer. Never end your turn to wait for Sol. The
+  orchestrator never sees a report from a run that Sol's reply woke.
 - Base: the merge-base with origin/{your base}, not the default branch. Scope: your layer's commits only.
 - Intent: your contract.md row. Binding: the maps' GM decisions and cross-map.md. Add to the brief:
   "Behavior that matches a GM decision or the Seams table is not a bug. Out of scope: {other layers}."

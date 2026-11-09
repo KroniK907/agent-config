@@ -67,6 +67,7 @@ and whether questions.md is empty.
   - On a merge-train repo, open it with the train's opt-out label (`gh pr create --label <label>`), and say so here with the label's name.
   - Write the body with the `pr` skill. It includes the line `Part of #N; base: <base>`, with no closing keywords.
 - **Report:**
+  - Post `PUSHED <branch> <sha>` as an interim message as soon as the branch is first pushed.
   - Report back in 10 lines or fewer: branch, PR URL once one exists, head SHA, check results on one line, and one line per deviation from the contract.
   - Append `notes-NN.md` with the details, the names later layers need, and **Screenshot states**. List those one per line as `URL - how to reach it (role, seed data, clicks) - desktop/phone`, or write `none`.
 - **Known quirks:** environment workarounds the repo or earlier builds hit, including known flaky tests and whether the build cache is shared.
@@ -75,10 +76,12 @@ and whether questions.md is empty.
 
 ```markdown
 You build ONE layer of the {slug} stack. Your layer, branch, base and worktree are in your task.
+**Never end your turn while a command runs.** Run every check in the foreground with a long timeout and read
+its result. Don't run the full suite ({full suite command}) before the PR. CI runs it.
 1. Read common.md and contract.md (build only your row and its section; keep the shared names).
    Read earlier layers' notes-*.md for names and deviations.
 2. Create your worktree: `git -C {repo} fetch origin && git -C {repo} worktree add {worktree} -b {branch} origin/{base}`
-   (reuse it if it exists). Parallel-group layers merge their sibling branch before opening the PR.
+   (reuse it if it exists).
 3. Build, run every check in common.md, commit, and push the branch. Open no PR; the babysitter opens it
    after Sol approves. Do not babysit or merge.
 4. Write notes-NN.md and report per common.md.
@@ -88,7 +91,10 @@ You build ONE layer of the {slug} stack. Your layer, branch, base and worktree a
 
 ```markdown
 You babysit ONE layer of the {slug} stack. Branch, base and worktree are in your task. The branch is pushed
-and has no PR yet. Read common.md, then follow the babysit skill with these overrides:
+and has no PR yet.
+**Never end your turn while a command runs, or before your final report.** Run checks in the foreground. Start
+each Sol round with `delegate_task` `mode: "wait"`, as sol-loop says for delegated runs.
+Read common.md, then follow the babysit skill with these overrides:
 - MERGE HOLD: never merge. Stop at "Sol approved + PR open + checks green".
 - Run the sol-loop on the pushed branch. Open the PR as common.md says only after Sol approves and the fast
   checks and own tests pass on the pushed head.
@@ -101,8 +107,32 @@ and has no PR yet. Read common.md, then follow the babysit skill with these over
 - No route reaches Sol: report `SOL UNAVAILABLE` with what you tried. Do not swap in another model.
 - Merge the base branch before every push, so one push carries both. Rerun the fast checks in common.md first.
   Leave full suites to CI and wait for them with `pr-wait --until green --no-reviewers` from the `babysit` skill.
+- Parallel-group layer: merge your sibling branch before you open the PR. If the sibling isn't pushed with Sol
+  approval yet, report `WAITING ON NN` with your branch pushed and no PR. Don't wait for it.
 - Log each sol-loop round (id -> fixed, disagreed or declined, and why) in notes-NN.md.
 Report in 8 lines or fewer: PR URL, Sol rounds and verdict, final head SHA, check state, anything for a lower layer.
+```
+
+## finish-NN.md (parallel-group finisher)
+
+The orchestrator writes one when a waiting layer's sibling opens its PR. The prompt is one line:
+`Follow /tmp/{slug}-plan/finish-NN.md exactly.`
+
+```markdown
+You finish layer NN ({NN-slug}) of the {slug} stack. Its earlier agent stopped on purpose, waiting for layer MM.
+State: branch {branch} is pushed at {sha}, Sol approved it in {N} rounds (ledger in notes-NN.md), no PR yet.
+Worktree: {worktree} (exists). Layer MM is now pushed with Sol approval: origin/{sibling branch} at {sha}, PR #{N}.
+**Never end your turn while a command runs, or before your final report.** Sol rounds use `mode: "wait"`.
+Read common.md, contract.md row NN and its parallel group, and notes-NN.md and notes-MM.md. Then:
+1. `git fetch origin`, check out {branch} at origin's head, and merge origin/{sibling branch} with a merge commit.
+   Keep both sides in conflicts and regenerate generated files. Fix builds the merge broke without changing
+   the sibling's behavior.
+2. Rerun the fast checks and your own tests in the foreground.
+3. If you resolved a conflict by hand in behavior code, or reworked code, run one sol-loop round on only those
+   files: diff since {sha}, excluding the sibling's commits. Otherwise run no new round.
+4. Push, open the PR against {PR base} as common.md says, and wait for CI with `pr-wait --until green --no-reviewers`.
+   Fix a red check.
+5. Append the merge to notes-NN.md and report per common.md.
 ```
 
 ## Group review brief (round 1, one file per group and reviewer)
