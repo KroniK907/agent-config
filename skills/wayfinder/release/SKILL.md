@@ -31,7 +31,7 @@ Leave closing keywords for maps out of the body. A map closes in step 4, once it
 
 ## 3. Land it
 
-Do every **Before merge** step first, or hand it to the user and wait. Babysit the PR with the `babysit` skill. Merge it when it is clean, unless the user said to hold. Watch the production deploy to the end. Then run the post-merge steps that need no human. Stop at the **human gates**: an infra apply (run the plan, show what it changes, wait for approval), production data changes, and DNS or cutovers.
+Do every **Before merge** step first, or hand it to the user and wait. Babysit the PR with the `babysit` skill. Merge it when it is clean, unless the user said to hold. Watch the production deploy to the end. Then run the **After deploy** steps that need no human, and tick each one on the release issue. Stop at the **human gates**: an infra apply (run the plan, show what it changes, wait for approval), production data changes, and DNS or cutovers.
 
 **Done when:** the deploy succeeded, and every post-merge step is either done or handed to the user with its command.
 
