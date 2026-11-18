@@ -15,7 +15,7 @@ One GitHub issue per feature, titled `{FeatureName}:Map` and labelled `wf:map`. 
 ```markdown
 # {FeatureName}:Map
 
-**Phase:** <shaping | shaped | building | built | released>. <one line of status>. Next: <`/grill #N` | `/build #N` | `/release`>.
+**Phase:** <shaping | shaped | building | built | released>. <one line of status>. Next: <`/grill #N` | `/build #N` | ships in the next release; prod steps on Release:Next #R>.
 **Map slug:** `{MAP-SLUG}`. Decision IDs are `{MAP-SLUG}-GM-NNN`.
 **Parent:** <parent map, if any>. **Related:** <#N (why)>, ...
 
@@ -52,6 +52,20 @@ What this map leaves to other maps or issues, with links.
 ```
 
 **Slices** stays empty until the grill's last decision (build order and evidence) fills it. Each slice is sized for one agent and one PR.
+
+## Phase
+
+The **Phase** line is the first thing a reader trusts, so whoever moves the work also moves the Phase in the same session.
+
+| Phase | True when | Next |
+|---|---|---|
+| `shaping` | The map is filed and not fully grilled. | `/grill #N` |
+| `shaped` | Every question is settled and **Slices** is written. Nothing is built. | `/build #N` or `/sol-build #N` |
+| `building` | A build is running, or some slices are merged and others are not. Slices merged only into a feature branch count here, because only `dev` leads to a release. | The open slices, or the feature branch merge |
+| `built` | Every slice is merged into `dev`, and its human steps are on the release issue (`release-steps` skill). | `ships in the next release; prod steps on Release:Next #R` |
+| `released` | The work is on `main`, and every human step it needs is done on prod. Close the map. | none |
+
+A map that splits slices into child maps says so on the Phase line and lists each child with its phase. A hub map's Phase is the earliest phase of its unfinished children.
 
 ## Editing the body
 

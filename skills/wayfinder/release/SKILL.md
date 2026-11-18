@@ -12,28 +12,31 @@ A **hotfix** is a patch release. It ships only the PRs the user names: branch fr
 
 ## 1. Scope
 
-List every PR on `dev` that is not on `main` (`git log origin/main..origin/dev --merges`). Choose the bump: the user's choice, otherwise a patch for fixes and a minor for new features. Note anything that needs a human: infra applies, migrations, secrets, DNS, data imports.
+List every PR on `dev` that is not on `main` (`git log origin/main..origin/dev --merges`). Choose the bump: the user's choice, otherwise a patch for fixes and a minor for new features.
 
-**Done when:** you have the version, the PR list, and the human steps.
+The human steps come from the open release issue (`gh issue list --label wf:release --state open`). Run the `release-steps` skill's **Re-check** on it first. Later work may have done a step, dropped it or changed its command, and a PR may have landed without recording its steps. For a hotfix, take only the steps of the PRs it ships.
+
+**Done when:** you have the version, the PR list, and a release issue whose open steps match today's code.
 
 ## 2. Release branch
 
 On `release/x.y.z`, bump the version and write the changelog entry. The changelog is for **users**: one entry per change they will notice, in plain words, and none for deploys, refactors, CI or infra. Open the PR to `main` with the `pr` skill. Its body has:
 - a table of each PR: what it does and its changelog entry, or `-`;
 - what the deploy does;
-- the post-merge steps, with exact commands;
-- `Closes #N` for each map whose slices have all merged.
+- `Human steps: #R`, then the release issue's open steps copied under its **Before merge** and **After deploy** headings, with exact commands.
+
+Leave closing keywords for maps out of the body. A map closes in step 4, once its prod steps are done.
 
 **Done when:** the PR is open and every PR on `dev` is in its table.
 
 ## 3. Land it
 
-Babysit the PR with the `babysit` skill. Merge it when it is clean, unless the user said to hold. Watch the production deploy to the end. Then run the post-merge steps that need no human. Stop at the **human gates**: an infra apply (run the plan, show what it changes, wait for approval), production data changes, and DNS or cutovers.
+Do every **Before merge** step first, or hand it to the user and wait. Babysit the PR with the `babysit` skill. Merge it when it is clean, unless the user said to hold. Watch the production deploy to the end. Then run the post-merge steps that need no human. Stop at the **human gates**: an infra apply (run the plan, show what it changes, wait for approval), production data changes, and DNS or cutovers.
 
 **Done when:** the deploy succeeded, and every post-merge step is either done or handed to the user with its command.
 
 ## 4. Back-merge
 
-Open `chore/back-merge-x.y.z` from `main` into `dev`, babysit it, and merge it. Set each closed map's **Phase** to `released`.
+Open `chore/back-merge-x.y.z` from `main` into `dev`, babysit it, and merge it. Then finish with the `release-steps` skill's **After the release**: tick the done steps, close the release issue as `Release:x.y.z`, open the next `Release:Next` with every step still open, and set each shipped map to `released` and close it once its steps are all done.
 
-**Done when:** `dev` contains the release commit, and the user has a summary listing the version, the PRs shipped, and any human steps left.
+**Done when:** `dev` contains the release commit, one `Release:Next` issue is open, and the user has a summary listing the version, the PRs shipped, and the human steps left with their release issue link.

@@ -109,7 +109,9 @@ On a merge-train repo, the train merges the PR. Don't merge it yourself. Keep th
 
 Otherwise, merge with the method the repo uses for its recent PRs. Squash is the default when it is allowed: `gh pr merge <N> --squash --match-head-commit <reviewed-sha>`. The flag makes GitHub refuse the merge if the head moved after your check. Leave out `--delete-branch` inside a worktree, because it tries to check out the base branch and fails.
 
-**Done when:** `gh pr view <N> --json state` reports `MERGED`, or a merge hold, a moved head, a stuck loop, or a failing check has stopped the merge.
+Once the PR merges into `dev`, check its body for a `## Human steps` section with steps in it. Record them with the `release-steps` skill, so they reach the next prod release.
+
+**Done when:** `gh pr view <N> --json state` reports `MERGED` and its human steps are on the release issue, or a merge hold, a moved head, a stuck loop, or a failing check has stopped the merge.
 
 ### 5. Report
 

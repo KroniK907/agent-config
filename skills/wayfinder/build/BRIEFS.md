@@ -59,7 +59,7 @@ and whether questions.md is empty.
   - **Flakes:** the machine is shared. Rerun a timeout, or a failing test the layer doesn't touch, once and alone before you call it a failure. Report it either way.
   - For UI layers: run the app against a disposable database and look at every new state at desktop and phone widths.
 - **Hard limits:**
-  - Leave production data, infra applies and DNS to a human. Write what they must run into the PR body.
+  - Leave production data, infra applies and DNS to a human. List each step under a `## Human steps` heading in the PR body: its kind, the exact command or page and field, and whether it must happen before the code deploys or after. Write `none` when there are none.
   - Never merge.
 - **PR:**
   - Open no PR, not even a draft, until Sol approved the layer and the fast checks and own tests pass on the pushed head. This overrides the `pull-request` rule's draft-on-first-edit step.
@@ -176,7 +176,7 @@ Plan: `/tmp/{slug}-plan/` on {machine}. Merge: {pre-approved | hold}.
 |---|---|---|---|---|---|---|
 | 01 | {area}/01-slug | #N | sonnet | Sol approved / babysitting / building / merged | abc1234 | deviation |
 
-Stack review: round N, {open findings | NO FINDINGS}. Human steps owed: {list}. Report: {hatch URL}.
+Stack review: round N, {open findings | NO FINDINGS}. Human steps owed: {list while building; `on Release:Next #R` once recorded}. Report: {hatch URL}.
 ```
 
 ## resume.md

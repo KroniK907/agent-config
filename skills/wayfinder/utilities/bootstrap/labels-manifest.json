@@ -3,5 +3,10 @@
     "name": "wf:map",
     "color": "1D76DB",
     "description": "Wayfinder map: one issue holding a feature's plan and decisions"
+  },
+  {
+    "name": "wf:release",
+    "color": "0E8A16",
+    "description": "Release issue: human steps owed before the next prod release"
   }
 ]
