@@ -12,7 +12,7 @@ Work merges to `dev` weeks before it reaches production. The **human steps** it 
 
 There is one open release issue per repo, labelled `wf:release` and titled `Release:Next`. Find it with `gh issue list --label wf:release --state open`. If none is open, create it from [TEMPLATE.md](TEMPLATE.md) (`gh issue create --label wf:release`). If the label is missing, create it first with `gh label create wf:release --description "Human steps owed before the next prod release"`.
 
-Each human step is one checkbox line, in the section for when it must happen:
+Each human step is one checkbox line, in the section for when it must happen: **Before merge**, **After deploy**, **Verify on prod**, or **Any time** for leftovers on work already on prod. A step the code can't support yet goes under **Needs code before it can be done**. A step that blocks the release goes first in its section and says so.
 
 ```markdown
 - [ ] **infra** Turn on the jobs tick for prod. Add "prod" to `jobs_tick_envs` in tfvars, then `tofu plan` and `tofu apply` from the main checkout. From #PR ({FeatureName}:Map #N). Dev: applied 2026-11-14. Check: `gcloud scheduler jobs describe nus-jobs-tick-prod`.

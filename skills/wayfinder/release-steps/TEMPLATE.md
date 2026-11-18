@@ -11,8 +11,14 @@ Steps prod needs before the new code deploys: infra or secrets the app reads at 
 ## After deploy
 Steps that need the new code running: Scheduler jobs that call new routes, data imports, backfills, maps VM or GeoServer changes, settings to fill in, cutovers.
 
+### Needs code before it can be done
+Owed steps that no merged code supports yet, such as a sweep with no caller. Each one names the PR or issue that will add the code.
+
 ## Verify on prod
 One smoke check per feature, run by a human after deploy.
+
+## Any time
+Steps for work already on prod, or that wait on nothing in this release: leftovers from earlier releases, cleanup, key rotations.
 
 ## Dropped
 Steps that later work made unnecessary, each with the commit or file that made it so.
