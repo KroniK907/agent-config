@@ -56,11 +56,13 @@ New questions an answer raises are handed back rather than asked. Ask a clarifyi
 
 ## 4. Build order
 
-The last decision is always **build order and evidence**. It covers the slices in build order (each one agent and one PR), what can run in parallel, the tests that prove each slice, and human steps such as infra applies or cutovers. Propose it, then get it accepted.
+The last decision is always **build order and evidence**. It covers the slices in build order (each one agent and one PR), what can run in parallel, and the tests that prove each slice. Propose it, then get it accepted.
+
+It ends with a **Human steps** list: everything production will need from a person, one line each. A line names its kind (`infra`, `secret`, `scheduler`, `maps-vm`, `data`, `dns`, `third-party`, `setting`), the slice that needs it, and whether it must happen before the code deploys or after. Write `none` when there are none. The build checks this list against the code it merged and carries it to the release issue with the `release-steps` skill.
 
 Size slices so each one is worth a PR. Every PR pays a fixed cost in checks, review rounds and merges, so a few large slices build faster than many small ones. Put slices that call each other next to each other in the order. The build reviews each group of related slices as soon as the group is done.
 
-**Done when:** the user accepts the build order.
+**Done when:** the user accepts the build order, and its Human steps list is written or says `none`.
 
 ## 5. Write it to the map
 

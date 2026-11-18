@@ -119,6 +119,6 @@ The report adds:
 - the design choices you made in fix rounds;
 - the follow-up layers.
 
-Link the report from Stack status on every map, and set each map's **Phase** to `built`.
+Link the report from Stack status on every map. Then run the `release-steps` skill for the merged stack, as `build` does. It sets each map's **Phase** to `built`. When root is a feature branch, each map stays `building` until that branch merges into `dev`, and `release-steps` runs then.
 
-**Done when:** the user has the hatch URL, and every map's Stack status shows the final state of every PR.
+**Done when:** the user has the hatch URL, every map's Stack status shows the final state of every PR, and every human step the stack owes is on the release issue.

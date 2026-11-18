@@ -31,6 +31,11 @@ Use this template for writing the PR body:
 **Blast Radius:** <one-word description>
 
 <optional: potential ramifications of merge>
+
+## Human steps
+
+<only when production needs a person after merge; otherwise leave the section out>
+- **<kind>** <exact command, or page and field>. <before merge | after deploy>.
 ```
 
 ## Sections
@@ -163,6 +168,10 @@ Concrete evidence that the change works. Show a before and after.
 Screenshots are S-tier - when the environment is set up for it and the change is visual.
 
 Execution-based evidence is A-tier. Test results, console output. Show the exact test that now fails and passes, using pseudocode.
+
+### Human steps
+
+Add this section only when production needs a person to act: a tofu apply, a secret, a Scheduler job, a data import, DNS, third-party setup, or a setting to fill in. Use one line per step. Each line starts with its kind in bold (`infra`, `secret`, `scheduler`, `maps-vm`, `data`, `dns`, `third-party`, `setting`), gives the exact command, and says whether the step goes before the code deploys or after. The `release-steps` skill copies these lines to the release issue when the PR merges.
 
 ### Merge Danger
 

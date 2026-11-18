@@ -95,9 +95,11 @@ Build a self-contained HTML report covering:
 - screenshots of every UI state in the layers' notes files, at desktop and phone widths;
 - where the time went: when each phase started and ended, and the longest waits (checks queued, reviews late, stalled delegates). Take the times from the thread and Stack status.
 
-Serve it with `hatch`, link it from Stack status, and set **Phase** to `built`.
+Serve it with `hatch` and link it from Stack status.
 
-**Done when:** the user has the hatch URL and Stack status shows the final state of every PR.
+Then hand the human steps to the next release with the `release-steps` skill. It collects them from the PR bodies, Stack status and the map's build-order decision, checks each against the merged code, writes them to the release issue, and sets **Phase** to `built`. A stack merged into a feature branch rather than `dev` stays `building` until that branch merges into `dev`; run `release-steps` then.
+
+**Done when:** the user has the hatch URL, Stack status shows the final state of every PR, and every human step the stack owes is on the release issue.
 
 ## Thread handoff
 
