@@ -68,6 +68,6 @@ The `release` skill copies the open steps into the release PR body and runs the 
 
 1. Tick what was done. Rename the issue to `Release:x.y.z` and close it.
 2. Open a new `Release:Next` that carries over every step still unticked. A hotfix ships only some PRs, so it carries over every step those PRs do not cover.
-3. Set each shipped map whose steps are all ticked to `released`, and close it.
+3. Set each shipped map to `released`. Close it if every step it owes is ticked; otherwise its Next names the open steps.
 
-**Done when:** exactly one release issue is open, and every map the release shipped is `released` and closed, or still `built` with its open steps on the new issue.
+**Done when:** exactly one release issue is open, and every map the release shipped is `released`, closed unless a step it owes is still open on the new issue.

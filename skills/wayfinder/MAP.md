@@ -63,7 +63,7 @@ The **Phase** line is the first thing a reader trusts, so whoever moves the work
 | `shaped` | Every question is settled and **Slices** is written. Nothing is built. | `/build #N` or `/sol-build #N` |
 | `building` | A build is running, or some slices are merged and others are not. Slices merged only into a feature branch count here, because only `dev` leads to a release. | The open slices, or the feature branch merge |
 | `built` | Every slice is merged into `dev`, and its human steps are on the release issue (`release-steps` skill). | `ships in the next release; prod steps on Release:Next #R` |
-| `released` | The work is on `main`, and every human step it needs is done on prod. Close the map. | none |
+| `released` | The work is on `main`. Close the map once every human step it owes on the release issue is ticked. | The open steps on the release issue, or none |
 
 A map that splits slices into child maps says so on the Phase line and lists each child with its phase. A hub map's Phase is the earliest phase of its unfinished children.
 
