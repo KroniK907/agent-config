@@ -37,7 +37,7 @@ ASCII diagram of the parts and how they connect.
 ## Slices
 1. **<Name>.** What it delivers. ([GM-NNN](url), ...)
 
-Which slices can run in parallel and which wait on which.
+Waves: which slices run in parallel in each wave, and which earlier slices each one waits on.
 
 ## Not yet specified
 Known gaps parked for later.
