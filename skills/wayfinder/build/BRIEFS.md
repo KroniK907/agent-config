@@ -166,6 +166,22 @@ the full group again.
 
 The final pass uses the round 1 brief with the whole stack as the group, scoped to the seams that join groups.
 
+## Fix brief (group review findings)
+
+```text
+Fix group review findings on layer {NN-slug}, branch {branch}, worktree {worktree}.
+Findings: {ids with file:line, failure scenario and agreed fix}. Deferred items: {ids, or none}.
+1. Merge your base, then fix each finding on this layer. Add a test that fails without the fix.
+2. Run the fast checks and the layer's own tests.
+3. Run the sol-loop skill on git diff {head before your fixes} HEAD. Scope it to the fixes and the
+   code paths they change: each finding's form, handler or query, every other caller of what you
+   changed, and the states the fix adds (a retry, a changed kind, a refused save). Loop until Sol
+   approves, round cap 3.
+4. Push, wait with pr-wait --until green --no-reviewers, and fix a red check.
+Report in 8 lines or fewer: new head, each id fixed or declined with the reason, Sol rounds and
+verdict on the fix diff, checks.
+```
+
 ## Stack status comment
 
 ```markdown
@@ -176,8 +192,17 @@ Plan: `/tmp/{slug}-plan/` on {machine}. Merge: {pre-approved | hold}.
 |---|---|---|---|---|---|---|
 | 01 | {area}/01-slug | #N | sonnet | Sol approved / babysitting / building / merged | abc1234 | deviation |
 
-Stack review: round N, {open findings | NO FINDINGS}. Human steps owed: {list while building; `on Release:Next #R` once recorded}. Report: {hatch URL}.
+| Group | Round | Head | Verdict | Fixed | Open | Declined |
+|---|---|---|---|---|---|---|
+| {group} | 2 | abc1234 | open findings / NO FINDINGS | X1 in def5678 | X4 | X2 (reason) |
+
+Human steps owed: {list while building; `on Release:Next #R` once recorded}. Report: {hatch URL}.
 ```
+
+Edit the comment by **overwriting**, never appending:
+- A layer's Notes cell holds its current state only: deviations from the map that are still true in the code. When a fix changes or removes a deviation, rewrite or delete its note in the same edit.
+- Each review round is one row in the review table, with ids and shas. Ids, findings and the reasons for a fix live in the review and notes files, not in this comment.
+- Prose lines stay one line each. Before the report and the final reply, check every Notes cell, design choice and human step against the merged code. Delete any that is no longer true.
 
 ## resume.md
 

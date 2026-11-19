@@ -32,9 +32,10 @@ Read the maps against each other. List each place where:
 
 Write the list to `/tmp/{slug}-plan/cross-map.md`. Ask the user about each conflict. Record each answer there, and post it as a GM comment on every map it changes. Create an empty `/tmp/{slug}-plan/deferred.md`.
 
-If any map asks for designs first, run them now, as in `build`.
+If any map asks for designs first, run them now, as in `build`. Check that root is green, as in `build`.
 
 **Done when:**
+- the full check suite passes on root's head;
 - every map file exists;
 - the slice list and root are fixed;
 - every cross-map conflict has a recorded answer;
@@ -95,7 +96,7 @@ After a sync, run a new per-layer sol-loop only where a merge conflict was resol
 
 Each group keeps its own sol-loop ledger. Running several loops at once overrides sol-loop's one-reviewer rule. Each loop still has one reviewer.
 
-**Fix round.** Check every finding yourself, as sol-loop requires. Then send **one combined fix round**, with one fix delegate per owning layer or per group of nearby layers. Each delegate gets every confirmed finding and deferred item for its layers. A fix goes on the layer that produces the seam, or into a small follow-up PR on top. Use Opus for fixes in money, auth, permissions, migrations or concurrency. When a fix needs a design choice, pick one and say so in Stack status. The user can overrule it when they read it.
+**Fix round.** Check every finding yourself, as sol-loop requires. Then send **one combined fix round**, with one fix delegate per owning layer or per group of nearby layers. Each delegate gets every confirmed finding and deferred item for its layers. A fix goes on the layer that produces the seam, or into a small follow-up PR on top. Use Opus for fixes in money, auth, permissions, migrations or concurrency. Each fix delegate follows the fix brief in this skill's BRIEFS.md, which ends with a sol-loop on its own fix diff. When a fix needs a design choice, pick one and say so in Stack status. The user can overrule it when they read it.
 
 **Later rounds.** Sync again. Then each group's reviewer checks only what changed since the head it last approved, plus its open ids. It does not review the full stack again. A group that approved, and whose seams the fix round did not touch, is done.
 
