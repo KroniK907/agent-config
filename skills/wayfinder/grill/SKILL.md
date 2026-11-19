@@ -60,7 +60,14 @@ The last decision is always **build order and evidence**. It covers the slices i
 
 It ends with a **Human steps** list: everything production will need from a person, one line each. A line names its kind (`infra`, `secret`, `scheduler`, `maps-vm`, `data`, `dns`, `third-party`, `setting`), the slice that needs it, and whether it must happen before the code deploys or after. Write `none` when there are none. The build checks this list against the code it merged and carries it to the release issue with the `release-steps` skill.
 
-Size slices so each one is worth a PR. Every PR pays a fixed cost in checks, review rounds and merges, so a few large slices build faster than many small ones. Put slices that call each other next to each other in the order. The build reviews each group of related slices as soon as the group is done.
+Order the slices for parallel workers by default. The build runs one agent per slice, so the order that finishes first is the one with the fewest waves, not the shortest list.
+
+- **Foundation first.** Put shared contracts in the first wave: schemas, types, interfaces, migrations, feature flags. Keep it as thin as the later slices allow. Every slice after it should build against the contract, not against another slice's code.
+- **Then waves.** Group the remaining slices into waves. Slices in one wave share a base and touch different files, so they can build at the same time. A slice waits only on a slice whose code it calls or whose files it edits.
+- **Split along seams.** When one slice blocks several others, split it so the part they need lands in an earlier wave. When two slices in a wave would edit the same files, move the shared edit into the foundation or merge the two slices.
+- **Size.** Each slice is still worth a PR. Every PR pays a fixed cost in checks, review rounds and merges. Don't split a slice only to fill a wave.
+
+Present the order as numbered waves. Under each wave list its slices and what each one waits on. Say how many workers can run at the peak. Slices that call each other form a review group, which the build reviews as soon as the group is done.
 
 **Done when:** the user accepts the build order, and its Human steps list is written or says `none`.
 
