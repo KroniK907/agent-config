@@ -18,7 +18,9 @@ Read the map body and every GM comment (`gh issue view N --comments`), and save 
 
 If the map or the user asks for designs first (module interfaces with `design-modules`, or UI mocks), run that now and wait for approval.
 
-**Done when:** `map.md` exists, the slice list is fixed, and any design approval is in.
+**Root is green.** Run the repo's full check suite on the root's head before any layer starts. A test that already fails there turns up later as a red check on layer 01 and costs a fix round inside the stack. If root is red, fix it in its own PR against root, merged before dispatch.
+
+**Done when:** `map.md` exists, the slice list is fixed, any design approval is in, and the full check suite passes on root's head.
 
 ## 2. Plan
 
@@ -62,7 +64,7 @@ Don't wait for the whole stack. A cross-PR bug found at the end is usually in a 
 
 **Sync first.** A lower layer can change after the layers above it stopped pushing. Before each review round, walk the stack bottom-up to the group's top layer. Merge each branch's base into it with a merge commit, rerun its fast checks, and push it if the merge brought anything in. A push that only merges the base needs no babysit round, unless a conflict was resolved by hand in behavior code. Then that layer gets a sol-loop on the conflict files only. Hand a sync of more than a few layers to one delegate rather than running it in this thread.
 
-**Round 1.** Run a read-only review of the group by a model from another family (GPT-6.1 Sol on T3 Code). In parallel, run an independent Claude pass. Both use the group review brief in BRIEFS.md on the group's synced top head. Send verified findings to fix delegates, one per owning layer. A fix goes on the layer that owns the code, or into a small follow-up PR on top.
+**Round 1.** Run a read-only review of the group by a model from another family (GPT-6.1 Sol on T3 Code). In parallel, run an independent Claude pass. Both use the group review brief in BRIEFS.md on the group's synced top head. Send verified findings to fix delegates, one per owning layer. A fix goes on the layer that owns the code, or into a small follow-up PR on top. Each fix delegate runs a sol-loop on its own fix diff before it reports, with the fix brief in BRIEFS.md. A fix that breaks a nearby path then fails at its own layer, before a sync and a full group round.
 
 **Later rounds.** Sync again. Each reviewer then checks only the change since the head it last reviewed, plus its open findings, with the re-review brief. It never reviews the full group again. After 5 rounds, stop and bring what's left to the user.
 

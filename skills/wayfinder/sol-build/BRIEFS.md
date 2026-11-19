@@ -130,6 +130,22 @@ X1 [blocker|should|nit] <seam id or "unlisted"> <file>:<line> <claim>. Fix: <sug
 D01 confirmed|not a bug <evidence>
 ```
 
+## Fix brief (seam review findings)
+
+```text
+Fix seam review findings on layer {NN-slug}, branch {branch}, worktree {worktree}.
+Findings: {ids with file:line, failure scenario and agreed fix}. Deferred items: {ids, or none}.
+1. Merge your base, then fix each finding on this layer. Add a test that fails without the fix.
+2. Run the fast checks and the layer's own tests.
+3. Run the sol-loop skill on git diff {head before your fixes} HEAD. Scope it to the fixes and the
+   code paths they change: each finding's form, handler or query, every other caller of what you
+   changed, and the states the fix adds (a retry, a changed kind, a refused save). Loop until Sol
+   approves, round cap 3.
+4. Push, wait with pr-wait --until green --no-reviewers, and fix a red check.
+Report in 8 lines or fewer: new head, each id fixed or declined with the reason, Sol rounds and
+verdict on the fix diff, checks.
+```
+
 ## Seam re-review brief (rounds 2 and later)
 
 ```text
@@ -170,6 +186,15 @@ Plan: `/tmp/{slug}-plan/` on {machine}. Maps: {#N, #M}. Root: `{root}`. Merge: {
 |---|---|---|---|---|---|---|---|---|
 | 01 | {area}/01-slug | #N | #N | sonnet | building / sol review / open / merged | 2 rounds, approved | abc1234 | deviation |
 
-Seam review: round N; {group}: {approved | N open}, ... Deferred: N open. Design choices made: {list}.
+| Group | Round | Head | Verdict | Fixed | Open | Declined |
+|---|---|---|---|---|---|---|
+| G1 {layers} | 2 | abc1234 | changes / approved | X1, X3 in def5678 | X4 | X2 (rare race) |
+
+Deferred: N open. Design choices made: {one line each}. Open for the user: {one line each}.
 Wake-up: {time, or none}. Follow-ups: {layers}. Human steps owed: {list}. Report: {hatch URL}.
 ```
+
+Edit the comment by **overwriting**, never appending:
+- A layer's Notes cell holds its current state only: deviations from the map that are still true in the code. When a fix changes or removes a deviation, rewrite or delete its note in the same edit.
+- Each review round is one row in the review table, with ids and shas. Ids, findings and the reasons for a fix live in the review and notes files, not in this comment.
+- Prose lines stay one line each. Before the report and the final reply, check every Notes cell, design choice and human step against the merged code. Delete any that is no longer true.
